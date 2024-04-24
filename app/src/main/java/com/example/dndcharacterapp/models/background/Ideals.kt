@@ -1,7 +1,10 @@
 package com.example.dndcharacterapp.models.background
 
-data class Ideals(
-    val choose: Int,
-    val from: List<From>,
-    val type: String
-)
+import io.realm.kotlin.ext.realmListOf
+import io.realm.kotlin.types.EmbeddedRealmObject
+
+class Ideals : EmbeddedRealmObject{
+    val choose: Int? = null
+    val from: List<From> = realmListOf()
+    val type: String? = null
+}

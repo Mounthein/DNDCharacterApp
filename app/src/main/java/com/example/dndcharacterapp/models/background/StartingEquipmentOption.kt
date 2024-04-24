@@ -1,7 +1,9 @@
 package com.example.dndcharacterapp.models.background
 
-data class StartingEquipmentOption(
-    val choose: Int,
-    val from: FromX,
-    val type: String
-)
+import io.realm.kotlin.types.EmbeddedRealmObject
+
+class StartingEquipmentOption : EmbeddedRealmObject{
+    val choose: Int? = null
+    val from: FromX? = null
+    val type: String? = null
+}

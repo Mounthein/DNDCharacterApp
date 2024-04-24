@@ -1,7 +1,9 @@
 package com.example.dndcharacterapp.models.race
 
-data class From(
-    val abilityScore: AbilityScore,
-    val bonus: Int,
-    val optionType: String
-)
+import io.realm.kotlin.types.EmbeddedRealmObject
+
+class From : EmbeddedRealmObject{
+    val abilityScore: AbilityScore? = null
+    val bonus: Int? = null
+    val optionType: String? = null
+}

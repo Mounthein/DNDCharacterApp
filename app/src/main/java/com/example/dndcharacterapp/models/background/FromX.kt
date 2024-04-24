@@ -1,5 +1,7 @@
 package com.example.dndcharacterapp.models.background
 
-data class FromX(
-    val equipmentCategory: EquipmentCategory
-)
+import io.realm.kotlin.types.EmbeddedRealmObject
+
+class FromX : EmbeddedRealmObject{
+    val equipmentCategory: EquipmentCategory? = null
+}

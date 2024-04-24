@@ -1,6 +1,8 @@
 package com.example.dndcharacterapp.models.background
 
-data class From(
-    val alignments: Alignments,
-    val description: String
-)
+import io.realm.kotlin.types.EmbeddedRealmObject
+
+class From : EmbeddedRealmObject{
+    var index: String? = null
+    var name: String? = null
+}

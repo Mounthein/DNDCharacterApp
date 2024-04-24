@@ -1,6 +1,8 @@
 package com.example.dndcharacterapp.models.abilityscore
 
-data class Skill(
-    val index: String,
-    val name: String
-)
+import io.realm.kotlin.types.EmbeddedRealmObject
+
+class Skill : EmbeddedRealmObject{
+    var index: String? = null
+    var name: String? = null
+    }

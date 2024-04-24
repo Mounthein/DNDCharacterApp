@@ -1,6 +1,8 @@
 package com.example.dndcharacterapp.models.background
 
-data class Equipment(
-    val index: String,
-    val name: String
-)
+import io.realm.kotlin.types.EmbeddedRealmObject
+
+class Equipment : EmbeddedRealmObject{
+    val index: String? = null
+    val name: String? = null
+}

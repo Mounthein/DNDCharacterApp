@@ -1,6 +1,8 @@
 package com.example.dndcharacterapp.models.background
 
-data class StartingProficiency(
-    val index: String,
-    val name: String
-)
+import io.realm.kotlin.types.EmbeddedRealmObject
+
+class StartingProficiency : EmbeddedRealmObject{
+    val index: String? = null
+    val name: String? = null
+}

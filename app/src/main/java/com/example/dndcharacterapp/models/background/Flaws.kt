@@ -1,6 +1,9 @@
 package com.example.dndcharacterapp.models.background
 
-data class Flaws(
-    val choose: Int,
-    val from: List<String>
-)
+import io.realm.kotlin.ext.realmListOf
+import io.realm.kotlin.types.EmbeddedRealmObject
+
+class Flaws : EmbeddedRealmObject {
+    val choose: Int? = null
+    val from: List<String> = realmListOf()
+}
