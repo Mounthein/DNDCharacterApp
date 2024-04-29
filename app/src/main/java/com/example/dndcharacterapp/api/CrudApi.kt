@@ -3,6 +3,8 @@ package com.example.dndcharacterapp.api
 import com.example.dndcharacterapp.models.abilityscore.AbilityScore
 import com.example.dndcharacterapp.models.abilityscore.Skill
 import com.example.dndcharacterapp.models.abilityscore.api.AbilityScores
+import com.example.dndcharacterapp.models.alignment.Alignment
+import com.example.dndcharacterapp.models.alignment.api.Alignement
 import com.example.dndcharacterapp.realm.RealmApp
 import com.google.gson.GsonBuilder
 import io.realm.kotlin.UpdatePolicy
@@ -14,6 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import com.example.dndcharacterapp.models.alignment.api.Alignements
 import org.mongodb.kbson.BsonObjectId
 import org.mongodb.kbson.ObjectId
 import kotlin.coroutines.CoroutineContext
@@ -44,6 +47,8 @@ class CrudApi():CoroutineScope {
         return Retrofit.Builder().baseUrl(urlapi).client(getClient()).addConverterFactory(GsonConverterFactory.create(gson)).build()
     }
 
+    // ========================================================== //
+    // ========================================================== //
     fun getAbilityScoreList(): Boolean?{
         var resposta: Response<AbilityScores>? = null
 
@@ -63,7 +68,7 @@ class CrudApi():CoroutineScope {
         }
     }
 
-    fun getAbilityScoreList(id: String): com.example.dndcharacterapp.models.abilityscore.api.AbilityScore?{
+    fun getAbilityScore(id: String): com.example.dndcharacterapp.models.abilityscore.api.AbilityScore?{
         var resposta: Response<com.example.dndcharacterapp.models.abilityscore.api.AbilityScore>? = null
 
         runBlocking {
@@ -80,6 +85,49 @@ class CrudApi():CoroutineScope {
             return null
         }
     }
+    // ========================================================== //
+    // ========================================================== //
+    fun getAlignmentList(): Boolean?{
+        var resposta: Response<Alignements>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getAlignmentList()
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            saveAlignments(resposta!!.body()!!)
+            return true
+        }else {
+            return null
+        }
+    }
+
+    fun getAlignment(id: String): Alignement?{
+        var resposta: Response<Alignement>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getAlignment(id)
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    // ========================================================== //
+    // ========================================================== //
+
+
 }
 
 private fun saveAbilityScores(abilityScores: AbilityScores) {
@@ -99,6 +147,21 @@ private fun saveAbilityScores(abilityScores: AbilityScores) {
                 abs.skills?.add(ski)
             }
             copyToRealm(abs, updatePolicy = UpdatePolicy.ALL)
+        }
+    }
+}
+
+private fun saveAlignments(alignments: Alignements) {
+    var realm = RealmApp.realm
+    realm.writeBlocking {
+        alignments.forEach{ali ->
+            var align: Alignment = Alignment()
+            align.id = ObjectId(ali.id)
+            align.abbreviation = ali.abbreviation
+            align.description = ali.description
+            align.index = ali.index
+            align.name = ali.name
+            copyToRealm(align, updatePolicy = UpdatePolicy.ALL)
         }
     }
 }

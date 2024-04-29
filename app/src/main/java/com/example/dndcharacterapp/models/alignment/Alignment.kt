@@ -6,9 +6,9 @@ import org.mongodb.kbson.ObjectId
 
 class Alignment: RealmObject{
     @PrimaryKey
-    val abbreviation: String? = null
-    val description: String? = null
-    val id: ObjectId = ObjectId()
-    val index: String? = null
-    val name: String? = null
+    var id: ObjectId = ObjectId()
+    var abbreviation: String? = null
+    var description: String? = null
+    var index: String? = null
+    var name: String? = null
 }
