@@ -17,6 +17,21 @@ import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import com.example.dndcharacterapp.models.alignment.api.Alignements
+import com.example.dndcharacterapp.models.background.Alignments
+import com.example.dndcharacterapp.models.background.Background
+import com.example.dndcharacterapp.models.background.Bonds
+import com.example.dndcharacterapp.models.background.Equipment
+import com.example.dndcharacterapp.models.background.EquipmentCategory
+import com.example.dndcharacterapp.models.background.Feature
+import com.example.dndcharacterapp.models.background.Flaws
+import com.example.dndcharacterapp.models.background.From
+import com.example.dndcharacterapp.models.background.FromX
+import com.example.dndcharacterapp.models.background.Ideals
+import com.example.dndcharacterapp.models.background.PersonalityTraits
+import com.example.dndcharacterapp.models.background.StartingEquipment
+import com.example.dndcharacterapp.models.background.StartingEquipmentOption
+import com.example.dndcharacterapp.models.background.StartingProficiency
+import com.example.dndcharacterapp.models.background.api.Backgrounds
 import org.mongodb.kbson.BsonObjectId
 import org.mongodb.kbson.ObjectId
 import kotlin.coroutines.CoroutineContext
@@ -127,8 +142,48 @@ class CrudApi():CoroutineScope {
     // ========================================================== //
     // ========================================================== //
 
+    fun getBackgroundList(): Boolean?{
+        var resposta: Response<Backgrounds>? = null
 
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getBackgroundList()
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            saveBackgrounds(resposta!!.body()!!)
+            return true
+        }else {
+            return null
+        }
+    }
+
+    fun getBackground(id: String): com.example.dndcharacterapp.models.background.api.Background?{
+        var resposta: Response<com.example.dndcharacterapp.models.background.api.Background>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getBackground(id)
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
 }
+
+
+// ========================================================== //
+// ========================================================== //
+
 
 private fun saveAbilityScores(abilityScores: AbilityScores) {
     var realm = RealmApp.realm
@@ -162,6 +217,93 @@ private fun saveAlignments(alignments: Alignements) {
             align.index = ali.index
             align.name = ali.name
             copyToRealm(align, updatePolicy = UpdatePolicy.ALL)
+        }
+    }
+}
+
+private fun saveBackgrounds(backgrounds: Backgrounds) {
+    var realm = RealmApp.realm
+    realm.writeBlocking {
+        backgrounds.forEach { back ->
+            var ba: Background = Background()
+            ba.id = ObjectId(back.id)
+            ba.index = back.index
+            ba.languageOptions = back.languageOptions
+            ba.name = back.name
+
+            // Objecte Bond
+            var bond: Bonds = Bonds()
+            bond.choose = back.bonds.choose
+            bond.from = back.bonds.from.toRealmList()
+            ba.bonds = bond
+
+            // Objecte Feature
+            var feat: Feature = Feature()
+            feat.name = back.feature.name
+            feat.description = back.feature.description.toRealmList()
+
+            // Object flaws
+            var flaw: Flaws = Flaws()
+            flaw.choose = back.flaws.choose
+            flaw.from = back.flaws.from.toRealmList()
+            ba.flaws = flaw
+
+            // Object ideals
+            var ideal: Ideals = Ideals()
+            ideal.choose = back.ideals.choose
+            back.ideals.from.forEach {f ->
+                var fr = From()
+                var ali = Alignments()
+                ali.index = f.alignments.index.toRealmList()
+                ali.name = f.alignments.name.toRealmList()
+                fr.alignments = ali
+                fr.description = f.description
+            }
+            ideal.type = back.ideals.type
+            ba.ideals = ideal
+
+            // Object personality Traits
+            var personalityTraits: PersonalityTraits = PersonalityTraits()
+            personalityTraits.choose = back.personalityTraits.choose
+            personalityTraits.from = back.personalityTraits.from.toRealmList()
+            ba.personalityTraits = personalityTraits
+
+            // Object startingEquipment
+            back.startingEquipment.forEach { se ->
+                var startingEquipment: StartingEquipment = StartingEquipment()
+                var equipment: Equipment = Equipment()
+                equipment.index = se.equipment.index
+                equipment.name = se.equipment.name
+                startingEquipment.equipment = equipment
+                startingEquipment.quantity = se.quantity
+                ba.startingEquipment.add(startingEquipment)
+            }
+
+            // Object startingEquipmentOption
+            back.startingEquipmentOption.forEach {seo ->
+                var startingeo: StartingEquipmentOption = StartingEquipmentOption()
+                var fromX: FromX = FromX()
+                var equipmentCategory: EquipmentCategory = EquipmentCategory()
+                equipmentCategory.index = seo.from.equipmentCategory.index
+                equipmentCategory.name = seo.from.equipmentCategory.name
+                fromX.equipmentCategory = equipmentCategory
+
+                startingeo.from = fromX
+                startingeo.choose = seo.choose
+                startingeo.type = seo.type
+
+                ba.startingEquipmentOption.add(startingeo)
+            }
+
+            // Object Starting Proficiencies
+            back.startingProficiencies.forEach { sp ->
+                var startingProficiency: StartingProficiency = StartingProficiency()
+                startingProficiency.index = sp.index
+                startingProficiency.name = sp.name
+                ba.startingProficiencies.add(startingProficiency)
+            }
+
+            copyToRealm(ba, updatePolicy = UpdatePolicy.ALL)
         }
     }
 }

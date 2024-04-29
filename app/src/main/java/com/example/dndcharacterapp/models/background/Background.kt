@@ -4,12 +4,15 @@ import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.EmbeddedRealmObject
 import io.realm.kotlin.types.RealmList
 import io.realm.kotlin.types.RealmObject
+import io.realm.kotlin.types.annotations.PrimaryKey
+import org.mongodb.kbson.ObjectId
 
 class Background : RealmObject{
     var bonds: Bonds? = null
     var feature: Feature? = null
     var flaws: Flaws? = null
-    var id: String? = null
+    @PrimaryKey
+    var id: ObjectId = ObjectId()
     var ideals: Ideals? = null
     var index: String? = null
     var languageOptions: Int? = null
