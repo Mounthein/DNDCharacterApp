@@ -15,7 +15,5 @@ class AbilityScore: RealmObject {
     var fullName: String?= null
     var index: String? = null
     var name: String? = null
-
-    // Common From
     var skills: RealmList<Skill>? = realmListOf()
 }

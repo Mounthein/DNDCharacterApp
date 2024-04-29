@@ -29,7 +29,7 @@ class MainViewModel: ViewModel() {
         )
 
     init {
-        createSampleEntries()
+        //createSampleEntries()
     }
     private fun createSampleEntries(){
         viewModelScope.launch {

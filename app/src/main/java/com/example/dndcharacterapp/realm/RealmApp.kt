@@ -6,6 +6,7 @@ import com.example.dndcharacterapp.models.abilityscore.Skill
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 
+
 class RealmApp: Application() {
 
     companion object {

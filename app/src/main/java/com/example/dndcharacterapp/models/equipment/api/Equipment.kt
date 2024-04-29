@@ -1,0 +1,31 @@
+package com.example.dndcharacterapp.models.equipment.api
+
+data class Equipment(
+    val armorCategory: String,
+    val armorName: ArmorName,
+    val capacity: String,
+    val categoryRange: String,
+    val contents: Contents,
+    val cost: Cost,
+    val description: List<String>,
+    val equipmentCategory: EquipmentCategory,
+    val gearCategory: Item,
+    val id: String,
+    val index: String,
+    val name: String,
+    val properties: List<Property>,
+    val quantity: Int,
+    val range: Range,
+    val special: List<String>,
+    val speed: Speed,
+    val stealthDisadvantage: Boolean,
+    val strengthMinimum: Int,
+    val throwRange: ThrowRange,
+    val toolCategory: String,
+    val twoHandedDamage: TwoHandedDamage,
+    val unitQuantity: UnitQuantity,
+    val vehicleCategory: String,
+    val weaponCategory: String,
+    val weaponRange: String,
+    val weight: Double
+)
