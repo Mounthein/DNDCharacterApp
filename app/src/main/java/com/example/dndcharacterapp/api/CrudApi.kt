@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.mongodb.kbson.BsonObjectId
 import org.mongodb.kbson.ObjectId
 import kotlin.coroutines.CoroutineContext
 import retrofit2.converter.gson.GsonConverterFactory
@@ -43,7 +44,7 @@ class CrudApi():CoroutineScope {
         return Retrofit.Builder().baseUrl(urlapi).client(getClient()).addConverterFactory(GsonConverterFactory.create(gson)).build()
     }
 
-    fun getAbilityScoreList(): AbilityScores?{
+    fun getAbilityScoreList(): Boolean?{
         var resposta: Response<AbilityScores>? = null
 
         runBlocking {
@@ -56,6 +57,24 @@ class CrudApi():CoroutineScope {
         }
         if (resposta!!.isSuccessful) {
             saveAbilityScores(resposta!!.body()!!)
+            return true
+        }else {
+            return null
+        }
+    }
+
+    fun getAbilityScoreList(id: String): com.example.dndcharacterapp.models.abilityscore.api.AbilityScore?{
+        var resposta: Response<com.example.dndcharacterapp.models.abilityscore.api.AbilityScore>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getAbilityScore(id)
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
             return resposta!!.body()!!
         }else {
             return null
