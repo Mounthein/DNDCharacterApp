@@ -14,6 +14,8 @@ import com.example.dndcharacterapp.models.damagetype.DamageType
 import com.example.dndcharacterapp.models.damagetype.DamageTypes
 import com.example.dndcharacterapp.models.equipment.Equipment
 import com.example.dndcharacterapp.models.equipment.Equipments
+import com.example.dndcharacterapp.models.equipmentcategory.EquipmentCategories
+import com.example.dndcharacterapp.models.equipmentcategory.EquipmentCategory
 import com.example.dndcharacterapp.realm.RealmApp
 import com.google.gson.GsonBuilder
 import io.realm.kotlin.UpdatePolicy
@@ -324,6 +326,46 @@ class CrudApi():CoroutineScope {
                 var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getEquipment(id)
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    // ========================================================== //
+    // ========================================================== //
+
+
+    fun getEquipmentCategoryList(): EquipmentCategories?{
+        var resposta: Response<EquipmentCategories>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getEquipmentCategoryList()
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    fun getEquipmentCategory(id: String): EquipmentCategory?{
+        var resposta: Response<EquipmentCategory>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getEquipmentCategory(id)
             }
             corrutina.join()
         }
