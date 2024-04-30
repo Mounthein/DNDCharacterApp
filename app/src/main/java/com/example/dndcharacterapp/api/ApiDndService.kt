@@ -12,6 +12,8 @@ import com.example.dndcharacterapp.models.condition.Condition
 import com.example.dndcharacterapp.models.condition.Conditions
 import com.example.dndcharacterapp.models.damagetype.DamageType
 import com.example.dndcharacterapp.models.damagetype.DamageTypes
+import com.example.dndcharacterapp.models.equipment.Equipment
+import com.example.dndcharacterapp.models.equipment.Equipments
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -79,4 +81,14 @@ interface ApiDndService {
         @Path("id") id: String
     ): Response<DamageType>
 
+    // ========================================================== //
+    // ========================================================== //
+
+    @GET("/api/Equipment/")
+    suspend fun getEquipmentList(): Response<Equipments>
+
+    @GET("/api/Equipment/{id}/")
+    suspend fun getEquipment(
+        @Path("id") id: String
+    ): Response<Equipment>
 }

@@ -12,6 +12,8 @@ import com.example.dndcharacterapp.models.condition.Condition
 import com.example.dndcharacterapp.models.condition.Conditions
 import com.example.dndcharacterapp.models.damagetype.DamageType
 import com.example.dndcharacterapp.models.damagetype.DamageTypes
+import com.example.dndcharacterapp.models.equipment.Equipment
+import com.example.dndcharacterapp.models.equipment.Equipments
 import com.example.dndcharacterapp.realm.RealmApp
 import com.google.gson.GsonBuilder
 import io.realm.kotlin.UpdatePolicy
@@ -282,6 +284,46 @@ class CrudApi():CoroutineScope {
                 var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getDamageType(id)
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    // ========================================================== //
+    // ========================================================== //
+
+
+    fun getEquipmentList(): Equipments?{
+        var resposta: Response<Equipments>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getEquipmentList()
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    fun getEquipment(id: String): Equipment?{
+        var resposta: Response<Equipment>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getEquipment(id)
             }
             corrutina.join()
         }
