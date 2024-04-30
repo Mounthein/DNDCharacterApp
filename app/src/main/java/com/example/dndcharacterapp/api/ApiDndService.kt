@@ -32,6 +32,10 @@ import com.example.dndcharacterapp.models.proficiency.Proficiencies
 import com.example.dndcharacterapp.models.proficiency.Proficiency
 import com.example.dndcharacterapp.models.race.Race
 import com.example.dndcharacterapp.models.race.Races
+import com.example.dndcharacterapp.models.skill.Skill
+import com.example.dndcharacterapp.models.skill.Skills
+import com.example.dndcharacterapp.models.spell.Spell
+import com.example.dndcharacterapp.models.spell.Spells
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -208,5 +212,27 @@ interface ApiDndService {
     suspend fun getRace(
         @Path("id") id: String
     ): Response<Race>
+
+    // ========================================================== //
+    // ========================================================== //
+
+    @GET("/api/Skill/")
+    suspend fun getSkillList(): Response<Skills>
+
+    @GET("/api/Skill/{id}/")
+    suspend fun getSkill(
+        @Path("id") id: String
+    ): Response<Skill>
+
+    // ========================================================== //
+    // ========================================================== //
+
+    @GET("/api/Spell/")
+    suspend fun getSpellList(): Response<Spells>
+
+    @GET("/api/Spell/{id}/")
+    suspend fun getSpell(
+        @Path("id") id: String
+    ): Response<Spell>
 
 }

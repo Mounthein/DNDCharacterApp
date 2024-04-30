@@ -32,6 +32,10 @@ import com.example.dndcharacterapp.models.proficiency.Proficiencies
 import com.example.dndcharacterapp.models.proficiency.Proficiency
 import com.example.dndcharacterapp.models.race.Race
 import com.example.dndcharacterapp.models.race.Races
+import com.example.dndcharacterapp.models.skill.Skill
+import com.example.dndcharacterapp.models.skill.Skills
+import com.example.dndcharacterapp.models.spell.Spell
+import com.example.dndcharacterapp.models.spell.Spells
 import com.example.dndcharacterapp.realm.RealmApp
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
@@ -698,6 +702,86 @@ class CrudApi():CoroutineScope {
                 var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getRace(id)
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    // ========================================================== //
+    // ========================================================== //
+
+
+    fun getSkillList(): Skills?{
+        var resposta: Response<Skills>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getSkillList()
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    fun getSkill(id: String): Skill?{
+        var resposta: Response<Skill>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getSkill(id)
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    // ========================================================== //
+    // ========================================================== //
+
+
+    fun getSpellList(): Spells?{
+        var resposta: Response<Spells>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getSpellList()
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    fun getSpell(id: String): Spell?{
+        var resposta: Response<Spell>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getSpell(id)
             }
             corrutina.join()
         }
