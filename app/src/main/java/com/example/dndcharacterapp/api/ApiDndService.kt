@@ -26,6 +26,8 @@ import com.example.dndcharacterapp.models.level.Level
 import com.example.dndcharacterapp.models.level.Levels
 import com.example.dndcharacterapp.models.magicitem.MagicItem
 import com.example.dndcharacterapp.models.magicitem.MagicItems
+import com.example.dndcharacterapp.models.magicschool.MagicSchool
+import com.example.dndcharacterapp.models.magicschool.MagicSchools
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -169,5 +171,16 @@ interface ApiDndService {
     suspend fun getMagicItem(
         @Path("id") id: String
     ): Response<MagicItem>
+
+    // ========================================================== //
+    // ========================================================== //
+
+    @GET("/api/MagicSchool/")
+    suspend fun getMagicSchoolList(): Response<MagicSchools>
+
+    @GET("/api/MagicSchool/{id}/")
+    suspend fun getMagicSchool(
+        @Path("id") id: String
+    ): Response<MagicSchool>
 
 }

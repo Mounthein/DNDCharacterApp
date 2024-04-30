@@ -26,6 +26,8 @@ import com.example.dndcharacterapp.models.level.Level
 import com.example.dndcharacterapp.models.level.Levels
 import com.example.dndcharacterapp.models.magicitem.MagicItem
 import com.example.dndcharacterapp.models.magicitem.MagicItems
+import com.example.dndcharacterapp.models.magicschool.MagicSchool
+import com.example.dndcharacterapp.models.magicschool.MagicSchools
 import com.example.dndcharacterapp.realm.RealmApp
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
@@ -572,6 +574,46 @@ class CrudApi():CoroutineScope {
                 var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getMagicItem(id)
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    // ========================================================== //
+    // ========================================================== //
+
+
+    fun getMagicSchoolList(): MagicSchools?{
+        var resposta: Response<MagicSchools>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getMagicSchoolList()
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    fun getMagicSchool(id: String): MagicSchool?{
+        var resposta: Response<MagicSchool>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getMagicSchool(id)
             }
             corrutina.join()
         }
