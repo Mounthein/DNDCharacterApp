@@ -2,6 +2,8 @@ package com.example.dndcharacterapp.api
 
 import com.example.dndcharacterapp.models.abilityScore.AbilityScore
 import com.example.dndcharacterapp.models.abilityScore.AbilityScores
+import com.example.dndcharacterapp.models.alignment.Alignment
+import com.example.dndcharacterapp.models.alignment.Alignments
 import com.example.dndcharacterapp.realm.RealmApp
 import com.google.gson.GsonBuilder
 import io.realm.kotlin.UpdatePolicy
@@ -72,6 +74,46 @@ class CrudApi():CoroutineScope {
                 var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getAbilityScore(id)
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    // ========================================================== //
+    // ========================================================== //
+
+
+    fun getAlignmentList(): Alignments?{
+        var resposta: Response<Alignments>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getAlignmentList()
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    fun getAlignment(id: String): Alignment?{
+        var resposta: Response<Alignment>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getAlignment(id)
             }
             corrutina.join()
         }
