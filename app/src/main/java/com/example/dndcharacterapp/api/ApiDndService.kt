@@ -16,6 +16,8 @@ import com.example.dndcharacterapp.models.equipment.Equipment
 import com.example.dndcharacterapp.models.equipment.Equipments
 import com.example.dndcharacterapp.models.equipmentcategory.EquipmentCategories
 import com.example.dndcharacterapp.models.equipmentcategory.EquipmentCategory
+import com.example.dndcharacterapp.models.feat.Feat
+import com.example.dndcharacterapp.models.feat.Feats
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -104,4 +106,17 @@ interface ApiDndService {
     suspend fun getEquipmentCategory(
         @Path("id") id: String
     ): Response<EquipmentCategory>
+
+    // ========================================================== //
+    // ========================================================== //
+
+    @GET("/api/Feat/")
+    suspend fun getFeatList(): Response<Feats>
+
+    @GET("/api/Feat/{id}/")
+    suspend fun getFeat(
+        @Path("id") id: String
+    ): Response<Feat>
+
+
 }
