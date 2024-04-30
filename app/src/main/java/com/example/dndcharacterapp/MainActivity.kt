@@ -46,6 +46,7 @@ class MainActivity : ComponentActivity() {
                     val abililies by viewModel.abilities.collectAsState()
                     val crudApi = CrudApi()
                     var llista1 = crudApi.getAbilityScoreList()
+                    var llista2 = crudApi.getBackgroundList()
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.spacedBy(16.dp),

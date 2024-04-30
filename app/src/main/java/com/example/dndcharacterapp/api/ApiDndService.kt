@@ -5,6 +5,8 @@ import com.example.dndcharacterapp.models.alignment.api.Alignement
 import com.example.dndcharacterapp.models.alignment.api.Alignements
 import com.example.dndcharacterapp.models.background.api.Background
 import com.example.dndcharacterapp.models.background.api.Backgrounds
+import com.example.dndcharacterapp.models.classes.api.Class
+import com.example.dndcharacterapp.models.classes.api.Classes
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -41,4 +43,20 @@ interface ApiDndService {
 
     // ========================================================== //
     // ========================================================== //
+
+    @GET("/api/Classes/")
+    suspend fun getClassesList(): Response<Classes>
+
+    @GET("/api/Classes/{id}/")
+    suspend fun getClasses(
+        @Path("id") id: String
+    ): Response<Class>
+
+    // ========================================================== //
+    // ========================================================== //
+
+    @GET("/api/Skill/")
+    suspend fun getSkillList(): Response<Classes>
+
+
 }
