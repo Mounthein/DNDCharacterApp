@@ -36,6 +36,8 @@ import com.example.dndcharacterapp.models.skill.Skill
 import com.example.dndcharacterapp.models.skill.Skills
 import com.example.dndcharacterapp.models.spell.Spell
 import com.example.dndcharacterapp.models.spell.Spells
+import com.example.dndcharacterapp.models.subclass.Subclass
+import com.example.dndcharacterapp.models.subclass.Subclasses
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -234,5 +236,16 @@ interface ApiDndService {
     suspend fun getSpell(
         @Path("id") id: String
     ): Response<Spell>
+
+    // ========================================================== //
+    // ========================================================== //
+
+    @GET("/api/Subclass/")
+    suspend fun getSubclassList(): Response<Subclasses>
+
+    @GET("/api/Subclass/{id}/")
+    suspend fun getSubclass(
+        @Path("id") id: String
+    ): Response<Subclass>
 
 }

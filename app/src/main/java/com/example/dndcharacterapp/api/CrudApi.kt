@@ -36,6 +36,8 @@ import com.example.dndcharacterapp.models.skill.Skill
 import com.example.dndcharacterapp.models.skill.Skills
 import com.example.dndcharacterapp.models.spell.Spell
 import com.example.dndcharacterapp.models.spell.Spells
+import com.example.dndcharacterapp.models.subclass.Subclass
+import com.example.dndcharacterapp.models.subclass.Subclasses
 import com.example.dndcharacterapp.realm.RealmApp
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
@@ -782,6 +784,46 @@ class CrudApi():CoroutineScope {
                 var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getSpell(id)
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    // ========================================================== //
+    // ========================================================== //
+
+
+    fun getSubclassList(): Subclasses?{
+        var resposta: Response<Subclasses>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getSubclassList()
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    fun getSubclass(id: String): Subclass?{
+        var resposta: Response<Subclass>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getSubclass(id)
             }
             corrutina.join()
         }
