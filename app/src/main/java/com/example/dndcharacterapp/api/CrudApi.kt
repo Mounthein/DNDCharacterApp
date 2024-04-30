@@ -28,6 +28,8 @@ import com.example.dndcharacterapp.models.magicitem.MagicItem
 import com.example.dndcharacterapp.models.magicitem.MagicItems
 import com.example.dndcharacterapp.models.magicschool.MagicSchool
 import com.example.dndcharacterapp.models.magicschool.MagicSchools
+import com.example.dndcharacterapp.models.proficiency.Proficiencies
+import com.example.dndcharacterapp.models.proficiency.Proficiency
 import com.example.dndcharacterapp.realm.RealmApp
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
@@ -614,6 +616,46 @@ class CrudApi():CoroutineScope {
                 var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getMagicSchool(id)
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    // ========================================================== //
+    // ========================================================== //
+
+
+    fun getProficiencyList(): Proficiencies?{
+        var resposta: Response<Proficiencies>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getProficiencyList()
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    fun getProficiency(id: String): Proficiency?{
+        var resposta: Response<Proficiency>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getProficiency(id)
             }
             corrutina.join()
         }
