@@ -4,6 +4,8 @@ import com.example.dndcharacterapp.models.abilityScore.AbilityScore
 import com.example.dndcharacterapp.models.abilityScore.AbilityScores
 import com.example.dndcharacterapp.models.alignment.Alignment
 import com.example.dndcharacterapp.models.alignment.Alignments
+import com.example.dndcharacterapp.models.background.Background
+import com.example.dndcharacterapp.models.background.Backgrounds
 import com.example.dndcharacterapp.realm.RealmApp
 import com.google.gson.GsonBuilder
 import io.realm.kotlin.UpdatePolicy
@@ -126,6 +128,47 @@ class CrudApi():CoroutineScope {
 
     // ========================================================== //
     // ========================================================== //
+
+
+    fun getBackgroundList(): Backgrounds?{
+        var resposta: Response<Backgrounds>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getBackgroundList()
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    fun getBackground(id: String): Background?{
+        var resposta: Response<Background>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getBackground(id)
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    // ========================================================== //
+    // ========================================================== //
+
 
 
 
