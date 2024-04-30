@@ -30,6 +30,8 @@ import com.example.dndcharacterapp.models.magicschool.MagicSchool
 import com.example.dndcharacterapp.models.magicschool.MagicSchools
 import com.example.dndcharacterapp.models.proficiency.Proficiencies
 import com.example.dndcharacterapp.models.proficiency.Proficiency
+import com.example.dndcharacterapp.models.race.Race
+import com.example.dndcharacterapp.models.race.Races
 import com.example.dndcharacterapp.realm.RealmApp
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
@@ -656,6 +658,46 @@ class CrudApi():CoroutineScope {
                 var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getProficiency(id)
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    // ========================================================== //
+    // ========================================================== //
+
+
+    fun getRaceList(): Races?{
+        var resposta: Response<Races>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getRaceList()
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    fun getRace(id: String): Race?{
+        var resposta: Response<Race>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getRace(id)
             }
             corrutina.join()
         }

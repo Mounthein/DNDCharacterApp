@@ -30,6 +30,8 @@ import com.example.dndcharacterapp.models.magicschool.MagicSchool
 import com.example.dndcharacterapp.models.magicschool.MagicSchools
 import com.example.dndcharacterapp.models.proficiency.Proficiencies
 import com.example.dndcharacterapp.models.proficiency.Proficiency
+import com.example.dndcharacterapp.models.race.Race
+import com.example.dndcharacterapp.models.race.Races
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -195,5 +197,16 @@ interface ApiDndService {
     suspend fun getProficiency(
         @Path("id") id: String
     ): Response<Proficiency>
+
+    // ========================================================== //
+    // ========================================================== //
+
+    @GET("/api/Race/")
+    suspend fun getRaceList(): Response<Races>
+
+    @GET("/api/Race/{id}/")
+    suspend fun getRace(
+        @Path("id") id: String
+    ): Response<Race>
 
 }
