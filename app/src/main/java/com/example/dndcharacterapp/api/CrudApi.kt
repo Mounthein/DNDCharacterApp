@@ -1,5 +1,7 @@
 package com.example.dndcharacterapp.api
 
+import com.example.dndcharacterapp.models.abilityScore.AbilityScore
+import com.example.dndcharacterapp.models.abilityScore.AbilityScores
 import com.example.dndcharacterapp.realm.RealmApp
 import com.google.gson.GsonBuilder
 import io.realm.kotlin.UpdatePolicy
@@ -43,8 +45,8 @@ class CrudApi():CoroutineScope {
 
     // ========================================================== //
     // ========================================================== //
-    /*
-    fun getAbilityScoreList(): Boolean?{
+
+    fun getAbilityScoreList(): AbilityScores?{
         var resposta: Response<AbilityScores>? = null
 
         runBlocking {
@@ -56,15 +58,14 @@ class CrudApi():CoroutineScope {
             corrutina.join()
         }
         if (resposta!!.isSuccessful) {
-            //saveAbilityScores(resposta!!.body()!!)
-            return true
+            return resposta!!.body()!!
         }else {
             return null
         }
     }
 
-    fun getAbilityScore(id: String): com.example.dndcharacterapp.models.abilityscore.api.AbilityScore?{
-        var resposta: Response<com.example.dndcharacterapp.models.abilityscore.api.AbilityScore>? = null
+    fun getAbilityScore(id: String): AbilityScore?{
+        var resposta: Response<AbilityScore>? = null
 
         runBlocking {
             val corrutina = launch {
@@ -80,8 +81,10 @@ class CrudApi():CoroutineScope {
             return null
         }
     }
-     */
+
     // ========================================================== //
     // ========================================================== //
+
+
 
 }
