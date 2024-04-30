@@ -22,6 +22,8 @@ import com.example.dndcharacterapp.models.feature.Feature
 import com.example.dndcharacterapp.models.feature.Features
 import com.example.dndcharacterapp.models.language.Language
 import com.example.dndcharacterapp.models.language.Languages
+import com.example.dndcharacterapp.models.level.Level
+import com.example.dndcharacterapp.models.level.Levels
 import com.example.dndcharacterapp.realm.RealmApp
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
@@ -488,6 +490,46 @@ class CrudApi():CoroutineScope {
                 var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getLanguage(id)
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    // ========================================================== //
+    // ========================================================== //
+
+
+    fun getLevelList(): Levels?{
+        var resposta: Response<Levels>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getLevelList()
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    fun getLevel(id: String): Level?{
+        var resposta: Response<Level>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getLevel(id)
             }
             corrutina.join()
         }
