@@ -20,6 +20,8 @@ import com.example.dndcharacterapp.models.feat.Feat
 import com.example.dndcharacterapp.models.feat.Feats
 import com.example.dndcharacterapp.models.feature.Feature
 import com.example.dndcharacterapp.models.feature.Features
+import com.example.dndcharacterapp.models.language.Language
+import com.example.dndcharacterapp.models.language.Languages
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -131,5 +133,15 @@ interface ApiDndService {
         @Path("id") id: String
     ): Response<Feature>
 
+    // ========================================================== //
+    // ========================================================== //
+
+    @GET("/api/Language/")
+    suspend fun getLanguageList(): Response<Languages>
+
+    @GET("/api/Language/{id}/")
+    suspend fun getLanguage(
+        @Path("id") id: String
+    ): Response<Language>
 
 }

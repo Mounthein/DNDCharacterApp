@@ -20,6 +20,8 @@ import com.example.dndcharacterapp.models.feat.Feat
 import com.example.dndcharacterapp.models.feat.Feats
 import com.example.dndcharacterapp.models.feature.Feature
 import com.example.dndcharacterapp.models.feature.Features
+import com.example.dndcharacterapp.models.language.Language
+import com.example.dndcharacterapp.models.language.Languages
 import com.example.dndcharacterapp.realm.RealmApp
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
@@ -446,6 +448,46 @@ class CrudApi():CoroutineScope {
                 var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getFeature(id)
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    // ========================================================== //
+    // ========================================================== //
+
+
+    fun getLanguageList(): Languages?{
+        var resposta: Response<Languages>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getLanguageList()
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    fun getLanguage(id: String): Language?{
+        var resposta: Response<Language>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getLanguage(id)
             }
             corrutina.join()
         }
