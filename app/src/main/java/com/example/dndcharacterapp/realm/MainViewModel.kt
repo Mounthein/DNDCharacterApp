@@ -2,8 +2,6 @@ package com.example.dndcharacterapp.realm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.dndcharacterapp.models.abilityscore.AbilityScore
-import com.example.dndcharacterapp.models.abilityscore.Skill
 import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.ext.realmListOf
@@ -16,6 +14,7 @@ class MainViewModel: ViewModel() {
 
     private val realm = RealmApp.realm
 
+    /*
     val abilities = realm
         .query<AbilityScore>()
         .asFlow()
@@ -27,10 +26,13 @@ class MainViewModel: ViewModel() {
             SharingStarted.WhileSubscribed(),
             emptyList()
         )
+     */
 
     init {
         //createSampleEntries()
     }
+
+    /*
     private fun createSampleEntries(){
         viewModelScope.launch {
             realm.write {
@@ -57,4 +59,5 @@ class MainViewModel: ViewModel() {
             }
         }
     }
+     */
 }

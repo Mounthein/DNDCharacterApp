@@ -26,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dndcharacterapp.api.CrudApi
-import com.example.dndcharacterapp.models.abilityscore.AbilityScore
 import com.example.dndcharacterapp.realm.MainViewModel
 import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
 
@@ -43,6 +42,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     //Greeting("Android")
+                    /*
                     val abililies by viewModel.abilities.collectAsState()
                     val crudApi = CrudApi()
                     var llista1 = crudApi.getAbilityScoreList()
@@ -63,14 +63,14 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                     }
-
-
+                     */
                 }
             }
         }
     }
 }
 
+/*
 @Composable
 fun AbilityItem(
     ability: AbilityScore,
@@ -91,6 +91,7 @@ fun AbilityItem(
         )
     }
 }
+ */
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
