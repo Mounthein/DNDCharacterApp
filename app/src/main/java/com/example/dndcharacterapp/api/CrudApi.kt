@@ -18,10 +18,10 @@ import com.example.dndcharacterapp.models.equipmentcategory.EquipmentCategories
 import com.example.dndcharacterapp.models.equipmentcategory.EquipmentCategory
 import com.example.dndcharacterapp.models.feat.Feat
 import com.example.dndcharacterapp.models.feat.Feats
+import com.example.dndcharacterapp.models.feature.Feature
+import com.example.dndcharacterapp.models.feature.Features
 import com.example.dndcharacterapp.realm.RealmApp
 import com.google.gson.GsonBuilder
-import io.realm.kotlin.UpdatePolicy
-import io.realm.kotlin.ext.toRealmList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -29,8 +29,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.mongodb.kbson.BsonObjectId
-import org.mongodb.kbson.ObjectId
 import kotlin.coroutines.CoroutineContext
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Response
@@ -408,6 +406,46 @@ class CrudApi():CoroutineScope {
                 var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getFeat(id)
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    // ========================================================== //
+    // ========================================================== //
+
+
+    fun getFeatureList(): Features?{
+        var resposta: Response<Features>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getFeatureList()
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    fun getFeature(id: String): Feature?{
+        var resposta: Response<Feature>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getFeature(id)
             }
             corrutina.join()
         }
