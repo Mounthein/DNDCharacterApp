@@ -6,6 +6,8 @@ import com.example.dndcharacterapp.models.alignment.Alignment
 import com.example.dndcharacterapp.models.alignment.Alignments
 import com.example.dndcharacterapp.models.background.Background
 import com.example.dndcharacterapp.models.background.Backgrounds
+import com.example.dndcharacterapp.models.classes.Classes
+import com.example.dndcharacterapp.models.classes.ClassesItem
 import com.example.dndcharacterapp.realm.RealmApp
 import com.google.gson.GsonBuilder
 import io.realm.kotlin.UpdatePolicy
@@ -169,6 +171,45 @@ class CrudApi():CoroutineScope {
     // ========================================================== //
     // ========================================================== //
 
+
+    fun getClassesList(): Classes?{
+        var resposta: Response<Classes>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getClassesList()
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    fun getClasses(id: String): ClassesItem?{
+        var resposta: Response<ClassesItem>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getClasses(id)
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    // ========================================================== //
+    // ========================================================== //
 
 
 
