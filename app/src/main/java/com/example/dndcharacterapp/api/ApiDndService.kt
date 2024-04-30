@@ -8,6 +8,10 @@ import com.example.dndcharacterapp.models.background.Background
 import com.example.dndcharacterapp.models.background.Backgrounds
 import com.example.dndcharacterapp.models.classes.Classes
 import com.example.dndcharacterapp.models.classes.ClassesItem
+import com.example.dndcharacterapp.models.condition.Condition
+import com.example.dndcharacterapp.models.condition.Conditions
+import com.example.dndcharacterapp.models.damagetype.DamageType
+import com.example.dndcharacterapp.models.damagetype.DamageTypes
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -56,7 +60,23 @@ interface ApiDndService {
     // ========================================================== //
     // ========================================================== //
 
+    @GET("/api/Conditions/")
+    suspend fun getConditionList(): Response<Conditions>
 
+    @GET("/api/Conditions/{id}/")
+    suspend fun getCondition(
+        @Path("id") id: String
+    ): Response<Condition>
 
+    // ========================================================== //
+    // ========================================================== //
+
+    @GET("/api/DamageType/")
+    suspend fun getDamageTypeList(): Response<DamageTypes>
+
+    @GET("/api/DamageType/{id}/")
+    suspend fun getDamageType(
+        @Path("id") id: String
+    ): Response<DamageType>
 
 }
