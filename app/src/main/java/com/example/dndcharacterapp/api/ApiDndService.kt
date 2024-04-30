@@ -40,6 +40,8 @@ import com.example.dndcharacterapp.models.subclass.Subclass
 import com.example.dndcharacterapp.models.subclass.Subclasses
 import com.example.dndcharacterapp.models.subrace.Subrace
 import com.example.dndcharacterapp.models.subrace.Subraces
+import com.example.dndcharacterapp.models.trait.Trait
+import com.example.dndcharacterapp.models.trait.Traits
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -260,5 +262,16 @@ interface ApiDndService {
     suspend fun getSubrace(
         @Path("id") id: String
     ): Response<Subrace>
+
+    // ========================================================== //
+    // ========================================================== //
+
+    @GET("/api/Trait/")
+    suspend fun getTraitList(): Response<Traits>
+
+    @GET("/api/Trait/{id}/")
+    suspend fun getTrait(
+        @Path("id") id: String
+    ): Response<Trait>
 
 }

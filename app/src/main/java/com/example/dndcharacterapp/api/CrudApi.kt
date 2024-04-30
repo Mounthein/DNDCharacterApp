@@ -40,6 +40,8 @@ import com.example.dndcharacterapp.models.subclass.Subclass
 import com.example.dndcharacterapp.models.subclass.Subclasses
 import com.example.dndcharacterapp.models.subrace.Subrace
 import com.example.dndcharacterapp.models.subrace.Subraces
+import com.example.dndcharacterapp.models.trait.Trait
+import com.example.dndcharacterapp.models.trait.Traits
 import com.example.dndcharacterapp.realm.RealmApp
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
@@ -866,6 +868,46 @@ class CrudApi():CoroutineScope {
                 var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getSubrace(id)
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    // ========================================================== //
+    // ========================================================== //
+
+
+    fun getTraitList(): Traits?{
+        var resposta: Response<Traits>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getTraitList()
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    fun getTrait(id: String): Trait?{
+        var resposta: Response<Trait>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getTrait(id)
             }
             corrutina.join()
         }
