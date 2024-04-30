@@ -24,6 +24,8 @@ import com.example.dndcharacterapp.models.language.Language
 import com.example.dndcharacterapp.models.language.Languages
 import com.example.dndcharacterapp.models.level.Level
 import com.example.dndcharacterapp.models.level.Levels
+import com.example.dndcharacterapp.models.magicitem.MagicItem
+import com.example.dndcharacterapp.models.magicitem.MagicItems
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -156,5 +158,16 @@ interface ApiDndService {
     suspend fun getLevel(
         @Path("id") id: String
     ): Response<Level>
+
+    // ========================================================== //
+    // ========================================================== //
+
+    @GET("/api/MagicItem/")
+    suspend fun getMagicItemList(): Response<MagicItems>
+
+    @GET("/api/MagicItem/{id}/")
+    suspend fun getMagicItem(
+        @Path("id") id: String
+    ): Response<MagicItem>
 
 }
