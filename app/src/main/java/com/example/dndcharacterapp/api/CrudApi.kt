@@ -42,6 +42,8 @@ import com.example.dndcharacterapp.models.subrace.Subrace
 import com.example.dndcharacterapp.models.subrace.Subraces
 import com.example.dndcharacterapp.models.trait.Trait
 import com.example.dndcharacterapp.models.trait.Traits
+import com.example.dndcharacterapp.models.weaponproperty.WeaponProperties
+import com.example.dndcharacterapp.models.weaponproperty.WeaponProperty
 import com.example.dndcharacterapp.realm.RealmApp
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
@@ -908,6 +910,46 @@ class CrudApi():CoroutineScope {
                 var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getTrait(id)
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    // ========================================================== //
+    // ========================================================== //
+
+
+    fun getWeaponPropertyList(): WeaponProperties?{
+        var resposta: Response<WeaponProperties>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getWeaponPropertyList()
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        }else {
+            return null
+        }
+    }
+
+    fun getWeaponProperty(id: String): WeaponProperty?{
+        var resposta: Response<WeaponProperty>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                var realm = RealmApp.realm
+                resposta = getRetrofit().create(ApiDndService::class.java)
+                    .getWeaponProperty(id)
             }
             corrutina.join()
         }

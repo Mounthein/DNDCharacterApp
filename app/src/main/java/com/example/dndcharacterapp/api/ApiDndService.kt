@@ -42,6 +42,8 @@ import com.example.dndcharacterapp.models.subrace.Subrace
 import com.example.dndcharacterapp.models.subrace.Subraces
 import com.example.dndcharacterapp.models.trait.Trait
 import com.example.dndcharacterapp.models.trait.Traits
+import com.example.dndcharacterapp.models.weaponproperty.WeaponProperties
+import com.example.dndcharacterapp.models.weaponproperty.WeaponProperty
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -273,5 +275,16 @@ interface ApiDndService {
     suspend fun getTrait(
         @Path("id") id: String
     ): Response<Trait>
+
+    // ========================================================== //
+    // ========================================================== //
+
+    @GET("/api/WeaponProperty/")
+    suspend fun getWeaponPropertyList(): Response<WeaponProperties>
+
+    @GET("/api/WeaponProperty/{id}/")
+    suspend fun getWeaponProperty(
+        @Path("id") id: String
+    ): Response<WeaponProperty>
 
 }
