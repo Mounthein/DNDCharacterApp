@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
-        android:name=".realm.RealmApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -15,7 +15,17 @@
         android:theme="@style/Theme.DNDCharacterApp"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.ui.theme.MagicActivity"
+            android:exported="false"
+            android:label="@string/title_activity_magic"
+            android:theme="@style/Theme.DNDCharacterApp" />
+        <activity
+            android:name=".ui.MagicReciclerView"
+            android:exported="false"
+            android:label="@string/title_activity_magic_recicler_view"
+            android:theme="@style/Theme.DNDCharacterApp" />
+        <activity
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.DNDCharacterApp">

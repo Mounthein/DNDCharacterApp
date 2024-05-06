@@ -66,7 +66,7 @@ class CrudApi():CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    private val urlapi = "https://bigredwave79.conveyor.cloud/"
+    private val urlapi = "https://bigtealdog99.conveyor.cloud/"
 
     private fun getClient(): OkHttpClient {
         var login = HttpLoggingInterceptor()
@@ -89,7 +89,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getAbilityScoreList()
             }
@@ -107,7 +106,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getAbilityScore(id)
             }
@@ -129,7 +127,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getAlignmentList()
             }
@@ -147,7 +144,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getAlignment(id)
             }
@@ -169,7 +165,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getBackgroundList()
             }
@@ -187,7 +182,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getBackground(id)
             }
@@ -209,7 +203,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getClassesList()
             }
@@ -227,7 +220,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getClasses(id)
             }
@@ -249,7 +241,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getConditionList()
             }
@@ -267,7 +258,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getCondition(id)
             }
@@ -289,7 +279,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getDamageTypeList()
             }
@@ -307,7 +296,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getDamageType(id)
             }
@@ -329,7 +317,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getEquipmentList()
             }
@@ -347,7 +334,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getEquipment(id)
             }
@@ -369,7 +355,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getEquipmentCategoryList()
             }
@@ -387,7 +372,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getEquipmentCategory(id)
             }
@@ -409,7 +393,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getFeatList()
             }
@@ -427,7 +410,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getFeat(id)
             }
@@ -449,7 +431,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getFeatureList()
             }
@@ -467,7 +448,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getFeature(id)
             }
@@ -489,7 +469,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getLanguageList()
             }
@@ -507,7 +486,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getLanguage(id)
             }
@@ -529,7 +507,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getLevelList()
             }
@@ -547,7 +524,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getLevel(id)
             }
@@ -569,7 +545,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getMagicItemList()
             }
@@ -587,7 +562,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getMagicItem(id)
             }
@@ -609,7 +583,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getMagicSchoolList()
             }
@@ -627,7 +600,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getMagicSchool(id)
             }
@@ -649,7 +621,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getProficiencyList()
             }
@@ -667,7 +638,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getProficiency(id)
             }
@@ -689,7 +659,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getRaceList()
             }
@@ -707,7 +676,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getRace(id)
             }
@@ -729,7 +697,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getSkillList()
             }
@@ -747,7 +714,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getSkill(id)
             }
@@ -769,7 +735,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getSpellList()
             }
@@ -787,7 +752,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getSpell(id)
             }
@@ -809,7 +773,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getSubclassList()
             }
@@ -827,7 +790,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getSubclass(id)
             }
@@ -849,7 +811,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getSubraceList()
             }
@@ -867,7 +828,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getSubrace(id)
             }
@@ -889,7 +849,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getTraitList()
             }
@@ -907,7 +866,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getTrait(id)
             }
@@ -929,7 +887,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getWeaponPropertyList()
             }
@@ -947,7 +904,6 @@ class CrudApi():CoroutineScope {
 
         runBlocking {
             val corrutina = launch {
-                var realm = RealmApp.realm
                 resposta = getRetrofit().create(ApiDndService::class.java)
                     .getWeaponProperty(id)
             }
