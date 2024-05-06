@@ -44,7 +44,6 @@ import com.example.dndcharacterapp.models.trait.Trait
 import com.example.dndcharacterapp.models.trait.Traits
 import com.example.dndcharacterapp.models.weaponproperty.WeaponProperties
 import com.example.dndcharacterapp.models.weaponproperty.WeaponProperty
-import com.example.dndcharacterapp.realm.RealmApp
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -53,11 +52,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import kotlin.coroutines.CoroutineContext
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Response
 import retrofit2.Retrofit
-
+import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.coroutines.CoroutineContext
 
 
 class CrudApi():CoroutineScope {
@@ -66,7 +64,7 @@ class CrudApi():CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    private val urlapi = "https://bigtealdog99.conveyor.cloud/"
+    private val urlapi = "https://lostgoldshop52.conveyor.cloud/"
 
     private fun getClient(): OkHttpClient {
         var login = HttpLoggingInterceptor()

@@ -1,6 +1,5 @@
 package com.example.dndcharacterapp.ui
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -25,27 +24,21 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
+import com.example.dndcharacterapp.R
 import com.example.dndcharacterapp.api.CrudApi
 import com.example.dndcharacterapp.models.spell.Spell
 import com.example.dndcharacterapp.models.spell.Spells
 import com.example.dndcharacterapp.ui.ui.theme.DNDCharacterAppTheme
-import com.example.dndcharacterapp.R
 import com.example.dndcharacterapp.ui.ui.theme.MagicActivity
 
 class MagicReciclerView : ComponentActivity() {

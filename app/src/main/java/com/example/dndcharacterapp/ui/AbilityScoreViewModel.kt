@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.dndcharacterapp.api.CrudApi
 import com.example.dndcharacterapp.models.abilityScore.AbilityScore
-import com.example.dndcharacterapp.models.abilityScore.AbilityScores
 
+// Esto es de testing, si da tiempo se puede intentar implementar, ignorar por el momento
 class AbilityScoreViewModel : ViewModel(){
 
     val abilityScores = MutableLiveData<AbilityScore>()

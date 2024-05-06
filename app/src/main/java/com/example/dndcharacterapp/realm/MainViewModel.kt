@@ -1,14 +1,6 @@
 package com.example.dndcharacterapp.realm
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import io.realm.kotlin.UpdatePolicy
-import io.realm.kotlin.ext.query
-import io.realm.kotlin.ext.realmListOf
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 class MainViewModel: ViewModel() {
 
