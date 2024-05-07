@@ -16,7 +16,7 @@ data class Equipment(
     val properties: List<Property>,
     val quantity: Int,
     val range: Range,
-    val special: List<String>,
+    val special: List<String>?,
     val speed: Speed,
     val stealthDisadvantage: Boolean,
     val strengthMinimum: Int,

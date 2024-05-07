@@ -53,7 +53,10 @@ class MainActivity : ComponentActivity() {
                                     .shadow(15.dp),
                                     id = R.drawable.wand)
                                 ButtonWithImage(modifier = Modifier
-                                    .clickable { }
+                                    .clickable {
+                                        val intent = Intent(this@MainActivity, ItemReciclerActivity::class.java)
+                                        startActivity(intent)
+                                    }
                                     .shadow(15.dp),
                                     id = R.drawable.potion)
                             }

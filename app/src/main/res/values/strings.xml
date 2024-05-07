@@ -2,4 +2,6 @@
     <string name="app_name">DNDCharacterApp</string>
     <string name="title_activity_magic_recicler_view">MagicReciclerView</string>
     <string name="title_activity_magic">MagicActivity</string>
+    <string name="title_activity_item_recicler">ItemReciclerActivity</string>
+    <string name="title_activity_equipment_item">EquipmentItemActivity</string>
 </resources>
