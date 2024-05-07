@@ -30,6 +30,8 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.toLowerCase
@@ -67,39 +69,9 @@ class ItemReciclerActivity : ComponentActivity() {
                         if (filtre.value.text.isNotEmpty()){
                             val equipmentFiltrat = equipmentList!!.filter { it.name.toLowerCase(Locale.ROOT).contains(filtre.value.text.toLowerCase(Locale.ROOT)) }
                             val magicFiltrat = equipmentMagicList!!.filter { it.name.toLowerCase(Locale.ROOT).contains(filtre.value.text.toLowerCase(Locale.ROOT)) }
-                            CardList(equipmentList = equipmentFiltrat, magicFiltrat, click = { eq ->
-                                val intent =
-                                    Intent(this@ItemReciclerActivity, MagicActivity::class.java).also {
-                                        intent.putExtra("equipment", eq.id)
-                                        intent.putExtra("isMagic", "n")
-                                        startActivity(intent)
-                                    }
-                            },
-                                {mi ->
-                                    val intent =
-                                        Intent(this@ItemReciclerActivity, EquipmentItemActivity::class.java).also {
-                                            intent.putExtra("equipment", mi.id)
-                                            intent.putExtra("isMagic", "y")
-                                            startActivity(intent)
-                                        }
-                            })
+                            CardList(equipmentList = equipmentFiltrat, magicFiltrat)
                         } else {
-                            CardList(equipmentList = equipmentList!!, equipmentMagicList!!, click = { eq ->
-                                val intent =
-                                    Intent(this@ItemReciclerActivity, MagicActivity::class.java).also {
-                                        intent.putExtra("equipment", eq.id)
-                                        intent.putExtra("isMagic", "n")
-                                        startActivity(intent)
-                                    }
-                            },
-                                {mi ->
-                                    val intent =
-                                        Intent(this@ItemReciclerActivity, MagicActivity::class.java).also {
-                                            intent.putExtra("equipment", mi.id)
-                                            intent.putExtra("isMagic", "y")
-                                            startActivity(intent)
-                                        }
-                                })
+                            CardList(equipmentList = equipmentList!!, equipmentMagicList!!)
                         }
 
                     }
@@ -112,8 +84,9 @@ class ItemReciclerActivity : ComponentActivity() {
 
 
 @Composable
-fun CardList(equipmentList: List<Equipment>, magicList: List<MagicItem>, click: (Equipment) -> Unit, miClick: (MagicItem) -> Unit){
+fun CardList(equipmentList: List<Equipment>, magicList: List<MagicItem>,){
     var llista: ArrayList<Any> = ArrayList()
+    val context = LocalContext.current
     llista.addAll(equipmentList)
     llista.addAll(magicList)
     LazyColumn (contentPadding = PaddingValues(10.dp),
@@ -124,12 +97,18 @@ fun CardList(equipmentList: List<Equipment>, magicList: List<MagicItem>, click: 
             if (IsEquipment(it)){
                 val eq = it as Equipment
                 EquipmentCard(equipment = eq) {
-                    click(eq)
+                    val intent= Intent(context, EquipmentItemActivity::class.java)
+                    intent.putExtra("equipment", eq.id)
+                    intent.putExtra("isMagic", "n")
+                    context.startActivity(intent)
                 }
             } else {
                 val mi = it as MagicItem
                 EquipmentCard(equipment = mi) {
-                    miClick(mi)
+                    val intent= Intent(context, EquipmentItemActivity::class.java)
+                    intent.putExtra("equipment", mi.id)
+                    intent.putExtra("isMagic", "y")
+                    context.startActivity(intent)
                 }
             }
 
