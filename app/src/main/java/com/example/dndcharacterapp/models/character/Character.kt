@@ -7,7 +7,7 @@ data class Character(
     val inspiration: Boolean = false,
     val background: String? = null,
     val race: Race? = null,
-    val alignment: Alignment? = null,
+    val alignments: Alignments? = null,
     val hitPoints: HitPoints? = null,
     val hit_die: List<HitDie>? = null,
     val death_saves: DeathSaves? = null,
