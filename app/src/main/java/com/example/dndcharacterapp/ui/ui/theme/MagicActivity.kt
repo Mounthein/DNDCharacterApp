@@ -50,7 +50,7 @@ class MagicActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val spellid: String? = intent.getStringExtra("spell")
         setContent {
-            DNDCharacterAppTheme {
+            DNDCharacterAppTheme (darkTheme = false){
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),

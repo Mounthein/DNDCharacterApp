@@ -52,7 +52,7 @@ class ItemReciclerActivity : ComponentActivity() {
         val equipmentList = CrudApi().getEquipmentList()?.toList()
         val equipmentMagicList = CrudApi().getMagicItemList()?.toList()
         setContent {
-            DNDCharacterAppTheme {
+            DNDCharacterAppTheme (darkTheme = false){
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

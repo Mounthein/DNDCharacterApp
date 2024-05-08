@@ -46,7 +46,7 @@ class MagicReciclerView : ComponentActivity() {
         super.onCreate(savedInstanceState)
         var magics: Spells? = CrudApi().getSpellList()
         setContent {
-            DNDCharacterAppTheme {
+            DNDCharacterAppTheme (darkTheme = false) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
