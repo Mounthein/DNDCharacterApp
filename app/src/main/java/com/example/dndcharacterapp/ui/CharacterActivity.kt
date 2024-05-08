@@ -41,7 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dndcharacterapp.api.CrudApi
 import com.example.dndcharacterapp.models.race.Race
-import com.example.dndcharacterapp.ui.ui.theme.DNDCharacterAppTheme
+import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
 
 class CharacterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
