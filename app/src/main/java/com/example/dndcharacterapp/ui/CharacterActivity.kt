@@ -1,9 +1,11 @@
 package com.example.dndcharacterapp.ui
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +20,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -29,10 +34,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import com.example.dndcharacterapp.models.alignment.Alignment as Alignments
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dndcharacterapp.api.CrudApi
-import com.example.dndcharacterapp.models.character.Alignments
 import com.example.dndcharacterapp.models.race.Race
 import com.example.dndcharacterapp.ui.ui.theme.DNDCharacterAppTheme
 
@@ -40,7 +47,7 @@ class CharacterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            DNDCharacterAppTheme {
+            DNDCharacterAppTheme (darkTheme = false){
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -57,14 +64,15 @@ class CharacterActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MostrarEditText(
     racesList: List<Race>,
-    alignmentsList: List<com.example.dndcharacterapp.models.alignment.Alignment>,
-    initialButtonText: String = racesList[0].name
+    alignmentsList: List<Alignments>,
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedOption by remember { mutableStateOf(initialButtonText) }
+    var racesOptions by remember { mutableStateOf(racesList[0].name) }
+    var alignmentsOptions by remember { mutableStateOf(alignmentsList[0].name) }
 
     Column(
         modifier = Modifier
@@ -117,38 +125,83 @@ fun MostrarEditText(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Button(
-                onClick = { expanded = true },
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(selectedOption)
+            var racesName : MutableList<String> = mutableListOf()
+            racesList.forEach {
+                racesName.add(it.name)
             }
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp)
-            ) {
-                racesList.forEach { option ->
-                    DropdownMenuItem(
-                        onClick = {
-                            selectedOption = option.name
-                            expanded = false
-                        },
-                        text = { Text(option.name) }
-                    )
-                }
-            }
+            MostrarDropDowns(list = racesName)
             Spacer(modifier = Modifier.width(16.dp))
-            TextField(
-                value = "",
-                onValueChange = { /*TODO*/ },
-                label = { Text("Alignment") },
-                modifier = Modifier.weight(1f)
-            )
+            var alignmentsName : MutableList<String> = mutableListOf()
+            alignmentsList.forEach {
+                alignmentsName.add(it.name)
+            }
+            MostrarDropDowns(list = alignmentsName)
+
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MostrarDropDowns(list: List<String>): String {
+    val context = LocalContext.current
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf(list[0]) }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Box(
+            modifier = Modifier.weight(1f)
+        ) {
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = {
+                    expanded = !expanded
+                }
+            ) {
+                TextField(
+                    value = selectedText,
+                    onValueChange = {},
+                    readOnly = true,
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    modifier = Modifier.menuAnchor()
+                )
+
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    list.forEach { item ->
+                        DropdownMenuItem(
+                            text = { Text(text = item) },
+                            onClick = {
+                                selectedText = item
+                                expanded = false
+                                Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
+                            }
+                        )
+                    }
+                }
+            }
+        }
+        Spacer(modifier = Modifier.width(8.dp)) // Ajusta el tamaño del spacer según sea necesario
+    }
+    return selectedText
+}
+
+
+//Esto mostrará un textfield para que se escriba el string
+@Composable
+fun MostrarTextField(textoMostrar: String){
+
+        return TextField(
+            value = "",
+            onValueChange = { /*TODO*/ },
+            label = { Text(textoMostrar) },
+        )
+
 }
 
 @Preview(showBackground = true)
