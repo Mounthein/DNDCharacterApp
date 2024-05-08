@@ -67,7 +67,7 @@ class MagicReciclerView : ComponentActivity() {
                                     .fillMaxSize()
                                     .padding(15.dp)){
                                 items(filtrats){
-                                    magicCard(spell = it, modifier = Modifier.fillMaxWidth()) {
+                                    MagicCard(spell = it) {
                                         val intent =
                                             Intent(this@MagicReciclerView, MagicActivity::class.java)
                                         intent.putExtra("spell", it.id)
@@ -83,7 +83,7 @@ class MagicReciclerView : ComponentActivity() {
                                     .fillMaxSize()
                                     .padding(15.dp)){
                                 items(magics!!){
-                                    magicCard(spell = it, modifier = Modifier.fillMaxWidth()) {
+                                    MagicCard(spell = it) {
                                         val intent =
                                             Intent(this@MagicReciclerView, MagicActivity::class.java)
                                         intent.putExtra("spell", it.id)
@@ -104,9 +104,10 @@ class MagicReciclerView : ComponentActivity() {
 }
 
 @Composable
-fun magicCard(spell: Spell, modifier: Modifier, click: () -> Unit){
+fun MagicCard(spell: Spell, click: () -> Unit){
     Card(colors = CardDefaults.cardColors(
-        containerColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        containerColor = MaterialTheme.colorScheme.tertiary,
+        contentColor = MaterialTheme.colorScheme.onTertiary
     ),
         modifier = Modifier
             .fillMaxSize()
@@ -122,7 +123,8 @@ fun magicCard(spell: Spell, modifier: Modifier, click: () -> Unit){
             Text(text = spell.name,
                 modifier = Modifier
                     .padding(16.dp),
-                textAlign = TextAlign.Center)
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.titleLarge)
             Box (modifier = Modifier
                 .fillMaxWidth()
                 .padding(15.dp)
@@ -133,16 +135,20 @@ fun magicCard(spell: Spell, modifier: Modifier, click: () -> Unit){
                     .fillMaxSize()
                     .padding(start = 6.dp),
                     horizontalAlignment = Alignment.Start) {
-                    Text(text = "Level: " + spell.level.toString())
-                    Text(text = "Casting: " + spell.castingTime)
-                    Text(text = "School: " + spell.from.name)
-                    Text(text = "Concentation: " + spell.concentration.toString())
-                    Text(text = "Range: " + spell.range.toString())
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Text(text = "Level: " + spell.level.toString(), color = MaterialTheme.colorScheme.inverseSurface)
+                    Text(text = "Casting: " + spell.castingTime, color = MaterialTheme.colorScheme.inverseSurface)
+                    Text(text = "School: " + spell.from.name, color = MaterialTheme.colorScheme.inverseSurface)
+                    Text(text = "Concentation: " + spell.concentration.toString(), color = MaterialTheme.colorScheme.inverseSurface)
+                    Text(text = "Range: " + spell.range, color = MaterialTheme.colorScheme.inverseSurface)
+                    Spacer(modifier = Modifier.height(20.dp))
                 }
             }
         }
     }
 }
+
+
 @Composable
 fun Greeting2(name: String, modifier: Modifier = Modifier) {
     Text(
@@ -151,10 +157,14 @@ fun Greeting2(name: String, modifier: Modifier = Modifier) {
     )
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, widthDp = 320)
 @Composable
 fun GreetingPreview() {
-    DNDCharacterAppTheme {
-        Greeting2("Android")
+    DNDCharacterAppTheme (darkTheme = false) {
+        Surface (modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background) {
+
+        }
+
     }
 }
