@@ -12,9 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.dndcharacterapp.ui.ui.theme.DNDCharacterAppTheme
-import com.example.dndcharacterapp.R
-import  android.content.Context
+import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,21 +28,14 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
 import com.example.dndcharacterapp.api.CrudApi
 import com.example.dndcharacterapp.models.equipment.Equipment
-import com.example.dndcharacterapp.models.equipment.Equipments
 import com.example.dndcharacterapp.models.magicitem.MagicItem
-import com.example.dndcharacterapp.ui.ui.theme.EquipmentItemActivity
-import com.example.dndcharacterapp.ui.ui.theme.MagicActivity
 import java.util.Locale
-import java.util.Objects
 
 class ItemReciclerActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

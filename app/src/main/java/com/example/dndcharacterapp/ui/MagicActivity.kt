@@ -1,4 +1,4 @@
-package com.example.dndcharacterapp.ui.ui.theme
+package com.example.dndcharacterapp.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -42,7 +42,7 @@ import com.example.dndcharacterapp.models.spell.DamageAtCharacterLevel
 import com.example.dndcharacterapp.models.spell.DamageSlotLevel
 import com.example.dndcharacterapp.models.spell.HealAtSlotLevel
 import com.example.dndcharacterapp.models.spell.Spell
-import com.example.dndcharacterapp.ui.ui.theme.ui.theme.DNDCharacterAppTheme
+import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
 
 
 class MagicActivity : ComponentActivity() {
@@ -288,7 +288,12 @@ fun TitleText(title: String) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview2() {
-    DNDCharacterAppTheme {
-        TitleText("Fireball")
+    DNDCharacterAppTheme(darkTheme = false) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+
+        }
     }
 }

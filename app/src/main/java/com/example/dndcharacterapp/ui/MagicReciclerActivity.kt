@@ -38,8 +38,7 @@ import com.example.dndcharacterapp.R
 import com.example.dndcharacterapp.api.CrudApi
 import com.example.dndcharacterapp.models.spell.Spell
 import com.example.dndcharacterapp.models.spell.Spells
-import com.example.dndcharacterapp.ui.ui.theme.DNDCharacterAppTheme
-import com.example.dndcharacterapp.ui.ui.theme.MagicActivity
+import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
 
 class MagicReciclerView : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

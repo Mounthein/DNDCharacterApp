@@ -20,7 +20,7 @@
             android:label="@string/title_activity_character"
             android:theme="@style/Theme.DNDCharacterApp" />
         <activity
-            android:name=".ui.ui.theme.EquipmentItemActivity"
+            android:name=".ui.EquipmentItemActivity"
             android:exported="false"
             android:label="@string/title_activity_equipment_item"
             android:theme="@style/Theme.DNDCharacterApp" />
@@ -30,7 +30,7 @@
             android:label="@string/title_activity_item_recicler"
             android:theme="@style/Theme.DNDCharacterApp" />
         <activity
-            android:name=".ui.ui.theme.MagicActivity"
+            android:name=".ui.MagicActivity"
             android:exported="false"
             android:label="@string/title_activity_magic"
             android:theme="@style/Theme.DNDCharacterApp" />

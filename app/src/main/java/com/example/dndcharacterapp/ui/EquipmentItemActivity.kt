@@ -1,4 +1,4 @@
-package com.example.dndcharacterapp.ui.ui.theme
+package com.example.dndcharacterapp.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -32,9 +32,8 @@ import androidx.compose.ui.unit.sp
 import com.example.dndcharacterapp.api.CrudApi
 import com.example.dndcharacterapp.models.equipment.Equipment
 import com.example.dndcharacterapp.models.magicitem.MagicItem
-import com.example.dndcharacterapp.ui.ui.theme.ui.theme.DNDCharacterAppTheme
+import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
 import com.example.dndcharacterapp.R
-import com.example.dndcharacterapp.models.equipment.Cost
 import com.example.dndcharacterapp.models.equipment.Property
 
 
