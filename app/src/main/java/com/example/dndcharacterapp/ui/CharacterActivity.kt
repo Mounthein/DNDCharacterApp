@@ -35,7 +35,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dndcharacterapp.api.CrudApi
-import com.example.dndcharacterapp.models.character.HitPoints
 import com.example.dndcharacterapp.models.race.Race
 import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
 
