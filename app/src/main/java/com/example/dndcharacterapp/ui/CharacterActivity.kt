@@ -116,13 +116,35 @@ fun MostrarEditText(
         }
         //HitPoint HitDie
         Text(text = "HitPoints")
-
-
-            Mostrar1TextField(textoMostrar = "Maximum")
-            Mostrar1TextField(textoMostrar = "Current")
-            Mostrar1TextField(textoMostrar = "Temporary")
-
-
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(
+                    value = "",
+                    onValueChange = { /*TODO*/ },
+                    label = { Text("Maximum") }
+                )
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(
+                    value = "",
+                    onValueChange = { /*TODO*/ },
+                    label = { Text("Current") }
+                )
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(
+                    value = "",
+                    onValueChange = { /*TODO*/ },
+                    label = { Text("Temporary") }
+                )
+            }
+        }
     }
 }
 
