@@ -64,7 +64,7 @@ class CrudApi():CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    private val urlapi = "https://otherorangestone94.conveyor.cloud/"
+    private val urlapi = "https://smallbrushedglass8.conveyor.cloud/"
 
     private fun getClient(): OkHttpClient {
         var login = HttpLoggingInterceptor()
