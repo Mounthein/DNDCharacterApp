@@ -22,7 +22,6 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import com.example.dndcharacterapp.models.alignment.Alignment as Alignments
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -36,8 +35,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dndcharacterapp.api.CrudApi
-import com.example.dndcharacterapp.models.classes.Classes
 import com.example.dndcharacterapp.models.classes.ClassesItem
+import com.example.dndcharacterapp.models.equipment.Equipment
 import com.example.dndcharacterapp.models.race.Race
 import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
 
@@ -53,8 +52,9 @@ class CharacterActivity : ComponentActivity() {
                     val races = CrudApi().getRaceList()?.toList()
                     val alignments = CrudApi().getAlignmentList()?.toList()
                     val classes = CrudApi().getClassesList()?.toList()
-                    if (races != null && alignments != null && classes != null) {
-                        MostrarComponentes(races, alignments, classes)
+                    val equipment = CrudApi().getEquipmentList()?.toList()
+                    if (races != null && alignments != null && classes != null && equipment != null) {
+                        MostrarComponentes(races, alignments, classes, equipment)
                     }
                 }
             }
@@ -67,13 +67,15 @@ class CharacterActivity : ComponentActivity() {
 fun MostrarComponentes(
     racesList: List<Race>,
     alignmentsList: List<com.example.dndcharacterapp.models.alignment.Alignment>?,
-    classeslist: List<ClassesItem>
+    classeslist: List<ClassesItem>,
+    equipmentList: List<Equipment>
 ) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
     var racesOptions by remember { mutableStateOf(racesList[0].name) }
     var alignmentsOptions by remember { mutableStateOf(alignmentsList!![0].name) }
     var classesOptions by remember { mutableStateOf(classeslist!![0].name) }
+    var equipmentOptions by remember { mutableStateOf(equipmentList!![0].name) }
 
     Column(
         modifier = Modifier
@@ -139,7 +141,7 @@ fun MostrarComponentes(
                 TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Temporary") })
             }
         }
-        Text(text = "HitPoints")
+        Text(text = "HitDie")
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -187,39 +189,157 @@ fun MostrarComponentes(
             }
         }
         //Classes Stats
-        Text(text = "Classes")
-        var selectedText1 by remember { mutableStateOf(classeslist[0].name) }
-        Row(Modifier.fillMaxWidth()) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp)
-            ) {
-                ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = {
-                    expanded = it
-                }) {
-                    TextField(value = selectedText1,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier.menuAnchor()
-                    )
+        Column(Modifier.fillMaxWidth()) {
+            // Texto "Classes"
+            Text(
+                text = "Classes", modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
+            )
 
-                    ExposedDropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }) {
-                        classeslist.forEach { item ->
-                            DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
-                                selectedText1 = item.name
-                                expanded = false
-                                Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
-                            })
+            var selectedText1 by remember { mutableStateOf(classeslist[0].name) }
+            Row(Modifier.fillMaxWidth()) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 4.dp)
+                ) {
+                    ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = {
+                        expanded = it
+                    }) {
+                        TextField(value = selectedText1,
+                            onValueChange = {},
+                            readOnly = true,
+                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                            modifier = Modifier.menuAnchor()
+                        )
+
+                        ExposedDropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }) {
+                            classeslist.forEach { item ->
+                                DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
+                                    selectedText1 = item.name
+                                    expanded = false
+                                    Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
+                                })
+                            }
                         }
                     }
                 }
             }
 
+            // Texto "Stats"
+            Text(
+                text = "Stats", modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
+            )
+
+            // TextFields para "Name" y "Value"
+            Row(Modifier.fillMaxWidth()) {
+                Box(modifier = Modifier.weight(1f)) {
+                    TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Name") })
+                }
+
+                Spacer(modifier = Modifier.width(4.dp))
+
+                Box(modifier = Modifier.weight(1f)) {
+                    TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Value") })
+                }
+            }
+        }
+
+        //SkillProficiencies Languages
+        Text(text = "SkillProficiencies")
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Name") })
+            }
             Spacer(modifier = Modifier.width(8.dp))
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Bonus") })
+            }
+        }
+        Text(text = "Languages")
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Name") })
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Type") })
+            }
+        }
+
+        //OtherProficiencies Equipment
+        Text(text = "OtherProficiencies")
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Name") })
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Type") })
+            }
+        }
+        Text(text = "Equipment")
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Name") })
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = "",
+                    onValueChange = { /*TODO*/ },
+                    label = { Text("EquipmentCategory") })
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Quantity") })
+            }
+        }
+
+        //CoinPouch Features
+        Text(text = "CoinPouch")
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Name") })
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Quantity") })
+            }
+        }
+        Text(text = "Features")
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Name") })
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Description") })
+            }
         }
     }
 }
