@@ -37,7 +37,12 @@ import androidx.compose.ui.unit.dp
 import com.example.dndcharacterapp.api.CrudApi
 import com.example.dndcharacterapp.models.classes.ClassesItem
 import com.example.dndcharacterapp.models.equipment.Equipment
+import com.example.dndcharacterapp.models.feature.Feature
+import com.example.dndcharacterapp.models.language.Language
+import com.example.dndcharacterapp.models.proficiency.Proficiency
 import com.example.dndcharacterapp.models.race.Race
+import com.example.dndcharacterapp.models.spell.Spell
+import com.example.dndcharacterapp.models.trait.Trait
 import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
 
 class CharacterActivity : ComponentActivity() {
@@ -52,9 +57,24 @@ class CharacterActivity : ComponentActivity() {
                     val races = CrudApi().getRaceList()?.toList()
                     val alignments = CrudApi().getAlignmentList()?.toList()
                     val classes = CrudApi().getClassesList()?.toList()
+                    val languages = CrudApi().getLanguageList()?.toList()
+                    val proficiencies = CrudApi().getProficiencyList()?.toList()
                     val equipment = CrudApi().getEquipmentList()?.toList()
-                    if (races != null && alignments != null && classes != null && equipment != null) {
-                        MostrarComponentes(races, alignments, classes, equipment)
+                    val features = CrudApi().getFeatureList()?.toList()
+                    val traits = CrudApi().getTraitList()?.toList()
+                    val spells = CrudApi().getSpellList()?.toList()
+                    if (races != null && alignments != null && classes != null && languages != null && proficiencies != null && equipment != null && features != null && traits != null && spells != null) {
+                        MostrarComponentes(
+                            races,
+                            alignments,
+                            classes,
+                            languages,
+                            proficiencies,
+                            equipment,
+                            features,
+                            traits,
+                            spells
+                        )
                     }
                 }
             }
@@ -65,17 +85,34 @@ class CharacterActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MostrarComponentes(
-    racesList: List<Race>,
+    racesList: List<Race>?,
     alignmentsList: List<com.example.dndcharacterapp.models.alignment.Alignment>?,
-    classeslist: List<ClassesItem>,
-    equipmentList: List<Equipment>
+    classeslist: List<ClassesItem>?,
+    languagesList: List<Language>?,
+    proficienciesList: List<Proficiency>?,
+    equipmentList: List<Equipment>?,
+    featuresList: List<Feature>?,
+    traitsList: List<Trait>?,
+    spellList: List<Spell>?,
 ) {
     val context = LocalContext.current
-    var expanded by remember { mutableStateOf(false) }
-    var racesOptions by remember { mutableStateOf(racesList[0].name) }
+    var expandedClasses by remember { mutableStateOf(false) }
+    var expandedOtherProficiency by remember { mutableStateOf(false) }
+    var expandedEquipment by remember { mutableStateOf(false) }
+    var expandedLanguages by remember { mutableStateOf(false) }
+    var expandedFeatures by remember { mutableStateOf(false) }
+    var expandedTraits by remember { mutableStateOf(false) }
+    var expandedPreparedSpells by remember { mutableStateOf(false) }
+    var expandedKnownSpells by remember { mutableStateOf(false) }
+    var racesOptions by remember { mutableStateOf(racesList!![0].name) }
     var alignmentsOptions by remember { mutableStateOf(alignmentsList!![0].name) }
     var classesOptions by remember { mutableStateOf(classeslist!![0].name) }
+    var languagesOptions by remember { mutableStateOf(languagesList!![0].name) }
+    var proficiencyOptions by remember { mutableStateOf(proficienciesList!![0].name) }
     var equipmentOptions by remember { mutableStateOf(equipmentList!![0].name) }
+    var featureOptions by remember { mutableStateOf(featuresList!![0].name) }
+    var traitOptions by remember { mutableStateOf(traitsList!![0].name) }
+    var spellOptions by remember { mutableStateOf(spellList!![0].name) }
 
     Column(
         modifier = Modifier
@@ -195,30 +232,29 @@ fun MostrarComponentes(
                 text = "Classes", modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
             )
 
-            var selectedText1 by remember { mutableStateOf(classeslist[0].name) }
+            var selectedTextClasses by remember { mutableStateOf(classeslist!![0].name) }
             Row(Modifier.fillMaxWidth()) {
                 Box(
                     modifier = Modifier
                         .weight(1f)
                         .padding(horizontal = 4.dp)
                 ) {
-                    ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = {
-                        expanded = it
+                    ExposedDropdownMenuBox(expanded = expandedClasses, onExpandedChange = {
+                        expandedClasses = it
                     }) {
-                        TextField(value = selectedText1,
+                        TextField(value = selectedTextClasses,
                             onValueChange = {},
                             readOnly = true,
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedClasses) },
                             modifier = Modifier.menuAnchor()
                         )
 
-                        ExposedDropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false }) {
-                            classeslist.forEach { item ->
+                        ExposedDropdownMenu(expanded = expandedClasses,
+                            onDismissRequest = { expandedClasses = false }) {
+                            classeslist!!.forEach { item ->
                                 DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
-                                    selectedText1 = item.name
-                                    expanded = false
+                                    selectedTextClasses = item.name
+                                    expandedClasses = false
                                     Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
                                 })
                             }
@@ -262,53 +298,98 @@ fun MostrarComponentes(
             }
         }
         Text(text = "Languages")
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Name") })
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Type") })
+        var selectedTextLanguages by remember { mutableStateOf(languagesList!![0].name) }
+        Row(Modifier.fillMaxWidth()) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 4.dp)
+            ) {
+                ExposedDropdownMenuBox(expanded = expandedLanguages, onExpandedChange = {
+                    expandedLanguages = it
+                }) {
+                    TextField(value = selectedTextLanguages,
+                        onValueChange = {},
+                        readOnly = true,
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedLanguages) },
+                        modifier = Modifier.menuAnchor()
+                    )
+
+                    ExposedDropdownMenu(expanded = expandedLanguages,
+                        onDismissRequest = { expandedLanguages = false }) {
+                        languagesList!!.forEach { item ->
+                            DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
+                                selectedTextLanguages = item.name
+                                expandedLanguages = false
+                                Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
+                            })
+                        }
+                    }
+                }
             }
         }
 
         //OtherProficiencies Equipment
         Text(text = "OtherProficiencies")
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Name") })
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Type") })
+        var selectedTextOtherProficiencies by remember { mutableStateOf(proficienciesList!![0].name) }
+        Row(Modifier.fillMaxWidth()) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 4.dp)
+            ) {
+                ExposedDropdownMenuBox(expanded = expandedOtherProficiency, onExpandedChange = {
+                    expandedOtherProficiency = it
+                }) {
+                    TextField(value = selectedTextOtherProficiencies,
+                        onValueChange = {},
+                        readOnly = true,
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedOtherProficiency) },
+                        modifier = Modifier.menuAnchor()
+                    )
+
+                    ExposedDropdownMenu(expanded = expandedOtherProficiency,
+                        onDismissRequest = { expandedOtherProficiency = false }) {
+                        proficienciesList!!.forEach { item ->
+                            DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
+                                selectedTextOtherProficiencies = item.name
+                                expandedOtherProficiency = false
+                                Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
+                            })
+                        }
+                    }
+                }
             }
         }
         Text(text = "Equipment")
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Name") })
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "",
-                    onValueChange = { /*TODO*/ },
-                    label = { Text("EquipmentCategory") })
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Quantity") })
+        var selectedTextEquipment by remember { mutableStateOf(equipmentList!![0].name) }
+        Row(Modifier.fillMaxWidth()) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 4.dp)
+            ) {
+                ExposedDropdownMenuBox(expanded = expandedEquipment, onExpandedChange = {
+                    expandedEquipment = it
+                }) {
+                    TextField(value = selectedTextEquipment,
+                        onValueChange = {},
+                        readOnly = true,
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedEquipment) },
+                        modifier = Modifier.menuAnchor()
+                    )
+
+                    ExposedDropdownMenu(expanded = expandedEquipment,
+                        onDismissRequest = { expandedEquipment = false }) {
+                        equipmentList!!.forEach { item ->
+                            DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
+                                selectedTextEquipment = item.name
+                                expandedEquipment = false
+                                Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
+                            })
+                        }
+                    }
+                }
             }
         }
 
@@ -328,17 +409,34 @@ fun MostrarComponentes(
             }
         }
         Text(text = "Features")
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Name") })
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Description") })
+        var selectedTextFeatures by remember { mutableStateOf(featuresList!![0].name) }
+        Row(Modifier.fillMaxWidth()) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 4.dp)
+            ) {
+                ExposedDropdownMenuBox(expanded = expandedFeatures, onExpandedChange = {
+                    expandedFeatures = it
+                }) {
+                    TextField(value = selectedTextFeatures,
+                        onValueChange = {},
+                        readOnly = true,
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedFeatures) },
+                        modifier = Modifier.menuAnchor()
+                    )
+
+                    ExposedDropdownMenu(expanded = expandedFeatures,
+                        onDismissRequest = { expandedFeatures = false }) {
+                        featuresList!!.forEach { item ->
+                            DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
+                                selectedTextFeatures = item.name
+                                expandedFeatures = false
+                                Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
+                            })
+                        }
+                    }
+                }
             }
         }
     }
@@ -410,8 +508,7 @@ fun MostrarDropDowns(list1: List<String>, list2: List<String>) {
                     modifier = Modifier.menuAnchor()
                 )
 
-                ExposedDropdownMenu(
-                    expanded = expanded1,
+                ExposedDropdownMenu(expanded = expanded1,
                     onDismissRequest = { expanded1 = false }) {
                     list1.forEach { item ->
                         DropdownMenuItem(text = { Text(text = item) }, onClick = {
@@ -441,8 +538,7 @@ fun MostrarDropDowns(list1: List<String>, list2: List<String>) {
                     modifier = Modifier.menuAnchor()
                 )
 
-                ExposedDropdownMenu(
-                    expanded = expanded2,
+                ExposedDropdownMenu(expanded = expanded2,
                     onDismissRequest = { expanded2 = false }) {
                     list2.forEach { item ->
                         DropdownMenuItem(text = { Text(text = item) }, onClick = {
