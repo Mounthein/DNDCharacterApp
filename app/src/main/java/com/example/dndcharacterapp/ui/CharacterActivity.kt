@@ -252,7 +252,7 @@ fun MostrarComponentes(
                         ExposedDropdownMenu(expanded = expandedClasses,
                             onDismissRequest = { expandedClasses = false }) {
                             classeslist!!.forEach { item ->
-                                DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
+                                DropdownMenuItem(text = { Text(text = item.name, color = MaterialTheme.colorScheme.onBackground) }, onClick = {
                                     selectedTextClasses = item.name
                                     expandedClasses = false
                                     Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
@@ -432,6 +432,37 @@ fun MostrarComponentes(
                             DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
                                 selectedTextFeatures = item.name
                                 expandedFeatures = false
+                                Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
+                            })
+                        }
+                    }
+                }
+            }
+        }
+        Text(text = "Traits")
+        var selectedTextTraits by remember { mutableStateOf(traitsList!![0].name) }
+        Row(Modifier.fillMaxWidth()) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 4.dp)
+            ) {
+                ExposedDropdownMenuBox(expanded = expandedTraits, onExpandedChange = {
+                    expandedTraits = it
+                }) {
+                    TextField(value = selectedTextTraits,
+                        onValueChange = {},
+                        readOnly = true,
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedTraits) },
+                        modifier = Modifier.menuAnchor()
+                    )
+
+                    ExposedDropdownMenu(expanded = expandedTraits,
+                        onDismissRequest = { expandedTraits = false }) {
+                        traitsList!!.forEach { item ->
+                            DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
+                                selectedTextTraits = item.name
+                                expandedTraits = false
                                 Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
                             })
                         }
