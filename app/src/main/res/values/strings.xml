@@ -6,4 +6,5 @@
     <string name="title_activity_equipment_item">EquipmentItemActivity</string>
     <string name="title_activity_character">CharacterActivity</string>
     <string name="title_activity_character_recycler">CharacterRecyclerActivity</string>
+    <string name="title_activity_configuration">ConfigurationActivity</string>
 </resources>

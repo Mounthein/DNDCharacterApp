@@ -15,6 +15,11 @@
         android:theme="@style/Theme.DNDCharacterApp"
         tools:targetApi="31">
         <activity
+            android:name=".ui.ConfigurationActivity"
+            android:exported="false"
+            android:label="@string/title_activity_configuration"
+            android:theme="@style/Theme.DNDCharacterApp" />
+        <activity
             android:name=".ui.CharacterRecyclerActivity"
             android:exported="false"
             android:label="@string/title_activity_character_recycler"
