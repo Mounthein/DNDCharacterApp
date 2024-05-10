@@ -668,15 +668,16 @@ fun MostrarComponentes(
                         newList.add("")
                         stringArray = newList
                     }) {
-                        Text("Add item", color = MaterialTheme.colorScheme.onBackground)
+                        Text("Afegir element", color = MaterialTheme.colorScheme.onBackground)
                     }
                     Button(onClick = {
                         val newList = stringArray.toMutableList()
                         newList.remove("")
                         stringArray = newList
                     }) {
-                        Text("Remove item", color = MaterialTheme.colorScheme.onBackground)
+                        Text("Eliminar element", color = MaterialTheme.colorScheme.onBackground)
                     }
+                    //Con este código se almacena la información
                     Button(onClick = {
                         val stringArrayArray: Array<String> = stringArray.toTypedArray()
                         // Use the stringArrayArray variable as a String array
@@ -685,6 +686,201 @@ fun MostrarComponentes(
                         Text("Save to String array", color = MaterialTheme.colorScheme.onBackground)
                     }
                 }
+            }
+        }
+
+        //Exhaustion
+        Text(text = "Exhaustion")
+        val inputvalueExhaustion = remember { mutableStateOf(TextFieldValue()) }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = inputvalueExhaustion.value,
+                    onValueChange = { inputvalueExhaustion.value = it },
+                    label = { Text("Exhaustion") })
+            }
+        }
+
+        //ExperienciePoints
+        Text(text = "ExperienciePoints")
+        val inputvalueExperienciePoints = remember { mutableStateOf(TextFieldValue()) }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = inputvalueExperienciePoints.value,
+                    onValueChange = { inputvalueExperienciePoints.value = it },
+                    label = { Text("ExperienciePoints") })
+            }
+        }
+
+        //PassiveWisdom
+        Text(text = "PassiveWisdom")
+        val inputvaluePassiveWisdom = remember { mutableStateOf(TextFieldValue()) }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = inputvaluePassiveWisdom.value,
+                    onValueChange = { inputvaluePassiveWisdom.value = it },
+                    label = { Text("PassiveWisdom") })
+            }
+        }
+
+        //Initiative
+        Text(text = "Initiative")
+        val inputvalueInitiative = remember { mutableStateOf(TextFieldValue()) }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = inputvalueInitiative.value,
+                    onValueChange = { inputvalueInitiative.value = it },
+                    label = { Text("Initiative") })
+            }
+        }
+
+        //Speed
+        Text(text = "Speed")
+        val inputvalueSpeed = remember { mutableStateOf(TextFieldValue()) }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = inputvalueSpeed.value,
+                    onValueChange = { inputvalueSpeed.value = it },
+                    label = { Text("Speed") })
+            }
+        }
+
+        //ProficiencyBonus
+        Text(text = "ProficiencyBonus")
+        val inputvalueProficiencyBonus = remember { mutableStateOf(TextFieldValue()) }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = inputvalueProficiencyBonus.value,
+                    onValueChange = { inputvalueProficiencyBonus.value = it },
+                    label = { Text("ProficiencyBonus") })
+            }
+        }
+
+        //PersonalityTraits
+        Text(text = "PersonalityTraits")
+        val inputvaluePersonalityTraits = remember { mutableStateOf(TextFieldValue()) }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = inputvaluePersonalityTraits.value,
+                    onValueChange = { inputvaluePersonalityTraits.value = it },
+                    label = { Text("PersonalityTraits") })
+            }
+        }
+
+        //Ideals
+        Text(text = "Ideals")
+        val inputvalueIdeals = remember { mutableStateOf(TextFieldValue()) }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = inputvalueIdeals.value,
+                    onValueChange = { inputvalueIdeals.value = it },
+                    label = { Text("Ideals") })
+            }
+        }
+
+        //Bonds
+        Text(text = "Bonds")
+        val inputvalueBonds = remember { mutableStateOf(TextFieldValue()) }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = inputvalueBonds.value,
+                    onValueChange = { inputvalueBonds.value = it },
+                    label = { Text("Bonds") })
+            }
+        }
+
+        //Bonds
+        Text(text = "Claws")
+        val inputvalueClaws = remember { mutableStateOf(TextFieldValue()) }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = inputvalueClaws.value,
+                    onValueChange = { inputvalueClaws.value = it },
+                    label = { Text("Bonds") })
+            }
+        }
+
+        //Bonds
+        Text(text = "CharacterBackstory")
+        val inputvalueCharacterBackstory = remember { mutableStateOf(TextFieldValue()) }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = inputvalueCharacterBackstory.value,
+                    onValueChange = { inputvalueCharacterBackstory.value = it },
+                    label = { Text("CharacterBackstory") })
+            }
+        }
+
+        //AlliesOrganizations
+        Text(text = "AlliesOrganizations")
+        val inputvalueAlliesOrganizations = remember { mutableStateOf(TextFieldValue()) }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = inputvalueAlliesOrganizations.value,
+                    onValueChange = { inputvalueAlliesOrganizations.value = it },
+                    label = { Text("AlliesOrganizations") })
+            }
+        }
+
+        //Symbol
+        Text(text = "Symbol")
+        val inputvalueSymbol = remember { mutableStateOf(TextFieldValue()) }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = inputvalueSymbol.value,
+                    onValueChange = { inputvalueSymbol.value = it },
+                    label = { Text("Symbol") })
             }
         }
     }

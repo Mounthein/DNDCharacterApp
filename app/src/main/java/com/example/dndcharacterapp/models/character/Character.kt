@@ -17,7 +17,7 @@ class Character: RealmObject {
     var hitPoints: EmHitPointsCh? = null
     var hit_die: RealmList<EmHitDieCh>? = null
     var death_saves: EmDeathSavesCh? = null
-    var temporary_HitPoints: Int? = null
+    //var temporary_HitPoints: Int? = null
     var exhaustion: Int? = null
     var armor_Class: EmArmorClassCh? = null
     var classes: RealmList<EmClassItemCh>? = null
@@ -42,7 +42,7 @@ class Character: RealmObject {
     var ideals: String? = null
     var bonds: String? = null
     var flaws: String? = null
-    var character_appearance: String? = null
+    //var character_appearance: String? = null
     var character_backstory: String? = null
     var allies_organizations: String? = null
     var symbol: String? = null
