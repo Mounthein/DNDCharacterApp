@@ -1,6 +1,7 @@
 package com.example.dndcharacterapp.ui
 
 import android.os.Bundle
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,6 +24,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -39,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dndcharacterapp.api.CrudApi
@@ -168,68 +171,98 @@ fun MostrarComponentes(
         }
         //HitPoint HitDie
         Text(text = "HitPoints")
+        val inputvalueHitPointsMaximum = remember { mutableStateOf(TextFieldValue()) }
+        val inputvalueHitPointsCurrent = remember { mutableStateOf(TextFieldValue()) }
+        val inputvalueHitPointsTemporary = remember { mutableStateOf(TextFieldValue()) }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Maximum") })
+                TextField(value = inputvalueHitPointsMaximum.value,
+                    onValueChange = { inputvalueHitPointsMaximum.value = it },
+                    label = { Text("Maximum") })
             }
             Spacer(modifier = Modifier.width(8.dp))
             Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Current") })
+                TextField(value = inputvalueHitPointsCurrent.value,
+                    { inputvalueHitPointsCurrent.value = it },
+                    label = { Text("Current") })
             }
             Spacer(modifier = Modifier.width(8.dp))
             Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Temporary") })
+                TextField(value = inputvalueHitPointsTemporary.value,
+                    { inputvalueHitPointsTemporary.value = it },
+                    label = { Text("Temporary") })
             }
         }
         Text(text = "HitDie")
+        val inputvalueHitDieType = remember { mutableStateOf(TextFieldValue()) }
+        val inputvalueHitDieQuantity = remember { mutableStateOf(TextFieldValue()) }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Type") })
+                TextField(value = inputvalueHitDieType.value,
+                    onValueChange = { inputvalueHitDieType.value = it },
+                    label = { Text("Type") })
             }
             Spacer(modifier = Modifier.width(8.dp))
             Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Quantity") })
+                TextField(value = inputvalueHitDieQuantity.value,
+                    onValueChange = { inputvalueHitDieQuantity.value = it },
+                    label = { Text("Quantity") })
             }
         }
         //DeathSaves ArmorClass
         Text(text = "DeathSaves")
+        val inputvalueDeathSavesSuccess = remember { mutableStateOf(TextFieldValue()) }
+        val inputvalueDeathSavesFailures = remember { mutableStateOf(TextFieldValue()) }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Success") })
+                TextField(value = inputvalueDeathSavesSuccess.value,
+                    onValueChange = { inputvalueDeathSavesSuccess.value = it },
+                    label = { Text("Success") })
             }
             Spacer(modifier = Modifier.width(8.dp))
             Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Failures") })
+                TextField(value = inputvalueDeathSavesFailures.value,
+                    onValueChange = { inputvalueDeathSavesFailures.value = it },
+                    label = { Text("Failures") })
             }
         }
         Text(text = "ArmorClass")
+        val inputvalueArmorClassName = remember { mutableStateOf(TextFieldValue()) }
+        val inputvalueArmorClassType = remember { mutableStateOf(TextFieldValue()) }
+        val inputvalueArmorClassValue = remember { mutableStateOf(TextFieldValue()) }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Name") })
+                TextField(value = inputvalueArmorClassName.value,
+                    onValueChange = { inputvalueArmorClassName.value = it },
+                    label = { Text("Name") })
             }
             Spacer(modifier = Modifier.width(8.dp))
             Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Type") })
+                TextField(value = inputvalueArmorClassType.value,
+                    onValueChange = { inputvalueArmorClassType.value = it },
+                    label = { Text("Type") })
             }
             Spacer(modifier = Modifier.width(8.dp))
             Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Value") })
+                TextField(value = inputvalueArmorClassValue.value,
+                    onValueChange = { inputvalueArmorClassValue.value = it },
+                    label = { Text("Value") })
             }
         }
         //Classes Stats
@@ -279,34 +312,45 @@ fun MostrarComponentes(
             Text(
                 text = "Stats", modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
             )
-
+            val inputvalueStatsName = remember { mutableStateOf(TextFieldValue()) }
+            val inputvalueStatsValue = remember { mutableStateOf(TextFieldValue()) }
             // TextFields para "Name" y "Value"
             Row(Modifier.fillMaxWidth()) {
                 Box(modifier = Modifier.weight(1f)) {
-                    TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Name") })
+                    TextField(value = inputvalueStatsName.value,
+                        onValueChange = { inputvalueStatsName.value = it },
+                        label = { Text("Name") })
                 }
 
                 Spacer(modifier = Modifier.width(4.dp))
 
                 Box(modifier = Modifier.weight(1f)) {
-                    TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Value") })
+                    TextField(value = inputvalueStatsValue.value,
+                        onValueChange = { inputvalueStatsValue.value = it },
+                        label = { Text("Value") })
                 }
             }
         }
 
         //SkillProficiencies Languages
         Text(text = "SkillProficiencies")
+        val inputvalueSkillProficienciesName = remember { mutableStateOf(TextFieldValue()) }
+        val inputvalueSkillProficienciesBonus = remember { mutableStateOf(TextFieldValue()) }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Name") })
+                TextField(value = inputvalueSkillProficienciesName.value,
+                    onValueChange = { inputvalueSkillProficienciesName.value = it },
+                    label = { Text("Name") })
             }
             Spacer(modifier = Modifier.width(8.dp))
             Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Bonus") })
+                TextField(value = inputvalueSkillProficienciesBonus.value,
+                    onValueChange = { inputvalueSkillProficienciesBonus.value = it },
+                    label = { Text("Bonus") })
             }
         }
         Text(text = "Languages")
@@ -407,17 +451,23 @@ fun MostrarComponentes(
 
         //CoinPouch Features
         Text(text = "CoinPouch")
+        val inputvalueCoinPouchName = remember { mutableStateOf(TextFieldValue()) }
+        val inputvalueCoinPouchQuantity = remember { mutableStateOf(TextFieldValue()) }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Name") })
+                TextField(value = inputvalueCoinPouchName.value,
+                    onValueChange = { inputvalueCoinPouchName.value = it },
+                    label = { Text("Name") })
             }
             Spacer(modifier = Modifier.width(8.dp))
             Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("Quantity") })
+                TextField(value = inputvalueCoinPouchQuantity.value,
+                    onValueChange = { inputvalueCoinPouchQuantity.value = it },
+                    label = { Text("Quantity") })
             }
         }
         Text(text = "Features")
@@ -488,24 +538,30 @@ fun MostrarComponentes(
         }
 
         Text(text = "SpellAbilities")
+        val inputvalueSpellAbilitiesSpellcastingAbility =
+            remember { mutableStateOf(TextFieldValue()) }
+        val inputvalueSpellAbilitiesSpellSaveDC = remember { mutableStateOf(TextFieldValue()) }
+        val inputvalueSpellAbilitiesSpellAttackBonus = remember { mutableStateOf(TextFieldValue()) }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "",
-                    onValueChange = { /*TODO*/ },
+                TextField(value = inputvalueSpellAbilitiesSpellcastingAbility.value,
+                    onValueChange = { inputvalueSpellAbilitiesSpellcastingAbility.value = it },
                     label = { Text("SpellcastingAbility") })
             }
             Spacer(modifier = Modifier.width(8.dp))
             Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text("SpellSaveDC") })
+                TextField(value = inputvalueSpellAbilitiesSpellSaveDC.value,
+                    onValueChange = { inputvalueSpellAbilitiesSpellSaveDC.value = it },
+                    label = { Text("SpellSaveDC") })
             }
             Spacer(modifier = Modifier.width(8.dp))
             Box(modifier = Modifier.weight(1f)) {
-                TextField(value = "",
-                    onValueChange = { /*TODO*/ },
+                TextField(value = inputvalueSpellAbilitiesSpellAttackBonus.value,
+                    onValueChange = { inputvalueSpellAbilitiesSpellAttackBonus.value = it },
                     label = { Text("SpellAttackBonus") })
             }
         }
@@ -589,22 +645,22 @@ fun MostrarComponentes(
                     .weight(1f)
                     .padding(horizontal = 4.dp)
             ) {
-                var stringArray by rememberSaveable { mutableStateOf(mutableListOf("Initial value")) }
+                var stringArray by rememberSaveable { mutableStateOf(mutableListOf("")) }
 
                 Column {
                     stringArray.forEachIndexed { index, item ->
-                        OutlinedTextField(
-                            value = item,
-                            onValueChange = { newValue ->
-                                val newList = stringArray.toMutableList()
-                                newList[index] = newValue
-                                stringArray = newList
-                            },
-                            label = { Text("Item $index", color = MaterialTheme.colorScheme.onBackground) },
-                            colors = TextFieldDefaults.outlinedTextFieldColors(
-                                focusedTextColor = MaterialTheme.colorScheme.background,
-                                unfocusedTextColor = MaterialTheme.colorScheme.background
+                        OutlinedTextField(value = item, onValueChange = { newValue ->
+                            val newList = stringArray.toMutableList()
+                            newList[index] = newValue
+                            stringArray = newList
+                        }, label = {
+                            Text(
+                                "Item $index", color = MaterialTheme.colorScheme.onBackground
                             )
+                        }, colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
+                        )
                         )
                     }
                     Button(onClick = {
@@ -637,13 +693,17 @@ fun MostrarComponentes(
 //Esto mostrará un textfield para que se escriba el string
 @Composable
 fun Mostrar1TextField(textoMostrar: String) {
+    val inputvalue1 = remember { mutableStateOf(TextFieldValue()) }
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(modifier = Modifier.weight(1f)) {
-            TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text(textoMostrar) })
+            TextField(value = inputvalue1.value,
+                onValueChange = { inputvalue1.value = it },
+                label = { Text(textoMostrar) })
+
         }
 
         Spacer(modifier = Modifier.width(8.dp))
@@ -652,6 +712,8 @@ fun Mostrar1TextField(textoMostrar: String) {
 
 @Composable
 fun Mostrar2TextField(textoMostrar1: String, textoMostrar2: String) {
+    val inputvalue1 = remember { mutableStateOf(TextFieldValue()) }
+    val inputvalue2 = remember { mutableStateOf(TextFieldValue()) }
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -660,7 +722,9 @@ fun Mostrar2TextField(textoMostrar1: String, textoMostrar2: String) {
         Box(
             modifier = Modifier.weight(1f)
         ) {
-            TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text(textoMostrar1) })
+            TextField(value = inputvalue1.value,
+                onValueChange = { inputvalue1.value = it },
+                label = { Text(textoMostrar1) })
         }
 
         Spacer(modifier = Modifier.width(8.dp))
@@ -668,7 +732,10 @@ fun Mostrar2TextField(textoMostrar1: String, textoMostrar2: String) {
         Box(
             modifier = Modifier.weight(1f)
         ) {
-            TextField(value = "", onValueChange = { /*TODO*/ }, label = { Text(textoMostrar2) })
+            TextField(value = inputvalue2.value,
+                onValueChange = { inputvalue2.value = it },
+                label = { Text(textoMostrar2) })
+
         }
     }
 }
