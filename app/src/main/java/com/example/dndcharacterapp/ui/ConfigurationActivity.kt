@@ -50,7 +50,7 @@ class ConfigurationActivity : ComponentActivity() {
     private val viewModel: ConfigViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val x = CrudApi().getUserOk("663bb77966105878580551c7", "string")
+        //val x = CrudApi().getUserOk("663bb77966105878580551c7", "string")
         setContent {
             DNDCharacterAppTheme {
                 // A surface container using the 'background' color from the theme
