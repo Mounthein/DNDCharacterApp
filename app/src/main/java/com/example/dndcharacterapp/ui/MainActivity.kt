@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,7 +37,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = colorResource(id = R.color.brown)
+                    color = MaterialTheme.colorScheme.surface
 
                 ) {
                     //viewModel.abilityScores.observe(this, Observer {  })
@@ -68,6 +69,14 @@ class MainActivity : ComponentActivity() {
                                     }
                                     .shadow(elevation = 15.dp),
                                     id = R.drawable.helmet)
+
+                                ButtonWithImage(modifier = Modifier
+                                    .clickable {
+                                        val intent = Intent(this@MainActivity, ConfigurationActivity::class.java)
+                                        startActivity(intent)
+                                    }
+                                    .shadow(elevation = 15.dp),
+                                    id = R.drawable.cog)
                             }
                         }
 

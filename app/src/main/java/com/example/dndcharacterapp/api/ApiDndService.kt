@@ -42,6 +42,7 @@ import com.example.dndcharacterapp.models.subrace.Subrace
 import com.example.dndcharacterapp.models.subrace.Subraces
 import com.example.dndcharacterapp.models.trait.Trait
 import com.example.dndcharacterapp.models.trait.Traits
+import com.example.dndcharacterapp.models.user.Message
 import com.example.dndcharacterapp.models.weaponproperty.WeaponProperties
 import com.example.dndcharacterapp.models.weaponproperty.WeaponProperty
 import retrofit2.Response
@@ -49,6 +50,13 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface ApiDndService {
+
+    @GET("/api/User/{id}/{pass}")
+    suspend fun getUserOk(
+        @Path("id") id: String,
+        @Path("pass") pass: String
+    ): Response<Message>
+
     @GET("/api/AbilityScore/")
     suspend fun getAbilityScoreList(): Response<AbilityScores>
 

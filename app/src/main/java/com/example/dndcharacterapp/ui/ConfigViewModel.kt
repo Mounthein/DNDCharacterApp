@@ -12,15 +12,16 @@ import kotlinx.coroutines.flow.stateIn
 class ConfigViewModel: ViewModel() {
     private val realm = RealmApp.realm
 
+
     val user = realm
         .query<User>()
         .asFlow()
         .map { results ->
-            results.list.first()
+            results.list.toList()
         }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(),
-            User()
+            emptyList()
         )
 }
