@@ -883,6 +883,18 @@ fun MostrarComponentes(
                     label = { Text("Symbol") })
             }
         }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                //Almacenar todos los elementos
+                Button(onClick = { Toast.makeText(context, "Character Añadido", Toast.LENGTH_SHORT).show() }) {
+                    Text("Afegir Character", color = MaterialTheme.colorScheme.onBackground)
+                }
+            }
+        }
     }
 }
 
