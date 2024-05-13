@@ -6,6 +6,8 @@ import com.example.dndcharacterapp.models.alignment.Alignment
 import com.example.dndcharacterapp.models.alignment.Alignments
 import com.example.dndcharacterapp.models.background.Background
 import com.example.dndcharacterapp.models.background.Backgrounds
+import com.example.dndcharacterapp.models.character.Character
+import com.example.dndcharacterapp.models.character.Characters
 import com.example.dndcharacterapp.models.classes.Classes
 import com.example.dndcharacterapp.models.classes.ClassesItem
 import com.example.dndcharacterapp.models.condition.Condition
@@ -295,4 +297,14 @@ interface ApiDndService {
         @Path("id") id: String
     ): Response<WeaponProperty>
 
+    // ========================================================== //
+    // ========================================================== //
+
+    @GET("/api/Character/")
+    suspend fun getCharacterList(): Response<Characters>
+
+    @GET("/api/Character/{id}/")
+    suspend fun getCharacter(
+        @Path("id") id: String
+    ): Response<Character>
 }
