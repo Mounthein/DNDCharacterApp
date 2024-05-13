@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dndcharacterapp.R
 import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
@@ -37,7 +38,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.surface
+                    color = MaterialTheme.colorScheme.background
 
                 ) {
                     //viewModel.abilityScores.observe(this, Observer {  })
@@ -92,10 +93,10 @@ fun ButtonWithImage(modifier: Modifier, id: Int){
     Box (
         modifier = Modifier
             .padding(10.dp)
-            .shadow(3.dp)) {
+            .background(MaterialTheme.colorScheme.primaryContainer)) {
         Image(painter = painterResource(id = id), contentDescription = "wand",
             modifier
-                .background(color = colorResource(id = R.color.darkbrown))
+                .background(color = MaterialTheme.colorScheme.onPrimaryContainer)
                 .size(150.dp)
                 .padding(10.dp))
     }
@@ -110,12 +111,16 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     )
 }
 
-/*
-@Preview(showBackground = true)
+
+@Preview(showBackground = true, widthDp = 100)
 @Composable
-fun GreetingPreview() {
-    DNDCharacterAppTheme {
-        Greeting("Android")
+fun Greeting() {
+    DNDCharacterAppTheme(darkTheme = false) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.surface
+        ){
+
+        }
     }
 }
-*/

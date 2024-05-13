@@ -105,7 +105,7 @@ class MagicReciclerView : ComponentActivity() {
 @Composable
 fun MagicCard(spell: Spell, click: () -> Unit){
     Card(colors = CardDefaults.cardColors(
-        containerColor = MaterialTheme.colorScheme.tertiary,
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.onTertiary
     ),
         modifier = Modifier
@@ -126,9 +126,10 @@ fun MagicCard(spell: Spell, click: () -> Unit){
                 style = MaterialTheme.typography.titleLarge)
             Box (modifier = Modifier
                 .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(topStart = 15.dp))
                 .padding(15.dp)
                 .background(color = colorResource(id = R.color.white))
-                .clip(shape = RoundedCornerShape(topStart = 15.dp)))
+                )
             {
                 Column (modifier = Modifier
                     .fillMaxSize()

@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -143,8 +144,9 @@ fun TextBox(title: String, content: String){
                     .fillMaxHeight()
                     .width(180.dp)
                     .padding()
-                    .background(color = colorResource(id = R.color.darkbrown))
-                    .border(BorderStroke(2.dp, colorResource(id = R.color.black))),
+                    .border(BorderStroke(2.dp, colorResource(id = R.color.black)))
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(color = colorResource(id = R.color.darkbrown)),
                 contentAlignment = Alignment.Center,
             ) {
 
@@ -293,7 +295,7 @@ fun GreetingPreview2() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-
+            TextBox(title = "Hola", content = "Peipito")
         }
     }
 }

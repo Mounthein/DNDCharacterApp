@@ -52,11 +52,11 @@ class ConfigurationActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         //val x = CrudApi().getUserOk("663bb77966105878580551c7", "string")
         setContent {
-            DNDCharacterAppTheme {
+            DNDCharacterAppTheme(darkTheme = false) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.primaryContainer
+                    color = MaterialTheme.colorScheme.background
                 ) {
                     val user by viewModel.user.collectAsState()
                     val isLogued = remember { mutableStateOf(true) }
