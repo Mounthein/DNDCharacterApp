@@ -2,6 +2,7 @@ package com.example.dndcharacterapp.models.character
 
 data class Character(
     val _id: String,
+    val username: String?,
     val name: String? = null,
     val level: Int? = null,
     val inspiration: Boolean = false,

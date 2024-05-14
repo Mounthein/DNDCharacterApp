@@ -8,6 +8,7 @@ import org.mongodb.kbson.ObjectId
 class Character: RealmObject {
     @PrimaryKey
     var _id: ObjectId = ObjectId()
+    var username: String? = null
     var name: String? = null
     var level: Int? = null
     var inspiration: Boolean = false
