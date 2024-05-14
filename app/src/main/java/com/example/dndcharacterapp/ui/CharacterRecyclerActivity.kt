@@ -28,10 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import com.example.dndcharacterapp.models.character.Character
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dndcharacterapp.api.CrudApi
-import com.example.dndcharacterapp.models.characterRealm.Character
 import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
 
 class CharacterRecyclerActivity : ComponentActivity() {

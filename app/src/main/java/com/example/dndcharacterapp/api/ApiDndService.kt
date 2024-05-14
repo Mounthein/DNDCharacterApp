@@ -6,8 +6,8 @@ import com.example.dndcharacterapp.models.alignment.Alignment
 import com.example.dndcharacterapp.models.alignment.Alignments
 import com.example.dndcharacterapp.models.background.Background
 import com.example.dndcharacterapp.models.background.Backgrounds
-import com.example.dndcharacterapp.models.characterRealm.Character
-import com.example.dndcharacterapp.models.characterRealm.Characters
+import com.example.dndcharacterapp.models.character.Character
+import com.example.dndcharacterapp.models.character.Characters
 import com.example.dndcharacterapp.models.classes.Classes
 import com.example.dndcharacterapp.models.classes.ClassesItem
 import com.example.dndcharacterapp.models.condition.Condition
@@ -45,12 +45,9 @@ import com.example.dndcharacterapp.models.subrace.Subraces
 import com.example.dndcharacterapp.models.trait.Trait
 import com.example.dndcharacterapp.models.trait.Traits
 import com.example.dndcharacterapp.models.user.Message
-import com.example.dndcharacterapp.models.user.User
-import com.example.dndcharacterapp.models.user.apiUser
 import com.example.dndcharacterapp.models.weaponproperty.WeaponProperties
 import com.example.dndcharacterapp.models.weaponproperty.WeaponProperty
 import retrofit2.Response
-import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -62,10 +59,11 @@ interface ApiDndService {
         @Path("pass") pass: String
     ): Response<Message>
 
+    /*
     @GET("/api/User/")
     suspend fun postUserOk(
         @Body user: apiUser
-    ): Response<Message>
+    ): Response<Message>*/
 
     @GET("/api/AbilityScore/")
     suspend fun getAbilityScoreList(): Response<AbilityScores>

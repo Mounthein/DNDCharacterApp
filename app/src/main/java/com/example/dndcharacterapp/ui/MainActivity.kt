@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
                             Column (modifier = Modifier.padding(10.dp)){
                                 ButtonWithImage(modifier = Modifier
                                     .clickable {
-                                        val intent = Intent(this@MainActivity, CharacterActivity::class.java)
+                                        val intent = Intent(this@MainActivity, CharacterRecyclerActivity::class.java)
                                         startActivity(intent)
                                     }
                                     .shadow(elevation = 15.dp),

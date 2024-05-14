@@ -160,12 +160,12 @@ fun LoginMenu(register: Boolean, logedin: MutableState<Boolean>, returner: Mutab
                         if (!register && user.isNotEmpty() && pass.isNotEmpty() || register && user.isNotEmpty() && pass.isNotEmpty() && pass2.isNotEmpty()){
                             var missatge: Message? = null
                             if (!register){
-                                missatge = CrudApi().getUserOk(user,pass)
+                                //missatge = CrudApi().getUserOk(user,pass)
                             } else {
                                 if (pass.equals(pass2)){
                                     var usuari: apiUser = apiUser( user, pass)
 
-                                    missatge = CrudApi().postUserOk(usuari)
+                                    //missatge = CrudApi().postUserOk(usuari)
                                 }
                             }
 
