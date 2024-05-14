@@ -24,8 +24,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,13 +42,27 @@ import com.example.dndcharacterapp.api.CrudApi
 import com.example.dndcharacterapp.models.spell.Spell
 import com.example.dndcharacterapp.models.spell.Spells
 import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
+var collected = false
 class MagicReciclerView : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var magics: Spells? = CrudApi().getSpellList()
+        collected = false
+        //var magics: Spells? = CrudApi().getSpellList()
         setContent {
             DNDCharacterAppTheme (darkTheme = false) {
+                var magics by remember { mutableStateOf<Spells?>(null) }
+                magics = Spells()
+
+                if (!collected){
+                    LaunchedEffect(true) {
+                        magics = fetchData()
+                    }
+                }
+
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -99,6 +116,13 @@ class MagicReciclerView : ComponentActivity() {
                 }
             }
         }
+    }
+}
+
+suspend fun fetchData(): Spells? {
+    collected = true
+    return withContext(Dispatchers.IO) {
+        CrudApi().getSpellList()
     }
 }
 

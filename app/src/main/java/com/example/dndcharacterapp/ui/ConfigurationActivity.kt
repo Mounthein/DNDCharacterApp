@@ -1,50 +1,53 @@
 package com.example.dndcharacterapp.ui
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import com.example.dndcharacterapp.api.CrudApi
-import com.example.dndcharacterapp.realm.MainViewModel
+import com.example.dndcharacterapp.models.user.Message
+import com.example.dndcharacterapp.models.user.User
+import com.example.dndcharacterapp.models.user.apiUser
 import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
+import org.mongodb.kbson.BsonObjectId
 
 class ConfigurationActivity : ComponentActivity() {
     private val viewModel: ConfigViewModel by viewModels()
@@ -59,12 +62,12 @@ class ConfigurationActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val user by viewModel.user.collectAsState()
-                    val isLogued = remember { mutableStateOf(true) }
+                    val isLogued = remember { mutableStateOf(false) }
                     Column(modifier = Modifier.fillMaxSize()) {
                         if (user.isNullOrEmpty()) {
-                            LoginSelector()
+                            LoginSelector(isLogued)
                         } else {
-                            isLogued.value = false
+                            isLogued.value = true
                         }
                     }
                 }
@@ -74,20 +77,22 @@ class ConfigurationActivity : ComponentActivity() {
 }
 
 @Composable
-fun LoginMenu(register: Boolean, logedin: Boolean) {
+fun LoginMenu(register: Boolean, logedin: MutableState<Boolean>, returner: MutableIntState) {
     var user by remember { mutableStateOf("") }
     var pass by remember { mutableStateOf("") }
     var pass2 by remember { mutableStateOf("") }
+    var cont = LocalContext.current
     Box(
         modifier = Modifier
             .fillMaxWidth(0.9f)
             .wrapContentSize()
-            .padding(8.dp)
             .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colorScheme.secondary),
+            .background(MaterialTheme.colorScheme.primaryContainer),
         contentAlignment = Alignment.Center
     ) {
-        Column(modifier = Modifier.fillMaxWidth().padding(bottom = 15.dp),
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 15.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,) {
 
@@ -146,21 +151,67 @@ fun LoginMenu(register: Boolean, logedin: Boolean) {
                 )
             }
 
-            Button(
-                onClick = {
-                          if (!register){
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Button(
+                    onClick = {
+                        if (!register && user.isNotEmpty() && pass.isNotEmpty() || register && user.isNotEmpty() && pass.isNotEmpty() && pass2.isNotEmpty()){
+                            var missatge: Message? = null
+                            if (!register){
+                                missatge = CrudApi().getUserOk(user,pass)
+                            } else {
+                                if (pass.equals(pass2)){
+                                    var usuari: apiUser = apiUser( user, pass)
 
-                          }
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
-                modifier = Modifier.width(150.dp).height(40.dp),
-            )
-            {
-                Text(text = "Send",
-                    color = MaterialTheme.colorScheme.onTertiaryContainer,
-                    textAlign = TextAlign.Center,
+                                    missatge = CrudApi().postUserOk(usuari)
+                                }
+                            }
+
+                            if ((missatge?.Message == "Login Incorrect") || (missatge?.Message.equals("User alredy exists")) || (missatge == null)){
+                                if (missatge != null) {
+                                    if (missatge.Message.equals("User already exists")) {
+                                        Toast.makeText(cont, "Error with the username, try another", Toast.LENGTH_LONG)
+                                            .show()
+                                    } else{
+                                        Toast.makeText(cont, "Error with user/password", Toast.LENGTH_LONG).show()
+                                    }
+                                } else {
+                                    Toast.makeText(cont, "Something looks wrong, try again later", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
+                    modifier = Modifier
+                        .width(150.dp)
+                        .height(40.dp),
                 )
+                {
+                    Text(text = "Send",
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+
+                Button(
+                    onClick = {
+                        returner.value = 0
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
+                    modifier = Modifier
+                        .width(150.dp)
+                        .height(40.dp),
+                )
+                {
+                    Text(text = "Return",
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        textAlign = TextAlign.Center,
+                    )
+                }
             }
+
         }
 
 
@@ -168,25 +219,35 @@ fun LoginMenu(register: Boolean, logedin: Boolean) {
 }
 
 @Composable
-fun LoginSelector() {
+fun LoginSelector(logedin: MutableState<Boolean>) {
+    val what = remember { mutableIntStateOf(0) }
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LoginButton(MaterialTheme.shapes.large, "Login")
-        LoginButton(MaterialTheme.shapes.large, "Register")
+        if (what.intValue == 0){
+            LoginButton(MaterialTheme.shapes.large, "Login") { what.intValue = 1 }
+            LoginButton(MaterialTheme.shapes.large, "Register") { what.intValue = 2 }
+        } else if (what.intValue == 1){
+            LoginMenu(register = false, logedin = logedin, returner = what)
+        } else{
+            LoginMenu(register = true, logedin = logedin, returner = what)
+        }
+
     }
 }
 
 @Composable
-fun LoginButton(shape: Shape, text: String) {
+fun LoginButton(shape: Shape, text: String, click: () -> Unit) {
     Box(
         modifier = Modifier
             .padding(20.dp)
             .fillMaxWidth()
             .height(100.dp)
             .clip(shape)
-            .background(MaterialTheme.colorScheme.surfaceVariant),
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .clickable(onClick = click),
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -211,9 +272,12 @@ fun GreetingPreview7() {
     DNDCharacterAppTheme(darkTheme = false) {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.primaryContainer,
+            color = MaterialTheme.colorScheme.background,
         ) {
-            LoginMenu(true, false)
+            val what = remember { mutableIntStateOf(0) }
+            val isLogued = remember { mutableStateOf(false) }
+            //LoginSelector(logedin = isLogued)
+            LoginMenu(true, isLogued, what)
         }
 
     }

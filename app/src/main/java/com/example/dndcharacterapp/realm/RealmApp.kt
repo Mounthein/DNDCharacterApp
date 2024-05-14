@@ -1,6 +1,7 @@
 package com.example.dndcharacterapp.realm
 
 import android.app.Application
+import com.example.dndcharacterapp.models.user.User
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 
@@ -16,6 +17,7 @@ class RealmApp: Application() {
         realm = Realm.open(
             configuration = RealmConfiguration.create(
                 schema = setOf(
+                    User::class
                 )
             )
         )
