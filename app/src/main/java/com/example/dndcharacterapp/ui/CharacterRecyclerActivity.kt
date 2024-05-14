@@ -1,6 +1,5 @@
 package com.example.dndcharacterapp.ui
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,15 +32,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dndcharacterapp.api.CrudApi
 import com.example.dndcharacterapp.models.character.Character
-import com.example.dndcharacterapp.models.equipment.Equipment
-import com.example.dndcharacterapp.models.magicitem.MagicItem
 import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
 import java.util.Locale
 
 class CharacterRecyclerActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        val character = CrudApi().getCharacterList()?.ToList()
+        val character = CrudApi().getCharacterList()?.toList()
         setContent {
             DNDCharacterAppTheme(darkTheme = false) {
                 // A surface container using the 'background' color from the theme
@@ -60,16 +57,12 @@ class CharacterRecyclerActivity : ComponentActivity() {
                                     .fillMaxWidth()
                             )
                         }
-//                        if (filtre.value.text.isNotEmpty()) {
-//                            val characterFiltrat = character!!.filter {
-//                                it.name.toLowerCase(
-//                                    Locale.ROOT
-//                                ).contains(filtre.value.text.toLowerCase(Locale.ROOT))
-//                            }
-//                            CharacterCardList(character = characterFiltrat)
-//                        } else {
-//                            CharacterCardList(character = character!!)
-//                        }
+                        if (filtre.value.text.isNotEmpty()) {
+                            //val characterFiltrat = character!!.filter { it.name?.toLowerCase(Locale.ROOT)?.contains(filtre.value.text.toLowerCase(Locale.ROOT)) }
+                            //CharacterCardList(character = characterFiltrat)
+                        } else {
+                            CharacterCardList(character = character!!)
+                        }
 
                     }
                 }
