@@ -1,8 +1,8 @@
-package com.example.dndcharacterapp.models.character
+package com.example.dndcharacterapp.models.characterRealm
 
 import io.realm.kotlin.types.EmbeddedRealmObject
 
-class EmProficiencyCh : EmbeddedRealmObject {
+class EmLanguageCh : EmbeddedRealmObject {
     var name: String? = null
     var type: String? = null
 }

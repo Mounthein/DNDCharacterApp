@@ -1,4 +1,4 @@
-package com.example.dndcharacterapp.models.character
+package com.example.dndcharacterapp.models.characterRealm
 
 import io.realm.kotlin.types.RealmList
 import io.realm.kotlin.types.RealmObject
