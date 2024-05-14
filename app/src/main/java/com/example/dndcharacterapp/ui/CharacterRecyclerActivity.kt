@@ -1,5 +1,6 @@
 package com.example.dndcharacterapp.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -45,25 +46,48 @@ class CharacterRecyclerActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        val filtre = remember { mutableStateOf(TextFieldValue()) }
-                        Box(modifier = Modifier.fillMaxWidth()) {
-                            Text(text = "Filtre")
-                            TextField(value = filtre.value,
-                                onValueChange = { newFilter -> filtre.value = newFilter })
-                            Spacer(
-                                modifier = Modifier
-                                    .height(15.dp)
-                                    .fillMaxWidth()
-                            )
-                        }
-                        if (filtre.value.text.isNotEmpty()) {
-                            //val characterFiltrat = character!!.filter { it.name?.toLowerCase(Locale.ROOT)?.contains(filtre.value.text.toLowerCase(Locale.ROOT)) }
-                            //CharacterCardList(character = characterFiltrat)
-                        } else {
-                            CharacterCardList(character = character!!)
-                        }
+                    Column (modifier = Modifier.fillMaxSize()) {
+                        var filtre = remember { mutableStateOf(TextFieldValue())}
+                        Text(text = "Filtre")
+                        TextField(value = filtre.value, onValueChange = {newFilter -> filtre.value = newFilter})
+                        Spacer(modifier = Modifier
+                            .height(15.dp)
+                            .fillMaxWidth())
 
+                        if (filtre.value.text.isNotEmpty()){
+                            var filtrats = character!!.filter { it.name!!.contains(filtre.value.text) }
+                            LazyColumn (contentPadding = PaddingValues(10.dp),
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(15.dp)){
+                                items(filtrats){
+                                    CharacterCard(character = it) {
+                                        val intent =
+                                            Intent(this@CharacterRecyclerActivity, MagicActivity::class.java)
+                                        intent.putExtra("character", it._id.toString())
+                                        startActivity(intent)
+                                    }
+
+                                }
+
+                            }
+                        } else {
+                            LazyColumn (contentPadding = PaddingValues(10.dp),
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(15.dp)){
+                                items(character!!){
+                                    CharacterCard(character = it) {
+                                        val intent =
+                                            Intent(this@CharacterRecyclerActivity, MagicActivity::class.java)
+                                        intent.putExtra("character", it._id.toString())
+                                        startActivity(intent)
+                                    }
+
+                                }
+
+                            }
+                        }
                     }
                 }
             }
@@ -81,7 +105,9 @@ fun CharacterCardList(character: List<Character>) {
             .fillMaxSize()
             .padding(15.dp)
     ) {
-        items(llista) {}
+        items(llista) {
+
+        }
     }
 }
 
