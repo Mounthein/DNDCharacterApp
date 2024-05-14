@@ -25,13 +25,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import com.example.dndcharacterapp.models.character.Character
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dndcharacterapp.api.CrudApi
+import com.example.dndcharacterapp.models.character.Character
 import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
 
 class CharacterRecyclerActivity : ComponentActivity() {
@@ -44,25 +43,33 @@ class CharacterRecyclerActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    Column (modifier = Modifier.fillMaxSize()) {
-                        var filtre = remember { mutableStateOf(TextFieldValue())}
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        var filtre = remember { mutableStateOf(TextFieldValue()) }
                         Text(text = "Filtre")
-                        TextField(value = filtre.value, onValueChange = {newFilter -> filtre.value = newFilter})
-                        Spacer(modifier = Modifier
-                            .height(15.dp)
-                            .fillMaxWidth())
+                        TextField(value = filtre.value,
+                            onValueChange = { newFilter -> filtre.value = newFilter })
+                        Spacer(
+                            modifier = Modifier
+                                .height(15.dp)
+                                .fillMaxWidth()
+                        )
 
-                        if (filtre.value.text.isNotEmpty()){
-                            var filtrats = character!!.filter { it.name!!.contains(filtre.value.text) }
-                            LazyColumn (contentPadding = PaddingValues(10.dp),
+                        if (filtre.value.text.isNotEmpty()) {
+                            var filtrats =
+                                character!!.filter { it.name!!.contains(filtre.value.text) }
+                            LazyColumn(
+                                contentPadding = PaddingValues(10.dp),
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .padding(15.dp)){
-                                items(filtrats){
+                                    .padding(15.dp)
+                            ) {
+                                items(filtrats) {
                                     CharacterCard(character = it) {
-                                        val intent =
-                                            Intent(this@CharacterRecyclerActivity, MagicActivity::class.java)
-                                        intent.putExtra("character", it._id.toString())
+                                        val intent = Intent(
+                                            this@CharacterRecyclerActivity,
+                                            CharacterActivity::class.java
+                                        )
+                                        intent.putExtra("character", it._id)
                                         startActivity(intent)
                                     }
 
@@ -70,15 +77,19 @@ class CharacterRecyclerActivity : ComponentActivity() {
 
                             }
                         } else {
-                            LazyColumn (contentPadding = PaddingValues(10.dp),
+                            LazyColumn(
+                                contentPadding = PaddingValues(10.dp),
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .padding(15.dp)){
-                                items(character!!){
+                                    .padding(15.dp)
+                            ) {
+                                items(character!!) {
                                     CharacterCard(character = it) {
-                                        val intent =
-                                            Intent(this@CharacterRecyclerActivity, MagicActivity::class.java)
-                                        intent.putExtra("character", it._id.toString())
+                                        val intent = Intent(
+                                            this@CharacterRecyclerActivity,
+                                            CharacterActivity::class.java
+                                        )
+                                        intent.putExtra("character", it._id)
                                         startActivity(intent)
                                     }
 
@@ -93,21 +104,6 @@ class CharacterRecyclerActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun CharacterCardList(character: List<Character>) {
-    var llista: ArrayList<Any> = ArrayList()
-    val context = LocalContext.current
-    llista.addAll(character)
-    LazyColumn(
-        contentPadding = PaddingValues(10.dp), modifier = Modifier
-            .fillMaxSize()
-            .padding(15.dp)
-    ) {
-        items(llista) {
-
-        }
-    }
-}
 
 @Composable
 fun CharacterCard(character: Character, click: () -> Unit) {
@@ -127,7 +123,7 @@ fun CharacterCard(character: Character, click: () -> Unit) {
                 textAlign = TextAlign.Center
             )
             Text(
-                text = "Level: " + character.level,
+                text = "Level: " + character.race?.name,
                 modifier = Modifier.padding(16.dp),
                 textAlign = TextAlign.Center
             )
