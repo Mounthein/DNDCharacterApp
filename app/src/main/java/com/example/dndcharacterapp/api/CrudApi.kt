@@ -1,5 +1,6 @@
 package com.example.dndcharacterapp.api
 
+import android.util.Log
 import com.example.dndcharacterapp.models.abilityScore.AbilityScore
 import com.example.dndcharacterapp.models.abilityScore.AbilityScores
 import com.example.dndcharacterapp.models.alignment.Alignment
@@ -44,8 +45,11 @@ import com.example.dndcharacterapp.models.subrace.Subrace
 import com.example.dndcharacterapp.models.subrace.Subraces
 import com.example.dndcharacterapp.models.trait.Trait
 import com.example.dndcharacterapp.models.trait.Traits
+import com.example.dndcharacterapp.models.user.Message
+import com.example.dndcharacterapp.models.user.apiUser
 import com.example.dndcharacterapp.models.weaponproperty.WeaponProperties
 import com.example.dndcharacterapp.models.weaponproperty.WeaponProperty
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -66,7 +70,7 @@ class CrudApi() : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    private val urlapi = "http://172.16.24.160/"
+    private val urlapi = "https://smallorangeapple85.conveyor.cloud/"
 
     private fun getClient(): OkHttpClient {
         var login = HttpLoggingInterceptor()
@@ -84,6 +88,45 @@ class CrudApi() : CoroutineScope {
 
     // ========================================================== //
     // ========================================================== //
+
+    fun getUserOk(user: String, pass: String): Message?{
+        var resposta: Response<Message>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                resposta = getRetrofit().create(ApiDndService::class.java).getUserOk(user, pass)
+            }
+            corrutina.join()
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        } else {
+            val errorBodyString = resposta!!.errorBody()!!.string()
+
+            return Gson().fromJson(errorBodyString, Message::class.java)
+        }
+    }
+    //postUserOk
+    fun postUserOk(apiUser: apiUser): Message?{
+        var resposta: Response<Message>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                Log.d("resposta2",apiUser.toString())
+                resposta = getRetrofit().create(ApiDndService::class.java).postUserOk(apiUser)
+
+            }
+            corrutina.join()
+            Log.d("resposta: ", resposta.toString())
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        } else {
+            val errorBodyString = resposta!!.errorBody()!!.string()
+
+            return Gson().fromJson(errorBodyString, Message::class.java)
+        }
+    }
 
     fun getAbilityScoreList(): AbilityScores? {
         var resposta: Response<AbilityScores>? = null

@@ -39,14 +39,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dndcharacterapp.api.CrudApi
 import com.example.dndcharacterapp.models.user.Message
 import com.example.dndcharacterapp.models.user.User
 import com.example.dndcharacterapp.models.user.apiUser
+import com.example.dndcharacterapp.realm.RealmApp
 import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
+import io.realm.kotlin.UpdatePolicy
 import org.mongodb.kbson.BsonObjectId
 
 class ConfigurationActivity : ComponentActivity() {
@@ -129,6 +133,7 @@ fun LoginMenu(register: Boolean, logedin: MutableState<Boolean>, returner: Mutab
                     .fillMaxWidth(0.9f)
                     .padding(bottom = 30.dp)
                     .clip(MaterialTheme.shapes.small),
+                visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             )
             if (register){
@@ -147,6 +152,7 @@ fun LoginMenu(register: Boolean, logedin: MutableState<Boolean>, returner: Mutab
                         .fillMaxWidth(0.9f)
                         .padding(bottom = 30.dp)
                         .clip(MaterialTheme.shapes.small),
+                    visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 )
             }
@@ -160,25 +166,42 @@ fun LoginMenu(register: Boolean, logedin: MutableState<Boolean>, returner: Mutab
                         if (!register && user.isNotEmpty() && pass.isNotEmpty() || register && user.isNotEmpty() && pass.isNotEmpty() && pass2.isNotEmpty()){
                             var missatge: Message? = null
                             if (!register){
-                                //missatge = CrudApi().getUserOk(user,pass)
+                                missatge = CrudApi().getUserOk(user,pass)
                             } else {
                                 if (pass.equals(pass2)){
                                     var usuari: apiUser = apiUser( user, pass)
 
-                                    //missatge = CrudApi().postUserOk(usuari)
+                                    missatge = CrudApi().postUserOk(usuari)
                                 }
                             }
 
-                            if ((missatge?.Message == "Login Incorrect") || (missatge?.Message.equals("User alredy exists")) || (missatge == null)){
+                            var test1 = missatge?.Message == "Login Incorrect"
+                            var test2 = missatge?.Message.equals("User alredy exists")
+                            var test3 = missatge == null
+                            if (test1 || test2 || test3){
                                 if (missatge != null) {
                                     if (missatge.Message.equals("User already exists")) {
                                         Toast.makeText(cont, "Error with the username, try another", Toast.LENGTH_LONG)
                                             .show()
-                                    } else{
+                                    } else if (missatge.Message.equals("Login Incorrect")){
                                         Toast.makeText(cont, "Error with user/password", Toast.LENGTH_LONG).show()
                                     }
                                 } else {
                                     Toast.makeText(cont, "Something looks wrong, try again later", Toast.LENGTH_LONG).show()
+                                }
+                            } else {
+                                if (missatge!!.Message == "Login Correct"){
+                                    var us: User = User()
+                                    us.username = user
+                                    us.password = pass
+                                    val realm = RealmApp.realm
+                                    realm.writeBlocking {
+                                        copyToRealm(us, updatePolicy = UpdatePolicy.ALL)
+                                    }
+                                    Toast.makeText(cont, "Login Correct", Toast.LENGTH_LONG).show()
+                                    logedin.value = true
+                                } else {
+                                    Toast.makeText(cont, "Register Correct", Toast.LENGTH_LONG).show()
                                 }
                             }
                         }

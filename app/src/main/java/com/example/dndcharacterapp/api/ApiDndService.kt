@@ -45,10 +45,13 @@ import com.example.dndcharacterapp.models.subrace.Subraces
 import com.example.dndcharacterapp.models.trait.Trait
 import com.example.dndcharacterapp.models.trait.Traits
 import com.example.dndcharacterapp.models.user.Message
+import com.example.dndcharacterapp.models.user.apiUser
 import com.example.dndcharacterapp.models.weaponproperty.WeaponProperties
 import com.example.dndcharacterapp.models.weaponproperty.WeaponProperty
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface ApiDndService {
@@ -59,11 +62,11 @@ interface ApiDndService {
         @Path("pass") pass: String
     ): Response<Message>
 
-    /*
-    @GET("/api/User/")
+
+    @POST("/api/User/")
     suspend fun postUserOk(
         @Body user: apiUser
-    ): Response<Message>*/
+    ): Response<Message>
 
     @GET("/api/AbilityScore/")
     suspend fun getAbilityScoreList(): Response<AbilityScores>
