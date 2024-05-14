@@ -1,7 +1,6 @@
 package com.example.dndcharacterapp.ui
 
 import android.os.Bundle
-import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,8 +27,6 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,7 +37,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -132,14 +128,10 @@ fun MostrarComponentes(
         verticalArrangement = Arrangement.spacedBy(16.dp),
 
         ) {
-        //Name Level
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Mostrar2TextField("Name", "Level")
-        }
+        //Name
+        Mostrar1TextField(textoMostrar = "Name")
+        //Level
+        Mostrar1TextField(textoMostrar = "Level")
         //Inspiration Background
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -150,8 +142,8 @@ fun MostrarComponentes(
             val inspiration = remember { mutableStateOf(true) }
             Checkbox(checked = inspiration.value, onCheckedChange = { inspiration.value = it })
             Spacer(modifier = Modifier.width(16.dp))
-            Mostrar1TextField("Background")
         }
+        Mostrar1TextField(textoMostrar = "Background")
         //Race Alignment
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -488,8 +480,7 @@ fun MostrarComponentes(
                         modifier = Modifier.menuAnchor()
                     )
 
-                    ExposedDropdownMenu(
-                        expanded = expandedFeatures,
+                    ExposedDropdownMenu(expanded = expandedFeatures,
                         onDismissRequest = { expandedFeatures = false }) {
                         featuresList!!.forEach { item ->
                             DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
@@ -522,8 +513,7 @@ fun MostrarComponentes(
                         modifier = Modifier.menuAnchor()
                     )
 
-                    ExposedDropdownMenu(
-                        expanded = expandedTraits,
+                    ExposedDropdownMenu(expanded = expandedTraits,
                         onDismissRequest = { expandedTraits = false }) {
                         traitsList!!.forEach { item ->
                             DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
@@ -690,199 +680,43 @@ fun MostrarComponentes(
         }
 
         //Exhaustion
-        Text(text = "Exhaustion")
-        val inputvalueExhaustion = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueExhaustion.value,
-                    onValueChange = { inputvalueExhaustion.value = it },
-                    label = { Text("Exhaustion") })
-            }
-        }
+        Mostrar1TextField(textoMostrar = "Exhaustion")
 
         //ExperienciePoints
-        Text(text = "ExperienciePoints")
-        val inputvalueExperienciePoints = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueExperienciePoints.value,
-                    onValueChange = { inputvalueExperienciePoints.value = it },
-                    label = { Text("ExperienciePoints") })
-            }
-        }
+        Mostrar1TextField(textoMostrar = "ExperienciePoints")
 
         //PassiveWisdom
-        Text(text = "PassiveWisdom")
-        val inputvaluePassiveWisdom = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvaluePassiveWisdom.value,
-                    onValueChange = { inputvaluePassiveWisdom.value = it },
-                    label = { Text("PassiveWisdom") })
-            }
-        }
+        Mostrar1TextField(textoMostrar = "PassiveWisdom")
 
         //Initiative
-        Text(text = "Initiative")
-        val inputvalueInitiative = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueInitiative.value,
-                    onValueChange = { inputvalueInitiative.value = it },
-                    label = { Text("Initiative") })
-            }
-        }
+        Mostrar1TextField(textoMostrar = "Initiative")
 
         //Speed
-        Text(text = "Speed")
-        val inputvalueSpeed = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueSpeed.value,
-                    onValueChange = { inputvalueSpeed.value = it },
-                    label = { Text("Speed") })
-            }
-        }
+        Mostrar1TextField(textoMostrar = "Speed")
 
         //ProficiencyBonus
-        Text(text = "ProficiencyBonus")
-        val inputvalueProficiencyBonus = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueProficiencyBonus.value,
-                    onValueChange = { inputvalueProficiencyBonus.value = it },
-                    label = { Text("ProficiencyBonus") })
-            }
-        }
+        Mostrar1TextField(textoMostrar = "ProficiencyBonus")
 
         //PersonalityTraits
-        Text(text = "PersonalityTraits")
-        val inputvaluePersonalityTraits = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvaluePersonalityTraits.value,
-                    onValueChange = { inputvaluePersonalityTraits.value = it },
-                    label = { Text("PersonalityTraits") })
-            }
-        }
+        Mostrar1TextField(textoMostrar = "PersonalityTraits")
 
         //Ideals
-        Text(text = "Ideals")
-        val inputvalueIdeals = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueIdeals.value,
-                    onValueChange = { inputvalueIdeals.value = it },
-                    label = { Text("Ideals") })
-            }
-        }
+        Mostrar1TextField(textoMostrar = "Ideals")
 
         //Bonds
-        Text(text = "Bonds")
-        val inputvalueBonds = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueBonds.value,
-                    onValueChange = { inputvalueBonds.value = it },
-                    label = { Text("Bonds") })
-            }
-        }
+        Mostrar1TextField(textoMostrar = "Bonds")
 
-        //Bonds
-        Text(text = "Claws")
-        val inputvalueClaws = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueClaws.value,
-                    onValueChange = { inputvalueClaws.value = it },
-                    label = { Text("Bonds") })
-            }
-        }
+        //Claws
+        Mostrar1TextField(textoMostrar = "Claws")
 
-        //Bonds
-        Text(text = "CharacterBackstory")
-        val inputvalueCharacterBackstory = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueCharacterBackstory.value,
-                    onValueChange = { inputvalueCharacterBackstory.value = it },
-                    label = { Text("CharacterBackstory") })
-            }
-        }
+        //CharacterBackstory
+        Mostrar1TextField(textoMostrar = "CharacterBackstory")
 
         //AlliesOrganizations
-        Text(text = "AlliesOrganizations")
-        val inputvalueAlliesOrganizations = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueAlliesOrganizations.value,
-                    onValueChange = { inputvalueAlliesOrganizations.value = it },
-                    label = { Text("AlliesOrganizations") })
-            }
-        }
+        Mostrar1TextField(textoMostrar = "AlliesOrganizations")
 
         //Symbol
-        Text(text = "Symbol")
-        val inputvalueSymbol = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueSymbol.value,
-                    onValueChange = { inputvalueSymbol.value = it },
-                    label = { Text("Symbol") })
-            }
-        }
+        Mostrar1TextField(textoMostrar = "Symbol")
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -890,7 +724,9 @@ fun MostrarComponentes(
         ) {
             Box(modifier = Modifier.weight(1f)) {
                 //Almacenar todos los elementos
-                Button(onClick = { Toast.makeText(context, "Character Añadido", Toast.LENGTH_SHORT).show() }) {
+                Button(onClick = {
+                    Toast.makeText(context, "Character Añadido", Toast.LENGTH_SHORT).show()
+                }) {
                     Text("Afegir Character", color = MaterialTheme.colorScheme.onBackground)
                 }
             }
@@ -900,54 +736,25 @@ fun MostrarComponentes(
 
 //Esto mostrará un textfield para que se escriba el string
 @Composable
-fun Mostrar1TextField(textoMostrar: String) {
-    val inputvalue1 = remember { mutableStateOf(TextFieldValue()) }
+fun Mostrar1TextField(textoMostrar: String): String {
+    val context = LocalContext.current
+    val res = remember { mutableStateOf(("")) }
+    Text(text = textoMostrar)
+    val inputValue = remember { mutableStateOf(TextFieldValue()) }
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(modifier = Modifier.weight(1f)) {
-            TextField(value = inputvalue1.value,
-                onValueChange = { inputvalue1.value = it },
+            TextField(value = inputValue.value,
+                onValueChange = { inputValue.value = it },
                 label = { Text(textoMostrar) })
-
-        }
-
-        Spacer(modifier = Modifier.width(8.dp))
-    }
-}
-
-@Composable
-fun Mostrar2TextField(textoMostrar1: String, textoMostrar2: String) {
-    val inputvalue1 = remember { mutableStateOf(TextFieldValue()) }
-    val inputvalue2 = remember { mutableStateOf(TextFieldValue()) }
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier.weight(1f)
-        ) {
-            TextField(value = inputvalue1.value,
-                onValueChange = { inputvalue1.value = it },
-                label = { Text(textoMostrar1) })
-        }
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Box(
-            modifier = Modifier.weight(1f)
-        ) {
-            TextField(value = inputvalue2.value,
-                onValueChange = { inputvalue2.value = it },
-                label = { Text(textoMostrar2) })
-
         }
     }
+    Spacer(modifier = Modifier.width(8.dp))
+    return inputValue.value.text
 }
-
 
 //Esto mostrará dos exposeddropdownmenusbox
 @OptIn(ExperimentalMaterial3Api::class)
@@ -975,8 +782,7 @@ fun MostrarDropDowns(list1: List<String>, list2: List<String>) {
                     modifier = Modifier.menuAnchor()
                 )
 
-                ExposedDropdownMenu(
-                    expanded = expanded1,
+                ExposedDropdownMenu(expanded = expanded1,
                     onDismissRequest = { expanded1 = false }) {
                     list1.forEach { item ->
                         DropdownMenuItem(text = { Text(text = item) }, onClick = {
@@ -1006,8 +812,7 @@ fun MostrarDropDowns(list1: List<String>, list2: List<String>) {
                     modifier = Modifier.menuAnchor()
                 )
 
-                ExposedDropdownMenu(
-                    expanded = expanded2,
+                ExposedDropdownMenu(expanded = expanded2,
                     onDismissRequest = { expanded2 = false }) {
                     list2.forEach { item ->
                         DropdownMenuItem(text = { Text(text = item) }, onClick = {
