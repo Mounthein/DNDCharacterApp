@@ -1,5 +1,6 @@
 package com.example.dndcharacterapp.models.characterRealm
 
+import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.RealmList
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
@@ -38,7 +39,7 @@ class CharacterRealm: RealmObject {
     var initiative: Int? = null
     var speed: Int? = null
     var proficiency_bonus: Int? = null
-    var saving_throws: RealmList<String> = crearRealmList()
+    var saving_throws: RealmList<String> = realmListOf("")
     var personality_traits: String? = null
     var ideals: String? = null
     var bonds: String? = null

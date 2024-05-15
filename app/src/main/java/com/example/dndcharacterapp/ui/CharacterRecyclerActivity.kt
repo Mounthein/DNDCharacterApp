@@ -48,8 +48,8 @@ class CharacterRecyclerActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    val character by viewModel.characters.collectAsState()
 
+                    val character by viewModel.characters.collectAsState()
                     Column(modifier = Modifier.fillMaxSize()) {
                         var filtre = remember { mutableStateOf(TextFieldValue()) }
                         Text(text = "Filtre")
@@ -130,11 +130,7 @@ fun CharacterCard(character: CharacterRealm, click: () -> Unit) {
                 modifier = Modifier.padding(16.dp),
                 textAlign = TextAlign.Center
             )
-            Text(
-                text = "Level: " + character.race?.name,
-                modifier = Modifier.padding(16.dp),
-                textAlign = TextAlign.Center
-            )
+
         }
     }
 }
