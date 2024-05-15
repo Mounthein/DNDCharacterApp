@@ -41,6 +41,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dndcharacterapp.api.CrudApi
+import com.example.dndcharacterapp.models.character.Character
 import com.example.dndcharacterapp.models.classes.ClassesItem
 import com.example.dndcharacterapp.models.equipment.Equipment
 import com.example.dndcharacterapp.models.feature.Feature
@@ -69,8 +70,11 @@ class CharacterActivity : ComponentActivity() {
                     val features = CrudApi().getFeatureList()?.toList()
                     val traits = CrudApi().getTraitList()?.toList()
                     val spells = CrudApi().getSpellList()?.toList()
+                    val characterImportado = intent.getStringExtra("character")
                     if (races != null && alignments != null && classes != null && languages != null && proficiencies != null && equipment != null && features != null && traits != null && spells != null) {
+                        var character: Character? = characterImportado?.let { CrudApi().getCharacter(it) }
                         MostrarComponentes(
+                            character,
                             races,
                             alignments,
                             classes,
@@ -91,6 +95,7 @@ class CharacterActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MostrarComponentes(
+    character:Character?,
     racesList: List<Race>?,
     alignmentsList: List<com.example.dndcharacterapp.models.alignment.Alignment>?,
     classeslist: List<ClassesItem>?,
@@ -109,7 +114,7 @@ fun MostrarComponentes(
     var expandedFeatures by remember { mutableStateOf(false) }
     var expandedTraits by remember { mutableStateOf(false) }
     var expandedPreparedSpells by remember { mutableStateOf(false) }
-    var expandedKnownSpells by remember { mutableStateOf(false) }
+    var expandedKnownSpells by remember { mutableStateOf(false) }/*
     var racesOptions by remember { mutableStateOf(racesList!![0].name) }
     var alignmentsOptions by remember { mutableStateOf(alignmentsList!![0].name) }
     var classesOptions by remember { mutableStateOf(classeslist!![0].name) }
@@ -118,7 +123,7 @@ fun MostrarComponentes(
     var equipmentOptions by remember { mutableStateOf(equipmentList!![0].name) }
     var featureOptions by remember { mutableStateOf(featuresList!![0].name) }
     var traitOptions by remember { mutableStateOf(traitsList!![0].name) }
-    var spellOptions by remember { mutableStateOf(spellList!![0].name) }
+    var spellOptions by remember { mutableStateOf(spellList!![0].name) }*/
 
     Column(
         modifier = Modifier
@@ -480,7 +485,8 @@ fun MostrarComponentes(
                         modifier = Modifier.menuAnchor()
                     )
 
-                    ExposedDropdownMenu(expanded = expandedFeatures,
+                    ExposedDropdownMenu(
+                        expanded = expandedFeatures,
                         onDismissRequest = { expandedFeatures = false }) {
                         featuresList!!.forEach { item ->
                             DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
@@ -513,7 +519,8 @@ fun MostrarComponentes(
                         modifier = Modifier.menuAnchor()
                     )
 
-                    ExposedDropdownMenu(expanded = expandedTraits,
+                    ExposedDropdownMenu(
+                        expanded = expandedTraits,
                         onDismissRequest = { expandedTraits = false }) {
                         traitsList!!.forEach { item ->
                             DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
@@ -782,7 +789,8 @@ fun MostrarDropDowns(list1: List<String>, list2: List<String>) {
                     modifier = Modifier.menuAnchor()
                 )
 
-                ExposedDropdownMenu(expanded = expanded1,
+                ExposedDropdownMenu(
+                    expanded = expanded1,
                     onDismissRequest = { expanded1 = false }) {
                     list1.forEach { item ->
                         DropdownMenuItem(text = { Text(text = item) }, onClick = {
@@ -812,7 +820,8 @@ fun MostrarDropDowns(list1: List<String>, list2: List<String>) {
                     modifier = Modifier.menuAnchor()
                 )
 
-                ExposedDropdownMenu(expanded = expanded2,
+                ExposedDropdownMenu(
+                    expanded = expanded2,
                     onDismissRequest = { expanded2 = false }) {
                     list2.forEach { item ->
                         DropdownMenuItem(text = { Text(text = item) }, onClick = {

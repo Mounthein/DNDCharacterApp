@@ -1,7 +1,7 @@
 package com.example.dndcharacterapp.realm
 
 import android.app.Application
-import com.example.dndcharacterapp.models.characterRealm.Character
+import com.example.dndcharacterapp.models.characterRealm.CharacterRealm
 import com.example.dndcharacterapp.models.characterRealm.EmAlignmentCh
 import com.example.dndcharacterapp.models.characterRealm.EmArmorClassCh
 import com.example.dndcharacterapp.models.characterRealm.EmClassItemCh
@@ -36,7 +36,7 @@ class RealmApp: Application() {
             configuration = RealmConfiguration.create(
                 schema = setOf(
                     User::class,
-                    Character::class,
+                    CharacterRealm::class,
                     EmAlignmentCh::class,
                     EmArmorClassCh::class,
                     EmClassItemCh::class,

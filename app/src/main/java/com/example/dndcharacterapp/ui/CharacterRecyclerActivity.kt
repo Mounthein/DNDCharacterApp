@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,6 +22,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,20 +32,24 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.dndcharacterapp.api.CrudApi
-import com.example.dndcharacterapp.models.character.Character
+import com.example.dndcharacterapp.models.characterRealm.CharacterRealm
+import com.example.dndcharacterapp.realm.MainViewModel
 import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
 
 class CharacterRecyclerActivity : ComponentActivity() {
+    private val viewModel: MainViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val character = CrudApi().getCharacterList()?.toList()
+        //val character = CrudApi().getCharacterList()?.toList()
+
         setContent {
             DNDCharacterAppTheme(darkTheme = false) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
+                    val character by viewModel.characters.collectAsState()
+
                     Column(modifier = Modifier.fillMaxSize()) {
                         var filtre = remember { mutableStateOf(TextFieldValue()) }
                         Text(text = "Filtre")
@@ -57,6 +64,7 @@ class CharacterRecyclerActivity : ComponentActivity() {
                         if (filtre.value.text.isNotEmpty()) {
                             var filtrats =
                                 character!!.filter { it.name!!.contains(filtre.value.text) }
+
                             LazyColumn(
                                 contentPadding = PaddingValues(10.dp),
                                 modifier = Modifier
@@ -69,8 +77,8 @@ class CharacterRecyclerActivity : ComponentActivity() {
                                             this@CharacterRecyclerActivity,
                                             CharacterActivity::class.java
                                         )
-                                        intent.putExtra("character", it._id)
-                                        startActivity(intent)
+                                        //intent.putExtra("character", it._id)
+                                        //startActivity(intent)
                                     }
 
                                 }
@@ -89,8 +97,8 @@ class CharacterRecyclerActivity : ComponentActivity() {
                                             this@CharacterRecyclerActivity,
                                             CharacterActivity::class.java
                                         )
-                                        intent.putExtra("character", it._id)
-                                        startActivity(intent)
+                                        //intent.putExtra("character", it._id)
+                                        //startActivity(intent)
                                     }
 
                                 }
@@ -106,7 +114,7 @@ class CharacterRecyclerActivity : ComponentActivity() {
 
 
 @Composable
-fun CharacterCard(character: Character, click: () -> Unit) {
+fun CharacterCard(character: CharacterRealm, click: () -> Unit) {
     Card(colors = CardDefaults.cardColors(
         containerColor = MaterialTheme.colorScheme.onSurfaceVariant
     ), modifier = Modifier

@@ -1,3 +1,3 @@
 package com.example.dndcharacterapp.models.characterRealm
 
-class Characters : ArrayList<Character>()
+class Characters : ArrayList<CharacterRealm>()
