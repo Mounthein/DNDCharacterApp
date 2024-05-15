@@ -6,9 +6,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -78,42 +81,32 @@ class MagicReciclerView : ComponentActivity() {
 
                         if (filtre.value.text.isNotEmpty()){
                             var filtrats = magics!!.filter { it.name.contains(filtre.value.text) }
-                            LazyColumn (contentPadding = PaddingValues(10.dp),
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(15.dp)){
-                                items(filtrats){
-                                    MagicCard(spell = it) {
-                                        val intent =
-                                            Intent(this@MagicReciclerView, MagicActivity::class.java)
-                                        intent.putExtra("spell", it.id)
-                                        startActivity(intent)
-                                    }
-
-                                }
-
-                            }
+                            CardList(magicList = filtrats)
                         } else {
-                            LazyColumn (contentPadding = PaddingValues(10.dp),
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(15.dp)){
-                                items(magics!!){
-                                    MagicCard(spell = it) {
-                                        val intent =
-                                            Intent(this@MagicReciclerView, MagicActivity::class.java)
-                                        intent.putExtra("spell", it.id)
-                                        startActivity(intent)
-                                    }
-
-                                }
-
-                            }
+                            CardList(magicList = magics!!.toList())
                         }
                     }
 
 
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun CardList(magicList: List<Spell>){
+    val context = LocalContext.current
+    LazyColumn(contentPadding = PaddingValues(10.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(15.dp)
+    ){
+        items(magicList){
+            MagicCard(spell = it) {
+                val intent = Intent(context, MagicActivity::class.java)
+                intent.putExtra("spell", it.id)
+                context.startActivity(intent)
             }
         }
     }
@@ -129,8 +122,9 @@ suspend fun fetchData(): Spells? {
 @Composable
 fun MagicCard(spell: Spell, click: () -> Unit){
     Card(colors = CardDefaults.cardColors(
+        contentColor = MaterialTheme.colorScheme.onSurface,
         containerColor = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = MaterialTheme.colorScheme.onTertiary
+
     ),
         modifier = Modifier
             .fillMaxSize()
@@ -143,11 +137,24 @@ fun MagicCard(spell: Spell, click: () -> Unit){
             .align(Alignment.CenterHorizontally),
             horizontalAlignment = Alignment.Start)
         {
-            Text(text = spell.name,
-                modifier = Modifier
-                    .padding(16.dp),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleLarge)
+            Row (modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween) {
+                Text(text = spell.name,
+                    modifier = Modifier
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface)
+
+                Text(text = "Level: " + spell.level,
+                    modifier = Modifier
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface)
+            }
+
+
             Box (modifier = Modifier
                 .fillMaxWidth()
                 .clip(shape = RoundedCornerShape(topStart = 15.dp))
@@ -186,8 +193,9 @@ fun Greeting2(name: String, modifier: Modifier = Modifier) {
 fun GreetingPreview() {
     DNDCharacterAppTheme (darkTheme = false) {
         Surface (modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background) {
-
+            color = MaterialTheme.colorScheme.primaryContainer) {
+            Text(text = "ñj",
+                color = MaterialTheme.colorScheme.onSurface)
         }
 
     }
