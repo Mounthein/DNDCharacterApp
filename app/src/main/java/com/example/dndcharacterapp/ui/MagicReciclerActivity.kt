@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -145,7 +147,10 @@ fun MagicCard(spell: Spell, click: () -> Unit){
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface)
-
+                Spacer(modifier = Modifier
+                    .fillMaxHeight()
+                    .width(13.dp)
+                    .background(MaterialTheme.colorScheme.primary))
                 Text(text = "Level: " + spell.level,
                     modifier = Modifier
                         .padding(16.dp),
@@ -162,18 +167,24 @@ fun MagicCard(spell: Spell, click: () -> Unit){
                 .background(color = colorResource(id = R.color.white))
                 )
             {
-                Column (modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 6.dp),
-                    horizontalAlignment = Alignment.Start) {
-                    Spacer(modifier = Modifier.height(20.dp))
-                    Text(text = "Level: " + spell.level.toString(), color = MaterialTheme.colorScheme.inverseSurface)
-                    Text(text = "Casting: " + spell.castingTime, color = MaterialTheme.colorScheme.inverseSurface)
-                    Text(text = "School: " + spell.from.name, color = MaterialTheme.colorScheme.inverseSurface)
-                    Text(text = "Concentation: " + spell.concentration.toString(), color = MaterialTheme.colorScheme.inverseSurface)
-                    Text(text = "Range: " + spell.range, color = MaterialTheme.colorScheme.inverseSurface)
-                    Spacer(modifier = Modifier.height(20.dp))
+                Row (Modifier.fillMaxSize()){
+                    Column (modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(start = 6.dp),
+                        horizontalAlignment = Alignment.Start) {
+                        Spacer(modifier = Modifier.height(20.dp))
+                        Text(text = "Casting: " + spell.castingTime, color = MaterialTheme.colorScheme.inverseSurface)
+                        Text(text = "School: " + spell.from.name, color = MaterialTheme.colorScheme.inverseSurface)
+                        Text(text = "Concentation: " + spell.concentration.toString(), color = MaterialTheme.colorScheme.inverseSurface)
+                        Text(text = "Range: " + spell.range, color = MaterialTheme.colorScheme.inverseSurface)
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
+                    Spacer(modifier = Modifier
+                        .fillMaxHeight()
+                        .width(13.dp)
+                        .background(MaterialTheme.colorScheme.primary))
                 }
+
             }
         }
     }
@@ -188,14 +199,47 @@ fun Greeting2(name: String, modifier: Modifier = Modifier) {
     )
 }
 
-@Preview(showBackground = true, widthDp = 320)
+@Preview(showBackground = true, widthDp = 320, heightDp = 500)
 @Composable
 fun GreetingPreview() {
     DNDCharacterAppTheme (darkTheme = false) {
         Surface (modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.primaryContainer) {
-            Text(text = "ñj",
-                color = MaterialTheme.colorScheme.onSurface)
+            color = MaterialTheme.colorScheme.background) {
+            Card (colors = CardDefaults.cardColors(
+                contentColor = MaterialTheme.colorScheme.onSurface,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .padding(10.dp)
+                    ) {
+                    Column (modifier = Modifier
+                        .align(Alignment.CenterHorizontally),
+                        horizontalAlignment = Alignment.Start) {
+                        Row (modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween)
+                        {
+                            Text(text = "Hola",
+                                modifier = Modifier
+                                    .padding(16.dp),
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.onSurface)
+                            Spacer(modifier = Modifier
+                                .fillMaxHeight()
+                                .width(13.dp)
+                                .background(MaterialTheme.colorScheme.primary))
+                            Text(text = "Level: ",
+                                modifier = Modifier
+                                    .padding(16.dp),
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.onSurface)
+                        }
+                    }
+            }
         }
 
     }

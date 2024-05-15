@@ -2,7 +2,7 @@ package com.example.dndcharacterapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val primaryLight = Color(0xE9D41600)
+val primaryLight = Color(0xFFF5404C)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFE7D2A9)
 val onPrimaryContainerLight = Color(0xFFE7D2A9)
