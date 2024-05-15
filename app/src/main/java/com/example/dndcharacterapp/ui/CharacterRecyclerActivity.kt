@@ -43,7 +43,7 @@ class CharacterRecyclerActivity : ComponentActivity() {
         //val character = CrudApi().getCharacterList()?.toList()
 
         setContent {
-            DNDCharacterAppTheme(darkTheme = false) {
+            DNDCharacterAppTheme(darkTheme = false, dynamicColor = false) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
@@ -116,7 +116,7 @@ class CharacterRecyclerActivity : ComponentActivity() {
 @Composable
 fun CharacterCard(character: CharacterRealm, click: () -> Unit) {
     Card(colors = CardDefaults.cardColors(
-        containerColor = MaterialTheme.colorScheme.onSurfaceVariant
+        containerColor = MaterialTheme.colorScheme.primaryContainer
     ), modifier = Modifier
         .fillMaxSize()
         .padding(10.dp)
@@ -128,7 +128,8 @@ fun CharacterCard(character: CharacterRealm, click: () -> Unit) {
             Text(
                 text = "Name: " + character.name,
                 modifier = Modifier.padding(16.dp),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurface
             )
 
         }
