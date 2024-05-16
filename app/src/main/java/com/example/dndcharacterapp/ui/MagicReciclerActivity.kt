@@ -44,6 +44,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dndcharacterapp.R
@@ -89,7 +90,7 @@ class MagicReciclerView : ComponentActivity() {
                             .fillMaxWidth())
 
                         if (filtre.value.text.isNotEmpty()){
-                            var filtrats = magics!!.filter { it.name.contains(filtre.value.text) }
+                            var filtrats = magics!!.filter { it.name.toLowerCase().contains(filtre.value.text.toLowerCase()) }
                             CardList(magicList = filtrats)
                         } else {
                             CardList(magicList = magics!!.toList())

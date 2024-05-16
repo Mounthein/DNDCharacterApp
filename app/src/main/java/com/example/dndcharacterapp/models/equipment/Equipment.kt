@@ -21,11 +21,11 @@ data class Equipment(
     val stealthDisadvantage: Boolean,
     val strengthMinimum: Int,
     val throwRange: ThrowRange?,
-    val toolCategory: String,
-    val twoHandedDamage: TwoHandedDamage,
-    val unitQuantity: UnitQuantity,
-    val vehicleCategory: String,
-    val weaponCategory: String,
-    val weaponRange: String,
+    val toolCategory: String?,
+    val twoHandedDamage: TwoHandedDamage?,
+    val unitQuantity: UnitQuantity?,
+    val vehicleCategory: String?,
+    val weaponCategory: String?,
+    val weaponRange: String?,
     val weight: Double?
 )

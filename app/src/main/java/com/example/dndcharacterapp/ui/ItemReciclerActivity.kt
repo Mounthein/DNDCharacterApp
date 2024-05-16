@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -14,24 +17,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.dndcharacterapp.R
 import com.example.dndcharacterapp.api.CrudApi
 import com.example.dndcharacterapp.models.equipment.Equipment
 import com.example.dndcharacterapp.models.magicitem.MagicItem
@@ -81,9 +93,8 @@ fun CardList(equipmentList: List<Equipment>, magicList: List<MagicItem>,){
     llista.addAll(equipmentList)
     llista.addAll(magicList)
     LazyColumn (contentPadding = PaddingValues(10.dp),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(15.dp)){
+        verticalArrangement = Arrangement.spacedBy(25.dp)
+    ){
         items(llista){
             if (IsEquipment(it)){
                 val eq = it as Equipment
@@ -119,25 +130,80 @@ fun IsEquipment(o: Any): Boolean{
 @Composable
 fun EquipmentCard(equipment: Equipment, click: () -> Unit){
     Card(colors = CardDefaults.cardColors(
-        containerColor = MaterialTheme.colorScheme.onSurfaceVariant
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
     ),
         modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp)
             .clickable { click() })
     {
         Column (modifier = Modifier
             .align(Alignment.CenterHorizontally),
             horizontalAlignment = Alignment.Start)
         {
-            Text(text = "Name: " + equipment.name,
-                modifier = Modifier
-                    .padding(16.dp),
-                textAlign = TextAlign.Center)
-            Text(text = "Type: " + equipment.equipmentCategory.name,
-                modifier = Modifier
-                    .padding(16.dp),
-                textAlign = TextAlign.Center)
+            Row (modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween){
+                Text(text = equipment.name,
+                    modifier = Modifier
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface)
+                Text(text = equipment.equipmentCategory.name,
+                    modifier = Modifier
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface)
+            }
+            CardContent(equipment = equipment)
+        }
+    }
+}
+
+@Composable
+fun CardContent(equipment: Equipment){
+    Box (modifier = Modifier
+        .padding(start = 15.dp, bottom = 15.dp, end = 15.dp)
+        .border(BorderStroke(2.dp, MaterialTheme.colorScheme.primary), MaterialTheme.shapes.medium)
+        .clip(MaterialTheme.shapes.medium)
+        .background(color = colorResource(id = R.color.white))
+
+    )
+    {
+        Row (Modifier.fillMaxSize()){
+            Column (modifier = Modifier
+                .fillMaxHeight()
+                .padding(start = 6.dp),
+                horizontalAlignment = Alignment.Start) {
+                Spacer(modifier = Modifier.height(20.dp))
+                if (equipment.weaponCategory != null){
+                    Text(text = "Weapon type: " + equipment.weaponCategory, color = MaterialTheme.colorScheme.onSurface)
+                }
+                if (equipment.weaponRange != null){
+                    Text(text = "Range: " + equipment.weaponRange, color = MaterialTheme.colorScheme.onSurface)
+                }
+                if (equipment.unitQuantity != null){
+                    Text(text = "Damage dice: " + equipment.unitQuantity.damageDice, color = MaterialTheme.colorScheme.onSurface)
+                    Text(text = "Damage type: " + equipment.unitQuantity.damageType.name, color = MaterialTheme.colorScheme.onSurface)
+                }
+                if (equipment.twoHandedDamage != null){
+                    Text(text = "Two handed damage dice: " + equipment.twoHandedDamage.damageDice, color = MaterialTheme.colorScheme.onSurface)
+                    Text(text = "Two handed damage type: " + equipment.twoHandedDamage.damageType.name, color = MaterialTheme.colorScheme.onSurface)
+                }
+                if (equipment.toolCategory != null){
+                    Text(text = "Tool category: " + equipment.toolCategory, color = MaterialTheme.colorScheme.onSurface)
+                }
+                if (equipment.vehicleCategory != null){
+                    Text(text = "Vehicle category: " + equipment.vehicleCategory, color = MaterialTheme.colorScheme.onSurface)
+                }
+                if (equipment.description != null){
+                    Text(text = "Description: " + equipment.vehicleCategory, color = MaterialTheme.colorScheme.onSurface)
+                    equipment.description.forEach {
+                        Text(text = it, color = MaterialTheme.colorScheme.onSurface)
+                    }
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+            }
         }
     }
 }
@@ -145,7 +211,7 @@ fun EquipmentCard(equipment: Equipment, click: () -> Unit){
 @Composable
 fun EquipmentCard(equipment: MagicItem, click: () -> Unit){
     Card(colors = CardDefaults.cardColors(
-        containerColor = MaterialTheme.colorScheme.onSurfaceVariant
+        containerColor = MaterialTheme.colorScheme.primaryContainer
     ),
         modifier = Modifier
             .fillMaxSize()
@@ -156,14 +222,47 @@ fun EquipmentCard(equipment: MagicItem, click: () -> Unit){
             .align(Alignment.CenterHorizontally),
             horizontalAlignment = Alignment.Start)
         {
-            Text(text = "Name: " + equipment.name,
-                modifier = Modifier
-                    .padding(16.dp),
-                textAlign = TextAlign.Center)
-            Text(text = "Type: " + equipment.equipmentCategory.name,
-                modifier = Modifier
-                    .padding(16.dp),
-                textAlign = TextAlign.Center)
+            Row (modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween){
+                Text(text = equipment.name,
+                    modifier = Modifier
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface)
+                Text(text = equipment.equipmentCategory.name,
+                    modifier = Modifier
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface)
+            }
+            CardContent(equipment = equipment)
+        }
+
+    }
+}
+
+@Composable
+fun CardContent(equipment: MagicItem){
+    Box (modifier = Modifier
+        .padding(start = 15.dp, bottom = 15.dp, end = 15.dp)
+        .border(BorderStroke(2.dp, MaterialTheme.colorScheme.primary), MaterialTheme.shapes.medium)
+        .clip(MaterialTheme.shapes.medium)
+        .background(color = colorResource(id = R.color.white))
+
+    )
+    {
+        Row (Modifier.fillMaxSize()){
+            Column (modifier = Modifier
+                .fillMaxHeight()
+                .padding(start = 6.dp),
+                horizontalAlignment = Alignment.Start) {
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(text = "Rarity: " + equipment.rarity.name, color = MaterialTheme.colorScheme.onSurface)
+                Text(text = "Description: " + equipment.desc[1], color = MaterialTheme.colorScheme.onSurface)
+                Spacer(modifier = Modifier.height(20.dp))
+            }
         }
     }
 }

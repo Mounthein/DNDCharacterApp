@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 data class Spell(
-    val areaOfEffect: AreaOfEffect,
+    val areaOfEffect: AreaOfEffect?,
     val attackType: String,
     val castingTime: String,
     val classes: List<Classe>,

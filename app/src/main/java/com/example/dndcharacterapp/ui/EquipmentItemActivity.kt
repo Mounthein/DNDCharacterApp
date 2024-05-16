@@ -104,6 +104,38 @@ fun PrintMagicItem(magicItem: MagicItem){
 }
 
 @Composable
+fun Body(magicItem: MagicItem){
+    Column (
+        modifier = Modifier
+            .padding(top = 40.dp)
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ){
+        Text(text = "Rarity: " + magicItem.rarity.name)
+        if (magicItem.variant) Text(text = "Variant: Yes")
+        Spacer(modifier = Modifier
+            .fillMaxWidth()
+            .height(40.dp))
+
+        Text(text = "Variants",
+            fontSize = 20.sp)
+        magicItem.variants.forEach {
+            Text(text = ".- ${it.name}")
+        }
+
+        Spacer(modifier = Modifier
+            .fillMaxWidth()
+            .height(40.dp))
+
+        Text(text = "Description",
+            fontSize = 20.sp)
+        magicItem.desc.forEach {
+            Text(text = ".- $it\n")
+        }
+    }
+}
+
+@Composable
 fun PrintNormalEquipment(equipment: Equipment){
     Header(name = equipment.name)
 
@@ -117,7 +149,7 @@ fun PrintNormalEquipment(equipment: Equipment){
 
 @Composable
 fun NormalTools(equipment: Equipment){
-    TextBox(title = "Tool Category", content = equipment.toolCategory)
+    TextBox(title = "Tool Category", content = equipment.toolCategory!!)
     Spacer(modifier = Modifier
         .fillMaxWidth()
         .height(40.dp))
@@ -182,10 +214,10 @@ fun NormalWeapon(equipment: Equipment){
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top)
     {
-        TextBox(title = "Category", content = equipment.weaponCategory)
-        TextBox(title = "Type", content = equipment.weaponRange)
+        TextBox(title = "Category", content = equipment.weaponCategory!!)
+        TextBox(title = "Type", content = equipment.weaponRange!!)
         TextBox(title = "Weight", content = equipment.weight.toString())
-        TextBox(title = "Damage Type", content = equipment.unitQuantity.damageType.name)
+        TextBox(title = "Damage Type", content = equipment.unitQuantity!!.damageType.name)
         TextBox(title = "Damage Dealt", content = equipment.unitQuantity.damageDice)
         if (equipment.weaponRange == "Ranged") {
             val range: String = equipment.range.normal.toString()+"/"+equipment.range.long

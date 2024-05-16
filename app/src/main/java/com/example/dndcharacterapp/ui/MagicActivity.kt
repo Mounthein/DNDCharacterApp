@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -57,11 +58,17 @@ class MagicActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Box (modifier = Modifier.fillMaxSize()){
+                    Box (modifier = Modifier
+                        .fillMaxSize()
+                        .padding(10.dp)
+                        .clip(MaterialTheme.shapes.large)
+                        .background(MaterialTheme.colorScheme.primaryContainer)){
                         var spell: Spell? = spellid?.let { CrudApi().getSpell(it) }
-                        Column(modifier = Modifier.fillMaxSize()) {
+                        Column(modifier = Modifier
+                            .wrapContentSize()
+                            .padding(5.dp)) {
                             Header(name = spell!!.name)
-                            Body(spell = spell!!)
+                            EndBody(spell = spell)
                         }
 
                     }
@@ -74,60 +81,107 @@ class MagicActivity : ComponentActivity() {
 @Composable
 fun Header(name: String){
     Box(modifier = Modifier
-        .fillMaxWidth()
-        .padding(bottom = 10.dp)
-        .height(60.dp)
-        .border(3.dp, color = colorResource(id = R.color.red)),
+        .fillMaxWidth(),
+        //.padding(bottom = 40.dp),
         contentAlignment = Alignment.Center){
-        Text(text = name,
-            fontSize = 30.sp,
-            fontStyle = FontStyle.Italic,
-            fontWeight = FontWeight.ExtraBold,
-            fontFamily = FontFamily.Cursive,
-        )
-    }
-}
-@Composable
-fun Body(spell: Spell){
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top,
-
-        ) {
-        TextBox(title = "Level", content = spell.level.toString(),)
-        TextBox(title = "Casting Time", content = spell.castingTime)
-        TextBox(title = "School", content = spell.from.name)
-        TextBox(title = "Duration", content = spell.duration)
-        TextBox(title = "Range", content = spell.range)
-        TextBox(title = "Components", content = spell.components)
-        if (spell.material.isNotEmpty()) TextBox(title = "Material", content = spell.material)
-
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .height(100.dp))
-        TitleText(title = "Description")
-        SpellDescription(descr = spell.description)
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .height(40.dp))
-
-        // Canviant las data class per a que puguin ser null fan que aquesta part funciona
-        // Problema solucionat, ja puc deixar de tenir una crisis mental
-        if (spell.damageSpell != null){
-            if (spell.damageSpell.damageSlotLevel != null){
-                SpellDamageLevel(levelDamage = spell.damageSpell.damageSlotLevel)
-            } else{
-                spell.damageSpell.damageAtCharacterLevel?.let { DamageAtLevel(damageLevel = it) }
+        Column (horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(text = name,
+                fontSize = 30.sp,
+                fontStyle = FontStyle.Italic,
+                fontWeight = FontWeight.ExtraBold,
+            )
+            Spacer(modifier = Modifier
+                .padding(top = 10.dp)
+                .fillMaxWidth()
+                .height(15.dp)
+                .border(
+                    BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface),
+                    MaterialTheme.shapes.medium
+                )
+                .clip(MaterialTheme.shapes.medium)
+                .background(MaterialTheme.colorScheme.primary)
+                )
             }
         }
 
-        if (spell.healAtSlotLevel != null){
-            SpellHealLevel(spell.healAtSlotLevel)
+}
+
+@Composable
+fun EndBody(spell: Spell){
+    Column (
+        modifier = Modifier
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ){
+        Row (
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.Top
+        ) {
+            Column (modifier = Modifier.padding(top = 40.dp)) {
+                Text(text = "Level: " + spell.level,
+                    modifier = Modifier.padding(bottom = 8.dp))
+                Text(text = "Casting Time: " + spell.castingTime,
+                    modifier = Modifier.padding(bottom = 8.dp))
+                Text(text = "School: " + spell.from.name,
+                    modifier = Modifier.padding(bottom = 8.dp))
+                Text(text = "Duration: " + spell.duration,
+                    modifier = Modifier.padding(bottom = 8.dp))
+                Text(text = "Range: " + spell.range,
+                    modifier = Modifier.padding(bottom = 8.dp))
+                Text(text = "Components: " + spell.components.joinToString(", "),
+                    modifier = Modifier.padding(bottom = 8.dp))
+            }
+            if (spell.damageSpell != null || spell.healAtSlotLevel != null){
+                Spacer(modifier = Modifier
+                    .padding(horizontal = 5.dp)
+                    .height(500.dp)
+                    .width(10.dp)
+                    .border(
+                        BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface),
+                        MaterialTheme.shapes.medium
+                    )
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.primary))
+
+                Column (modifier = Modifier.padding(top = 40.dp)){
+                    if (spell.damageSpell != null){
+                        Text(text = "Damage Type: " + spell.damageSpell.damageType?.name,
+                            modifier = Modifier.padding(bottom = 8.dp))
+
+                        if (spell.areaOfEffect == null){
+                            Text(text = "Target: Selected objective",
+                                modifier = Modifier.padding(bottom = 8.dp))
+                        } else {
+                            Text(text = "Target: Area",
+                                modifier = Modifier.padding(bottom = 8.dp))
+                            Text(text = "Area Size: " + spell.areaOfEffect.size.toString(),
+                                modifier = Modifier.padding(bottom = 8.dp))
+                            Text(text = "Area Type: " + spell.areaOfEffect.type,
+                                modifier = Modifier.padding(bottom = 8.dp))
+                        }
+                        if (spell.damageSpell.damageSlotLevel != null){
+                            Text(text = "Damage per slot level:",
+                                modifier = Modifier.padding(bottom = 8.dp))
+                            SpellDamageCard(levelDamage = spell.damageSpell.damageSlotLevel)
+                        } else{
+                            Text(text = "Damage per character level:",
+                                modifier = Modifier.padding(bottom = 8.dp))
+                            spell.damageSpell.damageAtCharacterLevel?.let { DamageAtLevelCard(damageLevel = it) }
+                        }
+                    }
+                    if (spell.healAtSlotLevel != null){
+                        Text(text = "Effect: Healing",
+                            modifier = Modifier.padding(bottom = 8.dp))
+                        SpellHealCard(spell.healAtSlotLevel)
+                    }
+                }
+            }
+
         }
+        Spacer(modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp))
+        SpellDescription(descr = spell.description)
     }
 }
 
@@ -213,8 +267,7 @@ fun SpellDescription(descr: List<String>){
             .fillMaxWidth()
             .height(300.dp)){
         items(descr){
-            Text(text = it,
-                fontFamily = FontFamily.Cursive,)
+            Text(text = it)
         }
     }
 }
@@ -276,8 +329,6 @@ fun TitleText(title: String) {
             text = title,
             style = TextStyle(
                 fontSize = 30.sp,
-                fontStyle = FontStyle.Italic,
-                fontFamily = FontFamily.Cursive,
                 fontWeight = FontWeight.Bold,
                 color = colorResource(id = R.color.black),
             ),
