@@ -272,75 +272,40 @@ fun MostrarComponentes(
         val ArmorClassType = inputvalueArmorClassType.value.text
         val ArmorClassValue = inputvalueArmorClassValue.value.text
 
-        //Classes Stats
-        Column(Modifier.fillMaxWidth()) {
-            // Texto "Classes"
-            Text(
-                text = "Classes", modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
-            )
+        //Classes
+        val classesName: MutableList<String> = mutableListOf()
+        classeslist!!.forEach {
+            classesName.add(it.name)
+        }
+        val classes = MostrarDropDowns(list1 = classesName, textoMostrar = "Classes")
 
-            var selectedTextClasses by remember { mutableStateOf(classeslist!![0].name) }
-
-            Row(Modifier.fillMaxWidth()) {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 4.dp)
-                ) {
-                    ExposedDropdownMenuBox(expanded = expandedClasses, onExpandedChange = {
-                        expandedClasses = it
-                    }) {
-                        TextField(value = selectedTextClasses,
-                            onValueChange = {},
-                            readOnly = true,
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedClasses) },
-                            modifier = Modifier.menuAnchor()
-                        )
-
-                        ExposedDropdownMenu(expanded = expandedClasses,
-                            onDismissRequest = { expandedClasses = false }) {
-                            classeslist!!.forEach { item ->
-                                DropdownMenuItem(text = {
-                                    Text(
-                                        text = item.name,
-                                        color = MaterialTheme.colorScheme.onBackground
-                                    )
-                                }, onClick = {
-                                    selectedTextClasses = item.name
-                                    expandedClasses = false
-                                    Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
-                                })
-                            }
-                        }
-                    }
-                }
+        // Texto "Stats"
+        Text(
+            text = "Stats", modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
+        )
+        val inputvalueStatsName = remember { mutableStateOf(TextFieldValue()) }
+        val inputvalueStatsValue = remember { mutableStateOf(TextFieldValue()) }
+        // TextFields para "Name" y "Value"
+        Row(Modifier.fillMaxWidth()) {
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = inputvalueStatsName.value,
+                    onValueChange = { inputvalueStatsName.value = it },
+                    label = { Text("Name") })
             }
 
-            // Texto "Stats"
-            Text(
-                text = "Stats", modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
-            )
-            val inputvalueStatsName = remember { mutableStateOf(TextFieldValue()) }
-            val inputvalueStatsValue = remember { mutableStateOf(TextFieldValue()) }
-            // TextFields para "Name" y "Value"
-            Row(Modifier.fillMaxWidth()) {
-                Box(modifier = Modifier.weight(1f)) {
-                    TextField(value = inputvalueStatsName.value,
-                        onValueChange = { inputvalueStatsName.value = it },
-                        label = { Text("Name") })
-                }
+            Spacer(modifier = Modifier.width(4.dp))
 
-                Spacer(modifier = Modifier.width(4.dp))
-
-                Box(modifier = Modifier.weight(1f)) {
-                    TextField(value = inputvalueStatsValue.value,
-                        onValueChange = { inputvalueStatsValue.value = it },
-                        label = { Text("Value") })
-                }
+            Box(modifier = Modifier.weight(1f)) {
+                TextField(value = inputvalueStatsValue.value,
+                    onValueChange = { inputvalueStatsValue.value = it },
+                    label = { Text("Value") })
             }
         }
 
-        //SkillProficiencies Languages
+        val StatsName = inputvalueStatsName.value.text
+        val StatsValue = inputvalueStatsValue.value.text
+
+        //SkillProficiencies
         Text(text = "SkillProficiencies")
         val inputvalueSkillProficienciesName = remember { mutableStateOf(TextFieldValue()) }
         val inputvalueSkillProficienciesBonus = remember { mutableStateOf(TextFieldValue()) }
@@ -361,103 +326,33 @@ fun MostrarComponentes(
                     label = { Text("Bonus") })
             }
         }
-        Text(text = "Languages")
-        var selectedTextLanguages by remember { mutableStateOf(languagesList!![0].name) }
-        Row(Modifier.fillMaxWidth()) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp)
-            ) {
-                ExposedDropdownMenuBox(expanded = expandedLanguages, onExpandedChange = {
-                    expandedLanguages = it
-                }) {
-                    TextField(value = selectedTextLanguages,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedLanguages) },
-                        modifier = Modifier.menuAnchor()
-                    )
 
-                    ExposedDropdownMenu(expanded = expandedLanguages,
-                        onDismissRequest = { expandedLanguages = false }) {
-                        languagesList!!.forEach { item ->
-                            DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
-                                selectedTextLanguages = item.name
-                                expandedLanguages = false
-                                Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
-                            })
-                        }
-                    }
-                }
-            }
+        val SkillProficienciesName = inputvalueSkillProficienciesName.value.text
+        val SkillProficienciesBonus = inputvalueSkillProficienciesBonus.value.text
+
+        //Languages
+        val languagesName: MutableList<String> = mutableListOf()
+        languagesList!!.forEach {
+            languagesName.add(it.name)
+        }
+        val languages = MostrarDropDowns(list1 = languagesName, textoMostrar = "Languages")
+
+        //OtherProficiencies
+        val otherProficienciesName: MutableList<String> = mutableListOf()
+        proficienciesList!!.forEach {
+            otherProficienciesName.add(it.name)
+        }
+        val otherProficiencies = MostrarDropDowns(list1 = otherProficienciesName, textoMostrar = "Other Proficiencies")
+
+        //Equipment
+        val equipmentName: MutableList<String> = mutableListOf()
+        equipmentList!!.forEach {
+            equipmentName.add(it.name)
         }
 
-        //OtherProficiencies Equipment
-        Text(text = "OtherProficiencies")
-        var selectedTextOtherProficiencies by remember { mutableStateOf(proficienciesList!![0].name) }
-        Row(Modifier.fillMaxWidth()) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp)
-            ) {
-                ExposedDropdownMenuBox(expanded = expandedOtherProficiency, onExpandedChange = {
-                    expandedOtherProficiency = it
-                }) {
-                    TextField(value = selectedTextOtherProficiencies,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedOtherProficiency) },
-                        modifier = Modifier.menuAnchor()
-                    )
+        val equipment = MostrarDropDowns(list1 = equipmentName, textoMostrar = "Equipment")
 
-                    ExposedDropdownMenu(expanded = expandedOtherProficiency,
-                        onDismissRequest = { expandedOtherProficiency = false }) {
-                        proficienciesList!!.forEach { item ->
-                            DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
-                                selectedTextOtherProficiencies = item.name
-                                expandedOtherProficiency = false
-                                Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
-                            })
-                        }
-                    }
-                }
-            }
-        }
-        Text(text = "Equipment")
-        var selectedTextEquipment by remember { mutableStateOf(equipmentList!![0].name) }
-        Row(Modifier.fillMaxWidth()) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp)
-            ) {
-                ExposedDropdownMenuBox(expanded = expandedEquipment, onExpandedChange = {
-                    expandedEquipment = it
-                }) {
-                    TextField(value = selectedTextEquipment,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedEquipment) },
-                        modifier = Modifier.menuAnchor()
-                    )
-
-                    ExposedDropdownMenu(expanded = expandedEquipment,
-                        onDismissRequest = { expandedEquipment = false }) {
-                        equipmentList!!.forEach { item ->
-                            DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
-                                selectedTextEquipment = item.name
-                                expandedEquipment = false
-                                Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
-                            })
-                        }
-                    }
-                }
-            }
-        }
-
-        //CoinPouch Features
+        //CoinPouch
         Text(text = "CoinPouch")
         val inputvalueCoinPouchName = remember { mutableStateOf(TextFieldValue()) }
         val inputvalueCoinPouchQuantity = remember { mutableStateOf(TextFieldValue()) }
@@ -478,38 +373,16 @@ fun MostrarComponentes(
                     label = { Text("Quantity") })
             }
         }
-        Text(text = "Features")
-        var selectedTextFeatures by remember { mutableStateOf(featuresList!![0].name) }
-        Row(Modifier.fillMaxWidth()) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp)
-            ) {
-                ExposedDropdownMenuBox(expanded = expandedFeatures, onExpandedChange = {
-                    expandedFeatures = it
-                }) {
-                    TextField(value = selectedTextFeatures,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedFeatures) },
-                        modifier = Modifier.menuAnchor()
-                    )
 
-                    ExposedDropdownMenu(
-                        expanded = expandedFeatures,
-                        onDismissRequest = { expandedFeatures = false }) {
-                        featuresList!!.forEach { item ->
-                            DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
-                                selectedTextFeatures = item.name
-                                expandedFeatures = false
-                                Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
-                            })
-                        }
-                    }
-                }
-            }
+        val coinPouchName = inputvalueCoinPouchName.value.text
+        val coinPouchQuantity = inputvalueCoinPouchQuantity.value.text
+
+        //Features
+        val featuresName: MutableList<String> = mutableListOf()
+        featuresList!!.forEach {
+            featuresName.add(it.name)
         }
+        val features = MostrarDropDowns(list1 = featuresName, textoMostrar = "Features")
 
         //Traits SpellAbilities
         Text(text = "Traits")
