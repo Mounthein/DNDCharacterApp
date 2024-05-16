@@ -1,6 +1,5 @@
 package com.example.dndcharacterapp.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -43,7 +42,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
 import com.example.dndcharacterapp.api.CrudApi
 import com.example.dndcharacterapp.models.classes.ClassesItem
 import com.example.dndcharacterapp.models.equipment.Equipment
@@ -77,14 +75,8 @@ class CharacterInsertarActivity : ComponentActivity() {
                     val features = CrudApi().getFeatureList()?.toList()
                     val traits = CrudApi().getTraitList()?.toList()
                     val spells = CrudApi().getSpellList()?.toList()
-                    val characterImportado = intent.getStringExtra("character")
-//                    val filtrats =
-//                        character.filter { it._id.toString() == characterImportado }.firstOrNull()
-
                     if (races != null && alignments != null && classes != null && languages != null && proficiencies != null && equipment != null && features != null && traits != null && spells != null) {
-//                        val characterMostrar: Character? = characterImportado?.let { CrudApi().getCharacter(it) }
                         MostrarComponentes(
-//                            filtrats,
                             races,
                             alignments,
                             classes,
@@ -105,7 +97,6 @@ class CharacterInsertarActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MostrarComponentes(
-//    character:CharacterRealm?,
     racesList: List<Race>?,
     alignmentsList: List<com.example.dndcharacterapp.models.alignment.Alignment>?,
     classeslist: List<ClassesItem>?,
@@ -135,9 +126,10 @@ fun MostrarComponentes(
 
         ) {
         //Name
-        Mostrar1TextField(textoMostrar = "Name")
+        val name = Mostrar1TextField(textoMostrar = "Name")
+        //Toast.makeText(LocalContext.current, name, Toast.LENGTH_SHORT).show()
         //Level
-        Mostrar1TextField(textoMostrar = "Level")
+        val level = Mostrar1TextField(textoMostrar = "Level")
         //Inspiration Background
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -145,28 +137,28 @@ fun MostrarComponentes(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = "Inspiration")
-            val inspiration = remember { mutableStateOf(true) }
-            Checkbox(checked = inspiration.value, onCheckedChange = { inspiration.value = it })
+            val inspirationRemember = remember { mutableStateOf(true) }
+            Checkbox(checked = inspirationRemember.value,
+                onCheckedChange = { inspirationRemember.value = it })
+            val inspiration = inspirationRemember.value
             Spacer(modifier = Modifier.width(16.dp))
         }
-        Mostrar1TextField(textoMostrar = "Background")
-        //Race Alignment
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            val racesName: MutableList<String> = mutableListOf()
-            racesList!!.forEach {
-                racesName.add(it.name)
-            }
-            val alignmentsName: MutableList<String> = mutableListOf()
-            alignmentsList!!.forEach {
-                alignmentsName.add(it.name)
-            }
+        val background = Mostrar1TextField(textoMostrar = "Background")
 
-            MostrarDropDowns(list1 = racesName, list2 = alignmentsName)
+        //Race
+        val racesName: MutableList<String> = mutableListOf()
+        racesList!!.forEach {
+            racesName.add(it.name)
         }
+        MostrarDropDowns(list1 = racesName, "Race")
+
+        //Alignment
+        val alignmentsName: MutableList<String> = mutableListOf()
+        alignmentsList!!.forEach {
+            alignmentsName.add(it.name)
+        }
+        MostrarDropDowns(list1 = alignmentsName, "Alignment")
+
         //HitPoint HitDie
         Text(text = "HitPoints")
         val inputvalueHitPointsMaximum = remember { mutableStateOf(TextFieldValue()) }
@@ -767,14 +759,17 @@ fun Mostrar1TextField(textoMostrar: String): String {
 //Esto mostrará dos exposeddropdownmenusbox
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MostrarDropDowns(list1: List<String>, list2: List<String>) {
+fun MostrarDropDowns(list1: List<String>, textoMostrar: String): String {
     val context = LocalContext.current
     var expanded1 by remember { mutableStateOf(false) }
     var selectedText1 by remember { mutableStateOf(list1[0]) }
-    var expanded2 by remember { mutableStateOf(false) }
-    var selectedText2 by remember { mutableStateOf(list2[0]) }
 
-    Row(Modifier.fillMaxWidth()) {
+    Text(text = textoMostrar)
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Box(
             modifier = Modifier
                 .weight(1f)
@@ -803,38 +798,8 @@ fun MostrarDropDowns(list1: List<String>, list2: List<String>) {
                 }
             }
         }
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 4.dp)
-        ) {
-            ExposedDropdownMenuBox(expanded = expanded2, onExpandedChange = {
-                expanded2 = it
-            }) {
-                TextField(value = selectedText2,
-                    onValueChange = {},
-                    readOnly = true,
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded2) },
-                    modifier = Modifier.menuAnchor()
-                )
-
-                ExposedDropdownMenu(
-                    expanded = expanded2,
-                    onDismissRequest = { expanded2 = false }) {
-                    list2.forEach { item ->
-                        DropdownMenuItem(text = { Text(text = item) }, onClick = {
-                            selectedText2 = item
-                            expanded2 = false
-                            Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
-                        })
-                    }
-                }
-            }
-        }
     }
+    return selectedText1
 }
 
 @Preview(showBackground = true)
