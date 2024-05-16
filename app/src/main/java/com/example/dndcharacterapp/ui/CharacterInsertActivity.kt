@@ -150,14 +150,15 @@ fun MostrarComponentes(
         racesList!!.forEach {
             racesName.add(it.name)
         }
-        MostrarDropDowns(list1 = racesName, "Race")
+        val race = MostrarDropDowns(list1 = racesName, "Race")
 
         //Alignment
         val alignmentsName: MutableList<String> = mutableListOf()
         alignmentsList!!.forEach {
             alignmentsName.add(it.name)
         }
-        MostrarDropDowns(list1 = alignmentsName, "Alignment")
+
+        val alignment = MostrarDropDowns(list1 = alignmentsName, "Alignment")
 
         //HitPoint HitDie
         Text(text = "HitPoints")
@@ -187,6 +188,10 @@ fun MostrarComponentes(
                     label = { Text("Temporary") })
             }
         }
+        val HitPointsMaximum = inputvalueHitPointsMaximum.value.text
+        val HitPointsCurrent = inputvalueHitPointsCurrent.value.text
+        val HitPointsTemporary = inputvalueHitPointsTemporary.value.text
+
         Text(text = "HitDie")
         val inputvalueHitDieType = remember { mutableStateOf(TextFieldValue()) }
         val inputvalueHitDieQuantity = remember { mutableStateOf(TextFieldValue()) }
@@ -207,10 +212,14 @@ fun MostrarComponentes(
                     label = { Text("Quantity") })
             }
         }
+        val HitDieType = inputvalueHitDieType.value.text
+        val HitDieQuantity = inputvalueHitDieQuantity.value.text
+
         //DeathSaves ArmorClass
         Text(text = "DeathSaves")
         val inputvalueDeathSavesSuccess = remember { mutableStateOf(TextFieldValue()) }
         val inputvalueDeathSavesFailures = remember { mutableStateOf(TextFieldValue()) }
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -228,6 +237,9 @@ fun MostrarComponentes(
                     label = { Text("Failures") })
             }
         }
+        val DeathSavesSuccess = inputvalueDeathSavesSuccess.value.text
+        val DeathSavesFailures = inputvalueDeathSavesFailures.value.text
+
         Text(text = "ArmorClass")
         val inputvalueArmorClassName = remember { mutableStateOf(TextFieldValue()) }
         val inputvalueArmorClassType = remember { mutableStateOf(TextFieldValue()) }
@@ -255,6 +267,11 @@ fun MostrarComponentes(
                     label = { Text("Value") })
             }
         }
+
+        val ArmorClassName = inputvalueArmorClassName.value.text
+        val ArmorClassType = inputvalueArmorClassType.value.text
+        val ArmorClassValue = inputvalueArmorClassValue.value.text
+
         //Classes Stats
         Column(Modifier.fillMaxWidth()) {
             // Texto "Classes"
@@ -263,6 +280,7 @@ fun MostrarComponentes(
             )
 
             var selectedTextClasses by remember { mutableStateOf(classeslist!![0].name) }
+
             Row(Modifier.fillMaxWidth()) {
                 Box(
                     modifier = Modifier
