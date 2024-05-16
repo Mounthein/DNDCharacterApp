@@ -1,6 +1,5 @@
 package com.example.dndcharacterapp.realm
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dndcharacterapp.models.characterRealm.CharacterRealm
@@ -24,11 +23,7 @@ import com.example.dndcharacterapp.models.characterRealm.EmTraitCh
 import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.ext.realmListOf
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -36,7 +31,6 @@ import kotlinx.coroutines.launch
 class MainViewModel : ViewModel() {
 
     private val realm = RealmApp.realm
-
 
 
     val characters = realm.query<CharacterRealm>().asFlow().map { results ->
@@ -48,6 +42,56 @@ class MainViewModel : ViewModel() {
     //init {
     //    createSampleEntriesCharacter()
     //}
+
+    private fun insertNewCharacter(characterRealm: CharacterRealm) {
+        viewModelScope.launch {
+            realm.write {
+                val characterRealmInsertar = CharacterRealm().apply {
+                    username = characterRealm.username
+                    name = characterRealm.name
+                    level = characterRealm.level
+                    inspiration = characterRealm.inspiration
+                    background = characterRealm.background
+                    race = characterRealm.race
+                    alignment = characterRealm.alignment
+                    hitPoints = characterRealm.hitPoints
+                    hit_die = characterRealm.hit_die
+                    death_saves = characterRealm.death_saves
+                    temporary_HitPoints = characterRealm.temporary_HitPoints
+                    exhaustion = characterRealm.exhaustion
+                    armor_Class = characterRealm.armor_Class
+                    classes = characterRealm.classes
+                    experience_Points = characterRealm.experience_Points
+                    stats = characterRealm.stats
+                    skill_proficiencies = characterRealm.skill_proficiencies
+                    other_proficiencies = characterRealm.other_proficiencies
+                    languages = characterRealm.languages
+                    proficiency_bonus = characterRealm.proficiency_bonus
+                    equipment = characterRealm.equipment
+                    coin_pouch = characterRealm.coin_pouch
+                    features = characterRealm.features
+                    traits = characterRealm.traits
+                    spell_abilities = characterRealm.spell_abilities
+                    known_spells = characterRealm.known_spells
+                    prepared_spells = characterRealm.prepared_spells
+                    passive_wisdom = characterRealm.passive_wisdom
+                    initiative = characterRealm.initiative
+                    speed = characterRealm.speed
+                    proficiency_bonus = characterRealm.proficiency_bonus
+                    saving_throws = characterRealm.saving_throws
+                    personality_traits = characterRealm.personality_traits
+                    ideals = characterRealm.ideals
+                    bonds = characterRealm.bonds
+                    flaws = characterRealm.flaws
+                    character_appearance = characterRealm.character_appearance
+                    character_backstory = characterRealm.character_backstory
+                    allies_organizations = characterRealm.allies_organizations
+                    symbol = characterRealm.symbol
+                }
+                copyToRealm(characterRealmInsertar, updatePolicy = UpdatePolicy.ALL)
+            }
+        }
+    }
 
     private fun createSampleEntriesCharacter() {
         viewModelScope.launch {

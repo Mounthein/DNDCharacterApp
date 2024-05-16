@@ -1,5 +1,6 @@
 package com.example.dndcharacterapp.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -53,6 +54,8 @@ import com.example.dndcharacterapp.models.spell.Spell
 import com.example.dndcharacterapp.models.trait.Trait
 import com.example.dndcharacterapp.realm.MainViewModel
 import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
+import io.realm.kotlin.ext.toRealmList
+import io.realm.kotlin.types.RealmList
 
 class CharacterInsertarActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
@@ -342,7 +345,8 @@ fun MostrarComponentes(
         proficienciesList!!.forEach {
             otherProficienciesName.add(it.name)
         }
-        val otherProficiencies = MostrarDropDowns(list1 = otherProficienciesName, textoMostrar = "Other Proficiencies")
+        val otherProficiencies =
+            MostrarDropDowns(list1 = otherProficienciesName, textoMostrar = "Other Proficiencies")
 
         //Equipment
         val equipmentName: MutableList<String> = mutableListOf()
@@ -384,40 +388,14 @@ fun MostrarComponentes(
         }
         val features = MostrarDropDowns(list1 = featuresName, textoMostrar = "Features")
 
-        //Traits SpellAbilities
-        Text(text = "Traits")
-        var selectedTextTraits by remember { mutableStateOf(traitsList!![0].name) }
-        Row(Modifier.fillMaxWidth()) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp)
-            ) {
-                ExposedDropdownMenuBox(expanded = expandedTraits, onExpandedChange = {
-                    expandedTraits = it
-                }) {
-                    TextField(value = selectedTextTraits,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedTraits) },
-                        modifier = Modifier.menuAnchor()
-                    )
-
-                    ExposedDropdownMenu(
-                        expanded = expandedTraits,
-                        onDismissRequest = { expandedTraits = false }) {
-                        traitsList!!.forEach { item ->
-                            DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
-                                selectedTextTraits = item.name
-                                expandedTraits = false
-                                Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
-                            })
-                        }
-                    }
-                }
-            }
+        //Traits
+        val traitsName: MutableList<String> = mutableListOf()
+        traitsList!!.forEach {
+            traitsName.add(it.name)
         }
+        val traits = MostrarDropDowns(list1 = traitsName, textoMostrar = "Traits")
 
+        //SpellAbilities
         Text(text = "SpellAbilities")
         val inputvalueSpellAbilitiesSpellcastingAbility =
             remember { mutableStateOf(TextFieldValue()) }
@@ -447,128 +425,29 @@ fun MostrarComponentes(
             }
         }
 
-        //PreparedSpells KnownSpells
-        Text(text = "PreparedSpells")
-        var selectedTextPreparedSpells by remember { mutableStateOf(spellList!![0].name) }
-        Row(Modifier.fillMaxWidth()) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp)
-            ) {
-                ExposedDropdownMenuBox(expanded = expandedPreparedSpells, onExpandedChange = {
-                    expandedPreparedSpells = it
-                }) {
-                    TextField(value = selectedTextPreparedSpells,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedPreparedSpells) },
-                        modifier = Modifier.menuAnchor()
-                    )
+        val SpellAbilitiesSpellcastingAbility =
+            inputvalueSpellAbilitiesSpellcastingAbility.value.text
+        val SpellAbilitiesSpellSaveDC = inputvalueSpellAbilitiesSpellSaveDC.value.text
+        val SpellAbilitiesSpellAttackBonus = inputvalueSpellAbilitiesSpellAttackBonus.value.text
 
-                    ExposedDropdownMenu(expanded = expandedPreparedSpells,
-                        onDismissRequest = { expandedPreparedSpells = false }) {
-                        spellList!!.forEach { item ->
-                            DropdownMenuItem(text = {
-                                Text(
-                                    text = item.name, color = MaterialTheme.colorScheme.onBackground
-                                )
-                            }, onClick = {
-                                selectedTextPreparedSpells = item.name
-                                expandedPreparedSpells = false
-                                Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
-                            })
-                        }
-                    }
-                }
-            }
+        //PreparedSpells
+        val preparedSpellsName: MutableList<String> = mutableListOf()
+        spellList!!.forEach {
+            preparedSpellsName.add(it.name)
         }
-        Text(text = "KnownSpells")
-        var selectedTextKnownSpells by remember { mutableStateOf(spellList!![0].name) }
-        Row(Modifier.fillMaxWidth()) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp)
-            ) {
-                ExposedDropdownMenuBox(expanded = expandedKnownSpells, onExpandedChange = {
-                    expandedKnownSpells = it
-                }) {
-                    TextField(value = selectedTextKnownSpells,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedKnownSpells) },
-                        modifier = Modifier.menuAnchor()
-                    )
+        val preparedSpells =
+            MostrarDropDowns(list1 = preparedSpellsName, textoMostrar = "PreparedSpells")
 
-                    ExposedDropdownMenu(expanded = expandedKnownSpells,
-                        onDismissRequest = { expandedKnownSpells = false }) {
-                        spellList!!.forEach { item ->
-                            DropdownMenuItem(text = {
-                                Text(
-                                    text = item.name, color = MaterialTheme.colorScheme.onBackground
-                                )
-                            }, onClick = {
-                                selectedTextKnownSpells = item.name
-                                expandedKnownSpells = false
-                                Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
-                            })
-                        }
-                    }
-                }
-            }
+        //KnownSpells
+        val knownSpellsName: MutableList<String> = mutableListOf()
+        spellList!!.forEach {
+            knownSpellsName.add(it.name)
         }
+        val knownSpells = MostrarDropDowns(list1 = knownSpellsName, textoMostrar = "KnownSpells")
+
+
         //SavingThrows
-        Text(text = "SavingThrows")
-        Row(Modifier.fillMaxWidth()) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp)
-            ) {
-                var stringArray by rememberSaveable { mutableStateOf(mutableListOf("")) }
-
-                Column {
-                    stringArray.forEachIndexed { index, item ->
-                        OutlinedTextField(value = item, onValueChange = { newValue ->
-                            val newList = stringArray.toMutableList()
-                            newList[index] = newValue
-                            stringArray = newList
-                        }, label = {
-                            Text(
-                                "Item $index", color = MaterialTheme.colorScheme.onBackground
-                            )
-                        }, colors = OutlinedTextFieldDefaults.colors(
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black,
-                        )
-                        )
-                    }
-                    Button(onClick = {
-                        val newList = stringArray.toMutableList()
-                        newList.add("")
-                        stringArray = newList
-                    }) {
-                        Text("Afegir element", color = MaterialTheme.colorScheme.onBackground)
-                    }
-                    Button(onClick = {
-                        val newList = stringArray.toMutableList()
-                        newList.remove("")
-                        stringArray = newList
-                    }) {
-                        Text("Eliminar element", color = MaterialTheme.colorScheme.onBackground)
-                    }
-                    //Con este código se almacena la información
-                    Button(onClick = {
-                        val stringArrayArray: Array<String> = stringArray.toTypedArray()
-                        // Use the stringArrayArray variable as a String array
-                        println(stringArrayArray.contentToString())
-                    }) {
-                        Text("Save to String array", color = MaterialTheme.colorScheme.onBackground)
-                    }
-                }
-            }
-        }
+        val savingThrows = MostrarTextFieldArray("SavingThrows")
 
         //Exhaustion
         Mostrar1TextField(textoMostrar = "Exhaustion")
@@ -608,20 +487,9 @@ fun MostrarComponentes(
 
         //Symbol
         Mostrar1TextField(textoMostrar = "Symbol")
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                //Almacenar todos los elementos
-                Button(onClick = {
-                    Toast.makeText(context, "Character Añadido", Toast.LENGTH_SHORT).show()
-                }) {
-                    Text("Afegir Character", color = MaterialTheme.colorScheme.onBackground)
-                }
-            }
-        }
+
+        //Boton añadir character
+        BotonAnadir(context)
     }
 }
 
@@ -691,6 +559,79 @@ fun MostrarDropDowns(list1: List<String>, textoMostrar: String): String {
         }
     }
     return selectedText1
+}
+
+@Composable
+fun MostrarTextFieldArray(textoMostrar: String): RealmList<String> {
+    Text(text = textoMostrar)
+    var stringArray by rememberSaveable { mutableStateOf(mutableListOf("")) }
+    Row(Modifier.fillMaxWidth()) {
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 4.dp)
+        ) {
+
+            Column {
+                stringArray.forEachIndexed { index, item ->
+                    OutlinedTextField(value = item, onValueChange = { newValue ->
+                        val newList = stringArray.toMutableList()
+                        newList[index] = newValue
+                        stringArray = newList
+                    }, label = {
+                        Text(
+                            "Saving Throws $index", color = MaterialTheme.colorScheme.onBackground
+                        )
+                    }, colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = Color.Black,
+                        unfocusedTextColor = Color.Black,
+                    )
+                    )
+                }
+                Button(onClick = {
+                    val newList = stringArray.toMutableList()
+                    newList.add("")
+                    stringArray = newList
+                }) {
+                    Text("Afegir element", color = MaterialTheme.colorScheme.onBackground)
+                }
+                Button(onClick = {
+                    val newList = stringArray.toMutableList()
+                    newList.remove("")
+                    stringArray = newList
+                }) {
+                    Text("Eliminar element", color = MaterialTheme.colorScheme.onBackground)
+                }
+                //Con este código se almacena la información
+                Button(onClick = {
+                    val stringArrayArray: Array<String> = stringArray.toTypedArray()
+                    // Use the stringArrayArray variable as a String array
+                    println(stringArrayArray.contentToString())
+                }) {
+                    Text("Save to String array", color = MaterialTheme.colorScheme.onBackground)
+                }
+            }
+        }
+    }
+    return stringArray.toRealmList()
+}
+
+@Composable
+fun BotonAnadir(context: Context){
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(modifier = Modifier.weight(1f)) {
+            //Almacenar todos los elementos
+            Button(onClick = {
+                Toast.makeText(context, "Character Añadido", Toast.LENGTH_SHORT).show()
+            }) {
+                Text("Afegir Character", color = MaterialTheme.colorScheme.onBackground)
+            }
+        }
+    }
 }
 
 @Preview(showBackground = true)
