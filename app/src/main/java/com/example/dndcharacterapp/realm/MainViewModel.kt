@@ -1,6 +1,5 @@
 package com.example.dndcharacterapp.realm
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dndcharacterapp.models.characterRealm.CharacterRealm
@@ -21,7 +20,6 @@ import com.example.dndcharacterapp.models.characterRealm.EmSpellAbilityCh
 import com.example.dndcharacterapp.models.characterRealm.EmSpellCh
 import com.example.dndcharacterapp.models.characterRealm.EmStatCh
 import com.example.dndcharacterapp.models.characterRealm.EmTraitCh
-import io.realm.kotlin.Realm
 import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.ext.realmListOf
@@ -32,7 +30,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.mongodb.kbson.ObjectId
 
 class MainViewModel : ViewModel() {
 
@@ -47,14 +44,13 @@ class MainViewModel : ViewModel() {
         viewModelScope, SharingStarted.WhileSubscribed(), emptyList()
     )
 
-    init {
-        createSampleEntriesCharacter()
-    }
+    //init {
+    //    createSampleEntriesCharacter()
+    //}
 
-    suspend fun fetchSearchResults(searchTerm: ObjectId) {
-        realm.query<CharacterRealm>("_id CONTAINS $0", searchTerm).asFlow().map { results ->
-                results.list.toList()
-            }.collect { filteredList ->
+    suspend fun fetchSearchResults(searchTerm: String) {
+        realm.query<CharacterRealm>("idString CONTAINS $0", searchTerm).find().asFlow()
+            .map { results -> results.list.toList() }.collect { filteredList ->
                 _searchResults.value = filteredList
             }
     }
@@ -62,21 +58,21 @@ class MainViewModel : ViewModel() {
     private fun createSampleEntriesCharacter() {
         viewModelScope.launch {
             realm.write {
-                var usernameCharacter = "user"
-                var nameCharacter = "name"
+                var usernameCharacter = "seancoca"
+                var nameCharacter = "Jironiah"
                 var levelCharacter = 1
                 var inspirationCharacter = true
-                var backgroundCharacter = "background"
+                var backgroundCharacter = "Guardian"
                 var raceCharacter = EmRaceCh().apply {
-                    name = "namerace"
+                    name = "Humano"
                     speed = 1
-                    size = "sizerace"
-                    subrace = "subracerace"
+                    size = "170cm"
+                    subrace = "Joven"
                 }
 
                 var alignmentCharacter = EmAlignmentCh().apply {
-                    name = "namealignment"
-                    abbreviation = "abbreviattionalignment"
+                    name = "Bueno"
+                    abbreviation = "BO"
                 }
                 var hitpoints = EmHitPointsCh().apply {
                     maximum = 1
@@ -84,7 +80,7 @@ class MainViewModel : ViewModel() {
                     temporary = 1
                 }
                 var hitdie = EmHitDieCh().apply {
-                    type = "typehitdie"
+                    type = "20"
                     quantity = 1
                 }
                 var deathsaves = EmDeathSavesCh().apply {
@@ -94,61 +90,63 @@ class MainViewModel : ViewModel() {
                 var temporaryHitPoints = 1
                 var exhaustionCharacter = 1
                 var armorclass = EmArmorClassCh().apply {
-                    name = "namearmorclass"
-                    type = "typearmorclass"
+                    name = "Ligero"
+                    type = "Ligero"
                     value = 1
                 }
                 var classItem = EmClassItemCh().apply {
-                    name = "nameclassitem"
+                    name = "Chaqueta"
                     level = 1
-                    subclass = "subclassitem"
+                    subclass = "Camiseta"
                 }
                 var experiencePoints = 1
                 var statsCharacter = EmStatCh().apply {
-                    name = "namestat"
+                    name = "Fuerza"
                     value = 1
                 }
                 var skillProficiency = EmSkillProficiencyCh().apply {
-                    name = "nameskillproficiency"
+                    name = "Inteligencia"
                     bonus = 1
                 }
                 var language = EmLanguageCh().apply {
-                    name = "namelanguage"
-                    type = "typelanguage"
+                    name = "Humano"
+                    type = "Real"
                 }
                 var proficiencyCharacter = EmProficiencyCh().apply {
-                    name = "nameproficiency"
-                    type = "typeproficiency"
+                    name = "Inteligente"
+                    type = "Inteligencia"
                 }
                 var equipmentCharacter = EmEquipmentCh().apply {
-                    name = "nameequipment"
-                    equipment_category = "equipmentcategoryequipment"
+                    name = "Armero"
+                    equipment_category = "Armeria"
                     quantity = 1
                 }
                 var coin = EmCoinCh().apply {
-                    name = "namecoin"
-                    quantity = 1
+                    name = "Euros"
+                    quantity = 200
                 }
                 var feature = EmFeatureCh().apply {
-                    name = "namefeature"
-                    description = "descriptionfeature"
+                    name = "Suerte"
+                    description = "Se basa en la suerte del personaje"
                 }
                 var trait = EmTraitCh().apply {
-                    name = "nametrait"
-                    description = "descriptiontrait"
+                    name = "Breath-Weapon"
+                    description =
+                        "You can use your action to exhale destructive energy. Your draconic ancestry determines the size, shape, and damage type of the exhalation."
                 }
                 var spellAbility = EmSpellAbilityCh().apply {
-                    spellcasting_ability = "spellcastingabilityspellability"
+                    spellcasting_ability = "AnimalFriendship"
                     spell_save_dc = 1
                     spell_attack_bonus = 1
                 }
                 var spell = EmSpellCh().apply {
-                    name = "namespell"
-                    description = "descriptionspell"
-                    school = "schoolspell"
+                    name = "AnimalMessenger"
+                    description =
+                        "By means of this spell, you use an animal to deliver a message. Choose a Tiny beast you can see within range, such as a squirrel, a blue jay, or a bat. You specify a location, which you must have visited, and a recipient who matches a general description, such as \"a man or woman dressed in the uniform of the town guard\" or \"a red-haired dwarf wearing a pointed hat.\" You also speak a message of up to twenty-five words. The target beast travels for the duration of the spell toward the specified location, covering about 50 miles per 24 hours for a flying messenger, or 25 miles for other animals."
+                    school = "Enchantment"
                     level = 1
-                    casting_time = "castingtimespell"
-                    duration = "durationspell"
+                    casting_time = "1 action"
+                    duration = "24 hours"
                 }
                 var passiveWisdom = 1
                 var initiativeCharacter = 1

@@ -9,6 +9,7 @@ import org.mongodb.kbson.ObjectId
 class CharacterRealm: RealmObject {
     @PrimaryKey
     var _id: ObjectId = ObjectId()
+    var idString: String = _id.toString()
     var username: String? = null
     var name: String? = null
     var level: Int? = null
