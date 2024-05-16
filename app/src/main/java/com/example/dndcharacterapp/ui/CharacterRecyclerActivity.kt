@@ -62,7 +62,7 @@ class CharacterRecyclerActivity : ComponentActivity() {
                         )
 
                         if (filtre.value.text.isNotEmpty()) {
-                            var filtrats =
+                            val filtrats =
                                 character!!.filter { it.name!!.contains(filtre.value.text) }
 
                             LazyColumn(
@@ -77,8 +77,8 @@ class CharacterRecyclerActivity : ComponentActivity() {
                                             this@CharacterRecyclerActivity,
                                             CharacterActivity::class.java
                                         )
-                                        //intent.putExtra("character", it._id)
-                                        //startActivity(intent)
+                                        intent.putExtra("character", it._id.toString())
+                                        startActivity(intent)
                                     }
 
                                 }
@@ -97,8 +97,8 @@ class CharacterRecyclerActivity : ComponentActivity() {
                                             this@CharacterRecyclerActivity,
                                             CharacterActivity::class.java
                                         )
-                                        //intent.putExtra("character", it._id)
-                                        //startActivity(intent)
+                                        intent.putExtra("character", it._id.toString())
+                                        startActivity(intent)
                                     }
 
                                 }
@@ -131,7 +131,24 @@ fun CharacterCard(character: CharacterRealm, click: () -> Unit) {
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurface
             )
-
+            Text(
+                text = "Level: " + character.level,
+                modifier = Modifier.padding(16.dp),
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = "Race: " + character.race!!.name,
+                modifier = Modifier.padding(16.dp),
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = "Name: " + (character.classes?.get(0)?.name),
+                modifier = Modifier.padding(16.dp),
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurface
+            )
         }
     }
 }

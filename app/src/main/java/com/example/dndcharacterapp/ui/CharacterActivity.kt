@@ -1,842 +1,363 @@
 package com.example.dndcharacterapp.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.widget.Toast
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.dndcharacterapp.R
 import com.example.dndcharacterapp.api.CrudApi
-import com.example.dndcharacterapp.models.character.Character
-import com.example.dndcharacterapp.models.classes.ClassesItem
-import com.example.dndcharacterapp.models.equipment.Equipment
-import com.example.dndcharacterapp.models.feature.Feature
-import com.example.dndcharacterapp.models.language.Language
-import com.example.dndcharacterapp.models.proficiency.Proficiency
-import com.example.dndcharacterapp.models.race.Race
+import com.example.dndcharacterapp.models.characterRealm.CharacterRealm
+import com.example.dndcharacterapp.models.spell.DamageAtCharacterLevel
+import com.example.dndcharacterapp.models.spell.DamageSlotLevel
+import com.example.dndcharacterapp.models.spell.HealAtSlotLevel
 import com.example.dndcharacterapp.models.spell.Spell
-import com.example.dndcharacterapp.models.trait.Trait
-import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
+import com.example.dndcharacterapp.realm.MainViewModel
+import com.example.dndcharacterapp.ui.ui.theme.DNDCharacterAppTheme
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.mongodb.kbson.ObjectId
 
 class CharacterActivity : ComponentActivity() {
+    private val viewModel: MainViewModel by viewModels()
+
+    @SuppressLint("StateFlowValueCalledInComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            DNDCharacterAppTheme(darkTheme = false) {
+            DNDCharacterAppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    val races = CrudApi().getRaceList()?.toList()
-                    val alignments = CrudApi().getAlignmentList()?.toList()
-                    val classes = CrudApi().getClassesList()?.toList()
-                    val languages = CrudApi().getLanguageList()?.toList()
-                    val proficiencies = CrudApi().getProficiencyList()?.toList()
-                    val equipment = CrudApi().getEquipmentList()?.toList()
-                    val features = CrudApi().getFeatureList()?.toList()
-                    val traits = CrudApi().getTraitList()?.toList()
-                    val spells = CrudApi().getSpellList()?.toList()
+                    val character by viewModel.characters.collectAsState()
                     val characterImportado = intent.getStringExtra("character")
-                    if (races != null && alignments != null && classes != null && languages != null && proficiencies != null && equipment != null && features != null && traits != null && spells != null) {
-                        var character: Character? = characterImportado?.let { CrudApi().getCharacter(it) }
-                        MostrarComponentes(
-                            character,
-                            races,
-                            alignments,
-                            classes,
-                            languages,
-                            proficiencies,
-                            equipment,
-                            features,
-                            traits,
-                            spells
-                        )
+                    val id = characterImportado?.let { stringToObjectId(it) }
+                    if (id!= null) {
+                        runBlocking {
+                            val corrutina = launch {
+                                    viewModel.fetchSearchResults(id)
+
+                            }
+                            corrutina.join()
+                        }
+                    } else {
+                        // objectId es null, el string no es un ObjectId válido
                     }
+
+                }
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        viewModel.searchResults!!.value?.let {
+                            it.get(0).name?.let { it1 ->
+                                HeaderCharacter(
+                                    name = it1
+                                )
+                            }
+                        }
+                        BodyCharacter(character = viewModel.searchResults!!.value[0])
+                    }
+
                 }
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MostrarComponentes(
-    character:Character?,
-    racesList: List<Race>?,
-    alignmentsList: List<com.example.dndcharacterapp.models.alignment.Alignment>?,
-    classeslist: List<ClassesItem>?,
-    languagesList: List<Language>?,
-    proficienciesList: List<Proficiency>?,
-    equipmentList: List<Equipment>?,
-    featuresList: List<Feature>?,
-    traitsList: List<Trait>?,
-    spellList: List<Spell>?,
-) {
-    val context = LocalContext.current
-    var expandedClasses by remember { mutableStateOf(false) }
-    var expandedOtherProficiency by remember { mutableStateOf(false) }
-    var expandedEquipment by remember { mutableStateOf(false) }
-    var expandedLanguages by remember { mutableStateOf(false) }
-    var expandedFeatures by remember { mutableStateOf(false) }
-    var expandedTraits by remember { mutableStateOf(false) }
-    var expandedPreparedSpells by remember { mutableStateOf(false) }
-    var expandedKnownSpells by remember { mutableStateOf(false) }/*
-    var racesOptions by remember { mutableStateOf(racesList!![0].name) }
-    var alignmentsOptions by remember { mutableStateOf(alignmentsList!![0].name) }
-    var classesOptions by remember { mutableStateOf(classeslist!![0].name) }
-    var languagesOptions by remember { mutableStateOf(languagesList!![0].name) }
-    var proficiencyOptions by remember { mutableStateOf(proficienciesList!![0].name) }
-    var equipmentOptions by remember { mutableStateOf(equipmentList!![0].name) }
-    var featureOptions by remember { mutableStateOf(featuresList!![0].name) }
-    var traitOptions by remember { mutableStateOf(traitsList!![0].name) }
-    var spellOptions by remember { mutableStateOf(spellList!![0].name) }*/
+fun stringToObjectId(string: String): ObjectId? {
+    return try {
+        ObjectId(string)
+    } catch (e: Exception) {
+        null
+    }
+}
 
+@Composable
+fun HeaderCharacter(name: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 10.dp)
+            .height(60.dp)
+            .border(3.dp, color = colorResource(id = R.color.red)),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = name,
+            fontSize = 30.sp,
+            fontStyle = FontStyle.Italic,
+            fontWeight = FontWeight.ExtraBold,
+            fontFamily = FontFamily.Cursive,
+        )
+    }
+}
+
+@Composable
+fun BodyCharacter(character: CharacterRealm) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(20.dp)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
 
         ) {
-        //Name
-        Mostrar1TextField(textoMostrar = "Name")
-        //Level
-        Mostrar1TextField(textoMostrar = "Level")
-        //Inspiration Background
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Inspiration")
-            val inspiration = remember { mutableStateOf(true) }
-            Checkbox(checked = inspiration.value, onCheckedChange = { inspiration.value = it })
-            Spacer(modifier = Modifier.width(16.dp))
-        }
-        Mostrar1TextField(textoMostrar = "Background")
-        //Race Alignment
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            val racesName: MutableList<String> = mutableListOf()
-            racesList!!.forEach {
-                racesName.add(it.name)
+        TextBoxCharacter(title = "Level", content = character.level.toString())
+        TextBoxCharacter(title = "Inspiration", content = character.inspiration.toString())
+        character.background?.let { TextBoxCharacter(title = "background", content = it) }
+//        TextBoxCharacter(title = "race", content = character.race)
+//        TextBoxCharacter(title = "alignment", content = character.alignment)
+//        TextBoxCharacter(title = "hitPoints", content = character.hitPoints)
+//        TextBoxCharacter(title = "hit_die", content = character.hit_die)
+//        TextBoxCharacter(title = "death_saves", content = character.death_saves)
+//        TextBoxCharacter(title = "temporary_HitPoints", content = character.temporary_HitPoints)
+//        TextBoxCharacter(title = "exhaustion", content = character.exhaustion)
+//        TextBoxCharacter(title = "armor_Class", content = character.armor_Class)
+//        TextBoxCharacter(title = "classes", content = character.classes)
+//        TextBoxCharacter(title = "experience_Points", content = character.experience_Points)
+//        TextBoxCharacter(title = "stats", content = character.stats)
+//        TextBoxCharacter(title = "skill_proficiencies", content = character.skill_proficiencies)
+//        TextBoxCharacter(title = "languages", content = character.languages)
+//        TextBoxCharacter(title = "other_proficiencies", content = character.other_proficiencies)
+//        TextBoxCharacter(title = "equipment", content = character.equipment)
+//        TextBoxCharacter(title = "coin_pouch", content = character.coin_pouch)
+        character.features?.get(0)
+            ?.let { it.name?.let { it1 -> TextBoxCharacter(title = "features", content = it1) } }
+        character.traits?.get(0)
+            ?.let { it.name?.let { it1 -> TextBoxCharacter(title = "traits", content = it1) } }
+        if (character.spell_abilities != null) {
+            character.spell_abilities!![0].spellcasting_ability?.let {
+                TextBoxCharacter(
+                    title = "spell_abilities", content = it
+                )
             }
-            val alignmentsName: MutableList<String> = mutableListOf()
-            alignmentsList!!.forEach {
-                alignmentsName.add(it.name)
-            }
-
-            MostrarDropDowns(list1 = racesName, list2 = alignmentsName)
-        }
-        //HitPoint HitDie
-        Text(text = "HitPoints")
-        val inputvalueHitPointsMaximum = remember { mutableStateOf(TextFieldValue()) }
-        val inputvalueHitPointsCurrent = remember { mutableStateOf(TextFieldValue()) }
-        val inputvalueHitPointsTemporary = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueHitPointsMaximum.value,
-                    onValueChange = { inputvalueHitPointsMaximum.value = it },
-                    label = { Text("Maximum") })
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueHitPointsCurrent.value,
-                    { inputvalueHitPointsCurrent.value = it },
-                    label = { Text("Current") })
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueHitPointsTemporary.value,
-                    { inputvalueHitPointsTemporary.value = it },
-                    label = { Text("Temporary") })
-            }
-        }
-        Text(text = "HitDie")
-        val inputvalueHitDieType = remember { mutableStateOf(TextFieldValue()) }
-        val inputvalueHitDieQuantity = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueHitDieType.value,
-                    onValueChange = { inputvalueHitDieType.value = it },
-                    label = { Text("Type") })
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueHitDieQuantity.value,
-                    onValueChange = { inputvalueHitDieQuantity.value = it },
-                    label = { Text("Quantity") })
-            }
-        }
-        //DeathSaves ArmorClass
-        Text(text = "DeathSaves")
-        val inputvalueDeathSavesSuccess = remember { mutableStateOf(TextFieldValue()) }
-        val inputvalueDeathSavesFailures = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueDeathSavesSuccess.value,
-                    onValueChange = { inputvalueDeathSavesSuccess.value = it },
-                    label = { Text("Success") })
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueDeathSavesFailures.value,
-                    onValueChange = { inputvalueDeathSavesFailures.value = it },
-                    label = { Text("Failures") })
-            }
-        }
-        Text(text = "ArmorClass")
-        val inputvalueArmorClassName = remember { mutableStateOf(TextFieldValue()) }
-        val inputvalueArmorClassType = remember { mutableStateOf(TextFieldValue()) }
-        val inputvalueArmorClassValue = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueArmorClassName.value,
-                    onValueChange = { inputvalueArmorClassName.value = it },
-                    label = { Text("Name") })
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueArmorClassType.value,
-                    onValueChange = { inputvalueArmorClassType.value = it },
-                    label = { Text("Type") })
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueArmorClassValue.value,
-                    onValueChange = { inputvalueArmorClassValue.value = it },
-                    label = { Text("Value") })
-            }
-        }
-        //Classes Stats
-        Column(Modifier.fillMaxWidth()) {
-            // Texto "Classes"
-            Text(
-                text = "Classes", modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
+            TextBoxCharacter(
+                title = "spell_abilities",
+                content = character.spell_abilities!![0].spell_save_dc.toString()
+            )
+            TextBoxCharacter(
+                title = "spell_abilities",
+                content = character.spell_abilities!![0].spell_attack_bonus.toString()
             )
 
-            var selectedTextClasses by remember { mutableStateOf(classeslist!![0].name) }
-            Row(Modifier.fillMaxWidth()) {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 4.dp)
-                ) {
-                    ExposedDropdownMenuBox(expanded = expandedClasses, onExpandedChange = {
-                        expandedClasses = it
-                    }) {
-                        TextField(value = selectedTextClasses,
-                            onValueChange = {},
-                            readOnly = true,
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedClasses) },
-                            modifier = Modifier.menuAnchor()
-                        )
-
-                        ExposedDropdownMenu(expanded = expandedClasses,
-                            onDismissRequest = { expandedClasses = false }) {
-                            classeslist!!.forEach { item ->
-                                DropdownMenuItem(text = {
-                                    Text(
-                                        text = item.name,
-                                        color = MaterialTheme.colorScheme.onBackground
-                                    )
-                                }, onClick = {
-                                    selectedTextClasses = item.name
-                                    expandedClasses = false
-                                    Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
-                                })
-                            }
-                        }
-                    }
-                }
+        }
+        character.prepared_spells?.get(0)?.let {
+            it.name?.let { it1 ->
+                TextBoxCharacter(
+                    title = "prepared_spells", content = it1
+                )
             }
-
-            // Texto "Stats"
-            Text(
-                text = "Stats", modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
+        }
+        character.known_spells?.get(0)?.let {
+            it.name?.let { it1 ->
+                TextBoxCharacter(
+                    title = "known_spells", content = it1
+                )
+            }
+        }
+        TextBoxCharacter(title = "passive_wisdom", content = character.passive_wisdom.toString())
+        TextBoxCharacter(title = "initiative", content = character.initiative.toString())
+        TextBoxCharacter(title = "speed", content = character.speed.toString())
+        TextBoxCharacter(
+            title = "proficiency_bonus", content = character.proficiency_bonus.toString()
+        )
+        TextBoxCharacter(title = "saving_throws", content = character.saving_throws)
+        character.personality_traits?.let {
+            TextBoxCharacter(
+                title = "personality_traits", content = it
             )
-            val inputvalueStatsName = remember { mutableStateOf(TextFieldValue()) }
-            val inputvalueStatsValue = remember { mutableStateOf(TextFieldValue()) }
-            // TextFields para "Name" y "Value"
-            Row(Modifier.fillMaxWidth()) {
-                Box(modifier = Modifier.weight(1f)) {
-                    TextField(value = inputvalueStatsName.value,
-                        onValueChange = { inputvalueStatsName.value = it },
-                        label = { Text("Name") })
-                }
-
-                Spacer(modifier = Modifier.width(4.dp))
-
-                Box(modifier = Modifier.weight(1f)) {
-                    TextField(value = inputvalueStatsValue.value,
-                        onValueChange = { inputvalueStatsValue.value = it },
-                        label = { Text("Value") })
-                }
-            }
         }
-
-        //SkillProficiencies Languages
-        Text(text = "SkillProficiencies")
-        val inputvalueSkillProficienciesName = remember { mutableStateOf(TextFieldValue()) }
-        val inputvalueSkillProficienciesBonus = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueSkillProficienciesName.value,
-                    onValueChange = { inputvalueSkillProficienciesName.value = it },
-                    label = { Text("Name") })
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueSkillProficienciesBonus.value,
-                    onValueChange = { inputvalueSkillProficienciesBonus.value = it },
-                    label = { Text("Bonus") })
-            }
+        character.ideals?.let { TextBoxCharacter(title = "ideals", content = it) }
+        character.bonds?.let { TextBoxCharacter(title = "bonds", content = it) }
+        character.flaws?.let { TextBoxCharacter(title = "flaws", content = it) }
+        character.character_appearance?.let {
+            TextBoxCharacter(
+                title = "character_appearance", content = it
+            )
         }
-        Text(text = "Languages")
-        var selectedTextLanguages by remember { mutableStateOf(languagesList!![0].name) }
-        Row(Modifier.fillMaxWidth()) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp)
-            ) {
-                ExposedDropdownMenuBox(expanded = expandedLanguages, onExpandedChange = {
-                    expandedLanguages = it
-                }) {
-                    TextField(value = selectedTextLanguages,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedLanguages) },
-                        modifier = Modifier.menuAnchor()
-                    )
-
-                    ExposedDropdownMenu(expanded = expandedLanguages,
-                        onDismissRequest = { expandedLanguages = false }) {
-                        languagesList!!.forEach { item ->
-                            DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
-                                selectedTextLanguages = item.name
-                                expandedLanguages = false
-                                Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
-                            })
-                        }
-                    }
-                }
-            }
+        character.character_backstory?.let {
+            TextBoxCharacter(
+                title = "character_backstory", content = it
+            )
         }
-
-        //OtherProficiencies Equipment
-        Text(text = "OtherProficiencies")
-        var selectedTextOtherProficiencies by remember { mutableStateOf(proficienciesList!![0].name) }
-        Row(Modifier.fillMaxWidth()) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp)
-            ) {
-                ExposedDropdownMenuBox(expanded = expandedOtherProficiency, onExpandedChange = {
-                    expandedOtherProficiency = it
-                }) {
-                    TextField(value = selectedTextOtherProficiencies,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedOtherProficiency) },
-                        modifier = Modifier.menuAnchor()
-                    )
-
-                    ExposedDropdownMenu(expanded = expandedOtherProficiency,
-                        onDismissRequest = { expandedOtherProficiency = false }) {
-                        proficienciesList!!.forEach { item ->
-                            DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
-                                selectedTextOtherProficiencies = item.name
-                                expandedOtherProficiency = false
-                                Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
-                            })
-                        }
-                    }
-                }
-            }
+        character.allies_organizations?.let {
+            TextBoxCharacter(
+                title = "allies_organizations", content = it
+            )
         }
-        Text(text = "Equipment")
-        var selectedTextEquipment by remember { mutableStateOf(equipmentList!![0].name) }
-        Row(Modifier.fillMaxWidth()) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp)
-            ) {
-                ExposedDropdownMenuBox(expanded = expandedEquipment, onExpandedChange = {
-                    expandedEquipment = it
-                }) {
-                    TextField(value = selectedTextEquipment,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedEquipment) },
-                        modifier = Modifier.menuAnchor()
-                    )
-
-                    ExposedDropdownMenu(expanded = expandedEquipment,
-                        onDismissRequest = { expandedEquipment = false }) {
-                        equipmentList!!.forEach { item ->
-                            DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
-                                selectedTextEquipment = item.name
-                                expandedEquipment = false
-                                Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
-                            })
-                        }
-                    }
-                }
-            }
-        }
-
-        //CoinPouch Features
-        Text(text = "CoinPouch")
-        val inputvalueCoinPouchName = remember { mutableStateOf(TextFieldValue()) }
-        val inputvalueCoinPouchQuantity = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueCoinPouchName.value,
-                    onValueChange = { inputvalueCoinPouchName.value = it },
-                    label = { Text("Name") })
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueCoinPouchQuantity.value,
-                    onValueChange = { inputvalueCoinPouchQuantity.value = it },
-                    label = { Text("Quantity") })
-            }
-        }
-        Text(text = "Features")
-        var selectedTextFeatures by remember { mutableStateOf(featuresList!![0].name) }
-        Row(Modifier.fillMaxWidth()) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp)
-            ) {
-                ExposedDropdownMenuBox(expanded = expandedFeatures, onExpandedChange = {
-                    expandedFeatures = it
-                }) {
-                    TextField(value = selectedTextFeatures,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedFeatures) },
-                        modifier = Modifier.menuAnchor()
-                    )
-
-                    ExposedDropdownMenu(
-                        expanded = expandedFeatures,
-                        onDismissRequest = { expandedFeatures = false }) {
-                        featuresList!!.forEach { item ->
-                            DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
-                                selectedTextFeatures = item.name
-                                expandedFeatures = false
-                                Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
-                            })
-                        }
-                    }
-                }
-            }
-        }
-
-        //Traits SpellAbilities
-        Text(text = "Traits")
-        var selectedTextTraits by remember { mutableStateOf(traitsList!![0].name) }
-        Row(Modifier.fillMaxWidth()) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp)
-            ) {
-                ExposedDropdownMenuBox(expanded = expandedTraits, onExpandedChange = {
-                    expandedTraits = it
-                }) {
-                    TextField(value = selectedTextTraits,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedTraits) },
-                        modifier = Modifier.menuAnchor()
-                    )
-
-                    ExposedDropdownMenu(
-                        expanded = expandedTraits,
-                        onDismissRequest = { expandedTraits = false }) {
-                        traitsList!!.forEach { item ->
-                            DropdownMenuItem(text = { Text(text = item.name) }, onClick = {
-                                selectedTextTraits = item.name
-                                expandedTraits = false
-                                Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
-                            })
-                        }
-                    }
-                }
-            }
-        }
-
-        Text(text = "SpellAbilities")
-        val inputvalueSpellAbilitiesSpellcastingAbility =
-            remember { mutableStateOf(TextFieldValue()) }
-        val inputvalueSpellAbilitiesSpellSaveDC = remember { mutableStateOf(TextFieldValue()) }
-        val inputvalueSpellAbilitiesSpellAttackBonus = remember { mutableStateOf(TextFieldValue()) }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueSpellAbilitiesSpellcastingAbility.value,
-                    onValueChange = { inputvalueSpellAbilitiesSpellcastingAbility.value = it },
-                    label = { Text("SpellcastingAbility") })
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueSpellAbilitiesSpellSaveDC.value,
-                    onValueChange = { inputvalueSpellAbilitiesSpellSaveDC.value = it },
-                    label = { Text("SpellSaveDC") })
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(modifier = Modifier.weight(1f)) {
-                TextField(value = inputvalueSpellAbilitiesSpellAttackBonus.value,
-                    onValueChange = { inputvalueSpellAbilitiesSpellAttackBonus.value = it },
-                    label = { Text("SpellAttackBonus") })
-            }
-        }
-
-        //PreparedSpells KnownSpells
-        Text(text = "PreparedSpells")
-        var selectedTextPreparedSpells by remember { mutableStateOf(spellList!![0].name) }
-        Row(Modifier.fillMaxWidth()) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp)
-            ) {
-                ExposedDropdownMenuBox(expanded = expandedPreparedSpells, onExpandedChange = {
-                    expandedPreparedSpells = it
-                }) {
-                    TextField(value = selectedTextPreparedSpells,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedPreparedSpells) },
-                        modifier = Modifier.menuAnchor()
-                    )
-
-                    ExposedDropdownMenu(expanded = expandedPreparedSpells,
-                        onDismissRequest = { expandedPreparedSpells = false }) {
-                        spellList!!.forEach { item ->
-                            DropdownMenuItem(text = {
-                                Text(
-                                    text = item.name, color = MaterialTheme.colorScheme.onBackground
-                                )
-                            }, onClick = {
-                                selectedTextPreparedSpells = item.name
-                                expandedPreparedSpells = false
-                                Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
-                            })
-                        }
-                    }
-                }
-            }
-        }
-        Text(text = "KnownSpells")
-        var selectedTextKnownSpells by remember { mutableStateOf(spellList!![0].name) }
-        Row(Modifier.fillMaxWidth()) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp)
-            ) {
-                ExposedDropdownMenuBox(expanded = expandedKnownSpells, onExpandedChange = {
-                    expandedKnownSpells = it
-                }) {
-                    TextField(value = selectedTextKnownSpells,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedKnownSpells) },
-                        modifier = Modifier.menuAnchor()
-                    )
-
-                    ExposedDropdownMenu(expanded = expandedKnownSpells,
-                        onDismissRequest = { expandedKnownSpells = false }) {
-                        spellList!!.forEach { item ->
-                            DropdownMenuItem(text = {
-                                Text(
-                                    text = item.name, color = MaterialTheme.colorScheme.onBackground
-                                )
-                            }, onClick = {
-                                selectedTextKnownSpells = item.name
-                                expandedKnownSpells = false
-                                Toast.makeText(context, item.name, Toast.LENGTH_SHORT).show()
-                            })
-                        }
-                    }
-                }
-            }
-        }
-        //SavingThrows
-        Text(text = "SavingThrows")
-        Row(Modifier.fillMaxWidth()) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp)
-            ) {
-                var stringArray by rememberSaveable { mutableStateOf(mutableListOf("")) }
-
-                Column {
-                    stringArray.forEachIndexed { index, item ->
-                        OutlinedTextField(value = item, onValueChange = { newValue ->
-                            val newList = stringArray.toMutableList()
-                            newList[index] = newValue
-                            stringArray = newList
-                        }, label = {
-                            Text(
-                                "Item $index", color = MaterialTheme.colorScheme.onBackground
-                            )
-                        }, colors = OutlinedTextFieldDefaults.colors(
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black,
-                        )
-                        )
-                    }
-                    Button(onClick = {
-                        val newList = stringArray.toMutableList()
-                        newList.add("")
-                        stringArray = newList
-                    }) {
-                        Text("Afegir element", color = MaterialTheme.colorScheme.onBackground)
-                    }
-                    Button(onClick = {
-                        val newList = stringArray.toMutableList()
-                        newList.remove("")
-                        stringArray = newList
-                    }) {
-                        Text("Eliminar element", color = MaterialTheme.colorScheme.onBackground)
-                    }
-                    //Con este código se almacena la información
-                    Button(onClick = {
-                        val stringArrayArray: Array<String> = stringArray.toTypedArray()
-                        // Use the stringArrayArray variable as a String array
-                        println(stringArrayArray.contentToString())
-                    }) {
-                        Text("Save to String array", color = MaterialTheme.colorScheme.onBackground)
-                    }
-                }
-            }
-        }
-
-        //Exhaustion
-        Mostrar1TextField(textoMostrar = "Exhaustion")
-
-        //ExperienciePoints
-        Mostrar1TextField(textoMostrar = "ExperienciePoints")
-
-        //PassiveWisdom
-        Mostrar1TextField(textoMostrar = "PassiveWisdom")
-
-        //Initiative
-        Mostrar1TextField(textoMostrar = "Initiative")
-
-        //Speed
-        Mostrar1TextField(textoMostrar = "Speed")
-
-        //ProficiencyBonus
-        Mostrar1TextField(textoMostrar = "ProficiencyBonus")
-
-        //PersonalityTraits
-        Mostrar1TextField(textoMostrar = "PersonalityTraits")
-
-        //Ideals
-        Mostrar1TextField(textoMostrar = "Ideals")
-
-        //Bonds
-        Mostrar1TextField(textoMostrar = "Bonds")
-
-        //Claws
-        Mostrar1TextField(textoMostrar = "Claws")
-
-        //CharacterBackstory
-        Mostrar1TextField(textoMostrar = "CharacterBackstory")
-
-        //AlliesOrganizations
-        Mostrar1TextField(textoMostrar = "AlliesOrganizations")
-
-        //Symbol
-        Mostrar1TextField(textoMostrar = "Symbol")
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(modifier = Modifier.weight(1f)) {
-                //Almacenar todos los elementos
-                Button(onClick = {
-                    Toast.makeText(context, "Character Añadido", Toast.LENGTH_SHORT).show()
-                }) {
-                    Text("Afegir Character", color = MaterialTheme.colorScheme.onBackground)
-                }
-            }
-        }
+        character.symbol?.let { TextBoxCharacter(title = "symbol", content = it) }
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(100.dp)
+        )
+        TitleTextCharacter(title = "Description")
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(40.dp)
+        )
     }
 }
 
-//Esto mostrará un textfield para que se escriba el string
 @Composable
-fun Mostrar1TextField(textoMostrar: String): String {
-    val context = LocalContext.current
-    val res = remember { mutableStateOf(("")) }
-    Text(text = textoMostrar)
-    val inputValue = remember { mutableStateOf(TextFieldValue()) }
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+fun TextBoxCharacter(title: String, content: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(80.dp), contentAlignment = Alignment.CenterStart
     ) {
-        Box(modifier = Modifier.weight(1f)) {
-            TextField(value = inputValue.value,
-                onValueChange = { inputValue.value = it },
-                label = { Text(textoMostrar) })
+        Row(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(180.dp)
+                    .padding()
+                    .border(BorderStroke(2.dp, colorResource(id = R.color.black)))
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(color = colorResource(id = R.color.darkbrown)),
+                contentAlignment = Alignment.Center,
+            ) {
+
+                Text(
+                    text = title, fontFamily = FontFamily.Cursive, fontSize = 20.sp
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .border(BorderStroke(2.dp, colorResource(id = R.color.black))),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = content,
+                    fontFamily = FontFamily.Cursive,
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(4.dp)
+                )
+            }
         }
     }
-    Spacer(modifier = Modifier.width(8.dp))
-    return inputValue.value.text
 }
 
-//Esto mostrará dos exposeddropdownmenusbox
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MostrarDropDowns(list1: List<String>, list2: List<String>) {
-    val context = LocalContext.current
-    var expanded1 by remember { mutableStateOf(false) }
-    var selectedText1 by remember { mutableStateOf(list1[0]) }
-    var expanded2 by remember { mutableStateOf(false) }
-    var selectedText2 by remember { mutableStateOf(list2[0]) }
+fun TextBoxCharacter(title: String, content: List<String>) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(80.dp), contentAlignment = Alignment.CenterStart
+    ) {
+        Row(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(180.dp)
+                    .padding()
+                    .background(color = colorResource(id = R.color.darkbrown))
+                    .border(BorderStroke(2.dp, colorResource(id = R.color.black))),
+                contentAlignment = Alignment.Center,
+            ) {
 
-    Row(Modifier.fillMaxWidth()) {
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 4.dp)
-        ) {
-            ExposedDropdownMenuBox(expanded = expanded1, onExpandedChange = {
-                expanded1 = it
-            }) {
-                TextField(value = selectedText1,
-                    onValueChange = {},
-                    readOnly = true,
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded1) },
-                    modifier = Modifier.menuAnchor()
+                Text(
+                    text = title, fontFamily = FontFamily.Cursive, fontSize = 20.sp
                 )
-
-                ExposedDropdownMenu(
-                    expanded = expanded1,
-                    onDismissRequest = { expanded1 = false }) {
-                    list1.forEach { item ->
-                        DropdownMenuItem(text = { Text(text = item) }, onClick = {
-                            selectedText1 = item
-                            expanded1 = false
-                            Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
-                        })
-                    }
-                }
             }
-        }
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 4.dp)
-        ) {
-            ExposedDropdownMenuBox(expanded = expanded2, onExpandedChange = {
-                expanded2 = it
-            }) {
-                TextField(value = selectedText2,
-                    onValueChange = {},
-                    readOnly = true,
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded2) },
-                    modifier = Modifier.menuAnchor()
-                )
-
-                ExposedDropdownMenu(
-                    expanded = expanded2,
-                    onDismissRequest = { expanded2 = false }) {
-                    list2.forEach { item ->
-                        DropdownMenuItem(text = { Text(text = item) }, onClick = {
-                            selectedText2 = item
-                            expanded2 = false
-                            Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
-                        })
-                    }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .border(BorderStroke(2.dp, colorResource(id = R.color.black))),
+                contentAlignment = Alignment.Center
+            ) {
+                var showContent: String = ""
+                content.forEach {
+                    showContent += "$it, "
                 }
+                showContent =
+                    showContent.removeRange(showContent.length - 2, showContent.length - 1)
+                Text(
+                    text = showContent, fontFamily = FontFamily.Cursive, fontSize = 20.sp
+                )
             }
         }
     }
+}
+
+@Composable
+
+fun TitleTextCharacter(title: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 10.dp)
+            .height(60.dp)
+            .border(3.dp, color = colorResource(id = R.color.red)),
+        contentAlignment = Alignment.Center
+    ) {
+
+        Text(
+            text = title,
+            style = TextStyle(
+                fontSize = 30.sp,
+                fontStyle = FontStyle.Italic,
+                fontFamily = FontFamily.Cursive,
+                fontWeight = FontWeight.Bold,
+                color = colorResource(id = R.color.black),
+            ),
+        )
+    }
+
+
+}
+
+@Composable
+fun Greeting7(name: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Hello $name!", modifier = modifier
+    )
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview5() {
+fun GreetingPreview8() {
+    DNDCharacterAppTheme {
+        Greeting7("Android")
+    }
 }

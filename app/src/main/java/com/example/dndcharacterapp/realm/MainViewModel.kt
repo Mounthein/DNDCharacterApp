@@ -25,14 +25,21 @@ import io.realm.kotlin.Realm
 import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.ext.realmListOf
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.mongodb.kbson.ObjectId
 
 class MainViewModel : ViewModel() {
 
     private val realm = RealmApp.realm
+    private val _searchResults = MutableStateFlow<List<CharacterRealm>>(emptyList())
+    var searchResults: StateFlow<List<CharacterRealm>> = _searchResults.asStateFlow()
+
 
     val characters = realm.query<CharacterRealm>().asFlow().map { results ->
         results.list.toList()
@@ -40,9 +47,17 @@ class MainViewModel : ViewModel() {
         viewModelScope, SharingStarted.WhileSubscribed(), emptyList()
     )
 
-    //init {
-    //    createSampleEntriesCharacter()
-    //}
+    init {
+        createSampleEntriesCharacter()
+    }
+
+    suspend fun fetchSearchResults(searchTerm: ObjectId) {
+        realm.query<CharacterRealm>("_id CONTAINS $0", searchTerm).asFlow().map { results ->
+                results.list.toList()
+            }.collect { filteredList ->
+                _searchResults.value = filteredList
+            }
+    }
 
     private fun createSampleEntriesCharacter() {
         viewModelScope.launch {
@@ -190,7 +205,7 @@ class MainViewModel : ViewModel() {
                     allies_organizations = alliesOrganizations
                     symbol = symbolCharacter
                 }
-                
+
                 copyToRealm(character, updatePolicy = UpdatePolicy.ALL)
             }
         }

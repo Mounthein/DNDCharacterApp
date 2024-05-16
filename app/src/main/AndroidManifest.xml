@@ -13,9 +13,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
         android:theme="@style/Theme.DNDCharacterApp"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.CharacterActivity"
+            android:exported="false"
+            android:label="@string/title_activity_character"
+            android:theme="@style/Theme.DNDCharacterApp" />
         <activity
             android:name=".ui.ConfigurationActivity"
             android:exported="false"
@@ -25,11 +30,6 @@
             android:name=".ui.CharacterRecyclerActivity"
             android:exported="false"
             android:label="@string/title_activity_character_recycler"
-            android:theme="@style/Theme.DNDCharacterApp" />
-        <activity
-            android:name=".ui.CharacterActivity"
-            android:exported="false"
-            android:label="@string/title_activity_character"
             android:theme="@style/Theme.DNDCharacterApp" />
         <activity
             android:name=".ui.EquipmentItemActivity"
