@@ -134,7 +134,6 @@ class MainViewModel : ViewModel() {
                 }
                 var classItem = EmClassItemCh().apply {
                     name = "Chaqueta"
-                    level = 1
                     subclass = "Camiseta"
                 }
                 var experiencePoints = 1
