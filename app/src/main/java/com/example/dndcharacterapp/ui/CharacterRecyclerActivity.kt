@@ -43,17 +43,15 @@ class CharacterRecyclerActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //val character = CrudApi().getCharacterList()?.toList()
-
         setContent {
             DNDCharacterAppTheme(darkTheme = false, dynamicColor = false) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-
                     val character by viewModel.characters.collectAsState()
                     Column(modifier = Modifier.fillMaxSize()) {
-                        var filtre = remember { mutableStateOf(TextFieldValue()) }
+                        val filtre = remember { mutableStateOf(TextFieldValue()) }
                         Text(text = "Filtre")
                         TextField(value = filtre.value,
                             onValueChange = { newFilter -> filtre.value = newFilter })
@@ -79,7 +77,7 @@ class CharacterRecyclerActivity : ComponentActivity() {
                                             this@CharacterRecyclerActivity,
                                             CharacterActivity::class.java
                                         )
-                                        intent.putExtra("character", it._id.toString())
+                                        intent.putExtra("character", it.idString)
                                         startActivity(intent)
                                     }
 
@@ -99,7 +97,7 @@ class CharacterRecyclerActivity : ComponentActivity() {
                                             this@CharacterRecyclerActivity,
                                             CharacterActivity::class.java
                                         )
-                                        intent.putExtra("character", it._id.toString())
+                                        intent.putExtra("character", it.idString)
                                         startActivity(intent)
                                     }
 

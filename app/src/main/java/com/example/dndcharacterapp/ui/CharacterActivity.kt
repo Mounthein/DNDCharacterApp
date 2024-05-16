@@ -1,7 +1,6 @@
 package com.example.dndcharacterapp.ui
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -11,6 +10,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -19,12 +19,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,9 +42,6 @@ import com.example.dndcharacterapp.R
 import com.example.dndcharacterapp.models.characterRealm.CharacterRealm
 import com.example.dndcharacterapp.realm.MainViewModel
 import com.example.dndcharacterapp.ui.ui.theme.DNDCharacterAppTheme
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import org.mongodb.kbson.ObjectId
 
 class CharacterActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
@@ -50,44 +49,39 @@ class CharacterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            DNDCharacterAppTheme {
+            DNDCharacterAppTheme(darkTheme = false, dynamicColor = false) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    //val character by viewModel.characters.collectAsState()
+                    val character by viewModel.characters.collectAsState()
                     val characterImportado = intent.getStringExtra("character")
-                    if (characterImportado != null) {
-                        runBlocking {
-                            val corrutina = launch {
-                                viewModel.fetchSearchResults(characterImportado)
+                    val filtrats = character.filter { it.idString == characterImportado }
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                        ) {
+                            LazyColumn(
+                                contentPadding = PaddingValues(10.dp),
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(15.dp)
+                            ) {
+                                items(filtrats!!) {
+                                    HeaderCharacter(name = it.name!!)
+                                    BodyCharacter(character = it)
+                                }
+
                             }
-                            corrutina.join()
                         }
-                    } else {
-                        Toast.makeText(this, "Es null", Toast.LENGTH_SHORT).show()
                     }
-
-                }
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        //HeaderCharacter(name = viewModel.searchResults!!.value[0]?.name!!)
-                        //BodyCharacter(character = viewModel.searchResults!!.value[0])
-                    }
-
                 }
             }
         }
     }
 }
 
-fun stringToObjectId(string: String): ObjectId? {
-    return try {
-        ObjectId(string)
-    } catch (e: Exception) {
-        null
-    }
-}
 
 @Composable
 fun HeaderCharacter(name: String) {
@@ -114,8 +108,7 @@ fun BodyCharacter(character: CharacterRealm) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(20.dp)
-            .verticalScroll(rememberScrollState()),
+            .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
 
@@ -132,13 +125,36 @@ fun BodyCharacter(character: CharacterRealm) {
 //        TextBoxCharacter(title = "exhaustion", content = character.exhaustion)
 //        TextBoxCharacter(title = "armor_Class", content = character.armor_Class)
 //        TextBoxCharacter(title = "classes", content = character.classes)
-//        TextBoxCharacter(title = "experience_Points", content = character.experience_Points)
-//        TextBoxCharacter(title = "stats", content = character.stats)
-//        TextBoxCharacter(title = "skill_proficiencies", content = character.skill_proficiencies)
-//        TextBoxCharacter(title = "languages", content = character.languages)
-//        TextBoxCharacter(title = "other_proficiencies", content = character.other_proficiencies)
-//        TextBoxCharacter(title = "equipment", content = character.equipment)
-//        TextBoxCharacter(title = "coin_pouch", content = character.coin_pouch)
+        TextBoxCharacter(
+            title = "experience_Points", content = character.experience_Points.toString()
+        )
+        TextBoxCharacter(title = "statsName", content = character.stats!!.get(0).name!!)
+        TextBoxCharacter(
+            title = "statsValue", content = character.stats!!.get(0).value!!.toString()
+        )
+        TextBoxCharacter(
+            title = "skill_proficienciesName",
+            content = character.skill_proficiencies!!.get(0).name!!
+        )
+        TextBoxCharacter(
+            title = "skill_proficienciesBonus",
+            content = character.skill_proficiencies!!.get(0).bonus!!.toString()
+        )
+        TextBoxCharacter(title = "languagesName", content = character.languages!!.get(0).name!!)
+        TextBoxCharacter(title = "languagesType", content = character.languages!!.get(0).type!!)
+        TextBoxCharacter(
+            title = "other_proficienciesName",
+            content = character.other_proficiencies!!.get(0).name!!
+        )
+        TextBoxCharacter(
+            title = "other_proficienciesType",
+            content = character.other_proficiencies!!.get(0).type!!
+        )
+        TextBoxCharacter(title = "equipmentName", content = character.equipment!!.get(0).name!!)
+        TextBoxCharacter(
+            title = "equipmentCategory", content = character.equipment!!.get(0).equipment_category!!
+        )
+        TextBoxCharacter(title = "coin_pouch", content = character.coin_pouch!!.get(0).name!!)
         character.features?.get(0)
             ?.let { it.name?.let { it1 -> TextBoxCharacter(title = "features", content = it1) } }
         character.traits?.get(0)
@@ -209,7 +225,6 @@ fun BodyCharacter(character: CharacterRealm) {
                 .fillMaxWidth()
                 .height(100.dp)
         )
-        TitleTextCharacter(title = "Description")
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()

@@ -1,5 +1,6 @@
 package com.example.dndcharacterapp.realm
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dndcharacterapp.models.characterRealm.CharacterRealm
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -34,8 +36,7 @@ import kotlinx.coroutines.launch
 class MainViewModel : ViewModel() {
 
     private val realm = RealmApp.realm
-    private val _searchResults = MutableStateFlow<List<CharacterRealm>>(emptyList())
-    var searchResults: StateFlow<List<CharacterRealm>> = _searchResults.asStateFlow()
+
 
 
     val characters = realm.query<CharacterRealm>().asFlow().map { results ->
@@ -47,13 +48,6 @@ class MainViewModel : ViewModel() {
     //init {
     //    createSampleEntriesCharacter()
     //}
-
-    suspend fun fetchSearchResults(searchTerm: String) {
-        realm.query<CharacterRealm>("idString CONTAINS $0", searchTerm).find().asFlow()
-            .map { results -> results.list.toList() }.collect { filteredList ->
-                _searchResults.value = filteredList
-            }
-    }
 
     private fun createSampleEntriesCharacter() {
         viewModelScope.launch {
