@@ -2,14 +2,19 @@ package com.example.dndcharacterapp.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +22,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -30,10 +36,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.example.dndcharacterapp.models.characterRealm.CharacterRealm
 import com.example.dndcharacterapp.realm.MainViewModel
 import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
@@ -105,7 +114,10 @@ class CharacterRecyclerActivity : ComponentActivity() {
 
                             }
                         }
+
                     }
+                    BotonIrInsertarCharacters()
+
                 }
             }
         }
@@ -121,7 +133,9 @@ fun CharacterCard(character: CharacterRealm, click: () -> Unit) {
         .fillMaxSize()
         .padding(10.dp)
         .clickable { click() }
-        .border(BorderStroke(2.dp, MaterialTheme.colorScheme.onSurface), MaterialTheme.shapes.medium)) {
+        .border(
+            BorderStroke(2.dp, MaterialTheme.colorScheme.onSurface), MaterialTheme.shapes.medium
+        )) {
         Column(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             horizontalAlignment = Alignment.Start
@@ -152,6 +166,26 @@ fun CharacterCard(character: CharacterRealm, click: () -> Unit) {
             )
         }
     }
+}
+
+@Composable
+fun BotonIrInsertarCharacters() {
+    val context = LocalContext.current
+    val intent = Intent(context, CharacterInsertarActivity::class.java)
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(modifier = Modifier.weight(1f)) {
+            Button(onClick = {
+                ContextCompat.startActivity(context, intent, null)
+            }) {
+                Text("Afegir Character", color = MaterialTheme.colorScheme.secondary)
+            }
+        }
+    }
+
 }
 
 @Composable

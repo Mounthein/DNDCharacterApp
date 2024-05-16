@@ -17,6 +17,11 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.CharacterInsertarActivity"
+            android:exported="false"
+            android:label="@string/title_activity_character_insertar"
+            android:theme="@style/Theme.DNDCharacterApp" />
+        <activity
             android:name=".ui.CharacterActivity"
             android:exported="false"
             android:label="@string/title_activity_character"

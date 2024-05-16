@@ -7,4 +7,5 @@
     <string name="title_activity_character">CharacterActivity</string>
     <string name="title_activity_character_recycler">CharacterRecyclerActivity</string>
     <string name="title_activity_configuration">ConfigurationActivity</string>
+    <string name="title_activity_character_insertar">CharacterInsertarActivity</string>
 </resources>

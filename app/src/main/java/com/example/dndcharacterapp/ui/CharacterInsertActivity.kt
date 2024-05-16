@@ -1,5 +1,6 @@
 package com.example.dndcharacterapp.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -42,9 +43,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
 import com.example.dndcharacterapp.api.CrudApi
-import com.example.dndcharacterapp.models.character.Character
-import com.example.dndcharacterapp.models.characterRealm.CharacterRealm
 import com.example.dndcharacterapp.models.classes.ClassesItem
 import com.example.dndcharacterapp.models.equipment.Equipment
 import com.example.dndcharacterapp.models.feature.Feature
@@ -124,16 +124,7 @@ fun MostrarComponentes(
     var expandedFeatures by remember { mutableStateOf(false) }
     var expandedTraits by remember { mutableStateOf(false) }
     var expandedPreparedSpells by remember { mutableStateOf(false) }
-    var expandedKnownSpells by remember { mutableStateOf(false) }/*
-    var racesOptions by remember { mutableStateOf(racesList!![0].name) }
-    var alignmentsOptions by remember { mutableStateOf(alignmentsList!![0].name) }
-    var classesOptions by remember { mutableStateOf(classeslist!![0].name) }
-    var languagesOptions by remember { mutableStateOf(languagesList!![0].name) }
-    var proficiencyOptions by remember { mutableStateOf(proficienciesList!![0].name) }
-    var equipmentOptions by remember { mutableStateOf(equipmentList!![0].name) }
-    var featureOptions by remember { mutableStateOf(featuresList!![0].name) }
-    var traitOptions by remember { mutableStateOf(traitsList!![0].name) }
-    var spellOptions by remember { mutableStateOf(spellList!![0].name) }*/
+    var expandedKnownSpells by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
