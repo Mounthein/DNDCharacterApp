@@ -39,11 +39,11 @@ class MainViewModel : ViewModel() {
         viewModelScope, SharingStarted.WhileSubscribed(), emptyList()
     )
 
-    //init {
-    //    createSampleEntriesCharacter()
-    //}
+//    init {
+//        createSampleEntriesCharacter()
+//    }
 
-    private fun insertNewCharacter(characterRealm: CharacterRealm) {
+    fun insertNewCharacter(characterRealm: CharacterRealm) {
         viewModelScope.launch {
             realm.write {
                 val characterRealmInsertar = CharacterRealm().apply {

@@ -44,6 +44,25 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dndcharacterapp.api.CrudApi
+import com.example.dndcharacterapp.models.character.HitDie
+import com.example.dndcharacterapp.models.characterRealm.CharacterRealm
+import com.example.dndcharacterapp.models.characterRealm.EmAlignmentCh
+import com.example.dndcharacterapp.models.characterRealm.EmArmorClassCh
+import com.example.dndcharacterapp.models.characterRealm.EmClassItemCh
+import com.example.dndcharacterapp.models.characterRealm.EmCoinCh
+import com.example.dndcharacterapp.models.characterRealm.EmDeathSavesCh
+import com.example.dndcharacterapp.models.characterRealm.EmEquipmentCh
+import com.example.dndcharacterapp.models.characterRealm.EmFeatureCh
+import com.example.dndcharacterapp.models.characterRealm.EmHitDieCh
+import com.example.dndcharacterapp.models.characterRealm.EmHitPointsCh
+import com.example.dndcharacterapp.models.characterRealm.EmLanguageCh
+import com.example.dndcharacterapp.models.characterRealm.EmProficiencyCh
+import com.example.dndcharacterapp.models.characterRealm.EmRaceCh
+import com.example.dndcharacterapp.models.characterRealm.EmSkillProficiencyCh
+import com.example.dndcharacterapp.models.characterRealm.EmSpellAbilityCh
+import com.example.dndcharacterapp.models.characterRealm.EmSpellCh
+import com.example.dndcharacterapp.models.characterRealm.EmStatCh
+import com.example.dndcharacterapp.models.characterRealm.EmTraitCh
 import com.example.dndcharacterapp.models.classes.ClassesItem
 import com.example.dndcharacterapp.models.equipment.Equipment
 import com.example.dndcharacterapp.models.feature.Feature
@@ -67,8 +86,6 @@ class CharacterInsertarActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    val character by viewModel.characters.collectAsState()
-
                     val races = CrudApi().getRaceList()?.toList()
                     val alignments = CrudApi().getAlignmentList()?.toList()
                     val classes = CrudApi().getClassesList()?.toList()
@@ -88,7 +105,8 @@ class CharacterInsertarActivity : ComponentActivity() {
                             equipment,
                             features,
                             traits,
-                            spells
+                            spells,
+                            viewModel
                         )
                     }
                 }
@@ -109,6 +127,7 @@ fun MostrarComponentes(
     featuresList: List<Feature>?,
     traitsList: List<Trait>?,
     spellList: List<Spell>?,
+    viewModel: MainViewModel
 ) {
     val context = LocalContext.current
     var expandedClasses by remember { mutableStateOf(false) }
@@ -119,6 +138,7 @@ fun MostrarComponentes(
     var expandedTraits by remember { mutableStateOf(false) }
     var expandedPreparedSpells by remember { mutableStateOf(false) }
     var expandedKnownSpells by remember { mutableStateOf(false) }
+    val characterInsertar: CharacterRealm? = null
 
     Column(
         modifier = Modifier
@@ -130,23 +150,19 @@ fun MostrarComponentes(
         ) {
         //Name
         val name = Mostrar1TextField(textoMostrar = "Name")
-        //Toast.makeText(LocalContext.current, name, Toast.LENGTH_SHORT).show()
+        characterInsertar?.name = name
+
         //Level
         val level = Mostrar1TextField(textoMostrar = "Level")
-        //Inspiration Background
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Inspiration")
-            val inspirationRemember = remember { mutableStateOf(true) }
-            Checkbox(checked = inspirationRemember.value,
-                onCheckedChange = { inspirationRemember.value = it })
-            val inspiration = inspirationRemember.value
-            Spacer(modifier = Modifier.width(16.dp))
-        }
+        characterInsertar?.level = level.toInt()
+
+        //Inspiration
+        val inspiration = MostrarCheckBox()
+        characterInsertar?.inspiration = inspiration
+
+        //Background
         val background = Mostrar1TextField(textoMostrar = "Background")
+        characterInsertar?.background = background
 
         //Race
         val racesName: MutableList<String> = mutableListOf()
@@ -154,16 +170,28 @@ fun MostrarComponentes(
             racesName.add(it.name)
         }
         val race = MostrarDropDowns(list1 = racesName, "Race")
+        val raceInsertar: EmRaceCh? = null
+        val raceFiltrado = racesList.filter { it.name == race }.firstOrNull()
+        raceInsertar?.name = raceFiltrado?.name
+        raceInsertar?.size = raceFiltrado?.size
+        raceInsertar?.speed = raceFiltrado?.speed
+        raceInsertar?.subrace = raceFiltrado?.subraces?.get(0)?.name
+        characterInsertar?.race = raceInsertar
+
 
         //Alignment
         val alignmentsName: MutableList<String> = mutableListOf()
         alignmentsList!!.forEach {
             alignmentsName.add(it.name)
         }
-
         val alignment = MostrarDropDowns(list1 = alignmentsName, "Alignment")
+        val alignmentInsertar: EmAlignmentCh? = null
+        val alignmentFiltrado = alignmentsList.filter { it.name == race }.firstOrNull()
+        alignmentInsertar?.name = alignmentFiltrado?.name
+        alignmentInsertar?.abbreviation = alignmentFiltrado?.abbreviation
+        characterInsertar?.alignment = alignmentInsertar
 
-        //HitPoint HitDie
+        //HitPoint
         Text(text = "HitPoints")
         val inputvalueHitPointsMaximum = remember { mutableStateOf(TextFieldValue()) }
         val inputvalueHitPointsCurrent = remember { mutableStateOf(TextFieldValue()) }
@@ -194,7 +222,16 @@ fun MostrarComponentes(
         val HitPointsMaximum = inputvalueHitPointsMaximum.value.text
         val HitPointsCurrent = inputvalueHitPointsCurrent.value.text
         val HitPointsTemporary = inputvalueHitPointsTemporary.value.text
+        //Esto es lo que se inserta
+        val hitPointsCh: EmHitPointsCh? = null
 
+        hitPointsCh?.maximum = HitPointsMaximum.toInt()
+        hitPointsCh?.current = HitPointsCurrent.toInt()
+        hitPointsCh?.temporary = HitPointsTemporary.toInt()
+
+        characterInsertar?.hitPoints = hitPointsCh
+
+        //HitDie
         Text(text = "HitDie")
         val inputvalueHitDieType = remember { mutableStateOf(TextFieldValue()) }
         val inputvalueHitDieQuantity = remember { mutableStateOf(TextFieldValue()) }
@@ -217,8 +254,18 @@ fun MostrarComponentes(
         }
         val HitDieType = inputvalueHitDieType.value.text
         val HitDieQuantity = inputvalueHitDieQuantity.value.text
+        //Esto es lo que se inserta
+        val hitDieCh: EmHitDieCh? = null
+        hitDieCh?.type = HitDieType
+        hitDieCh?.type = HitDieQuantity
 
-        //DeathSaves ArmorClass
+        val hitDieListInsertar: RealmList<EmHitDieCh>? = null
+        if (hitDieCh != null) {
+            hitDieListInsertar?.add(hitDieCh)
+        }
+        characterInsertar?.hit_die = hitDieListInsertar
+
+        //DeathSaves
         Text(text = "DeathSaves")
         val inputvalueDeathSavesSuccess = remember { mutableStateOf(TextFieldValue()) }
         val inputvalueDeathSavesFailures = remember { mutableStateOf(TextFieldValue()) }
@@ -242,7 +289,14 @@ fun MostrarComponentes(
         }
         val DeathSavesSuccess = inputvalueDeathSavesSuccess.value.text
         val DeathSavesFailures = inputvalueDeathSavesFailures.value.text
+        //Esto es lo que se inserta
+        val deathSavesCh: EmDeathSavesCh? = null
+        deathSavesCh?.success = DeathSavesSuccess.toInt()
+        deathSavesCh?.failures = DeathSavesFailures.toInt()
 
+        characterInsertar?.death_saves = deathSavesCh
+
+        //ArmorClass
         Text(text = "ArmorClass")
         val inputvalueArmorClassName = remember { mutableStateOf(TextFieldValue()) }
         val inputvalueArmorClassType = remember { mutableStateOf(TextFieldValue()) }
@@ -274,6 +328,13 @@ fun MostrarComponentes(
         val ArmorClassName = inputvalueArmorClassName.value.text
         val ArmorClassType = inputvalueArmorClassType.value.text
         val ArmorClassValue = inputvalueArmorClassValue.value.text
+        //Esto es lo que se inserta
+        val armorClassCh: EmArmorClassCh? = null
+        armorClassCh?.name = ArmorClassName
+        armorClassCh?.type = ArmorClassType
+        armorClassCh?.value = ArmorClassValue.toInt()
+
+        characterInsertar?.armor_Class = armorClassCh
 
         //Classes
         val classesName: MutableList<String> = mutableListOf()
@@ -282,7 +343,15 @@ fun MostrarComponentes(
         }
         val classes = MostrarDropDowns(list1 = classesName, textoMostrar = "Classes")
 
-        // Texto "Stats"
+        val classeListInsertar: RealmList<EmClassItemCh>? = null
+        val classeFiltrar = classeslist.filter { it.name == classes }.firstOrNull()
+        val classeInsertar: EmClassItemCh? = null
+        classeInsertar?.name = classeFiltrar?.name
+        classeInsertar?.subclass = classeFiltrar?.subclasses?.get(0)?.name
+        classeListInsertar?.add(classeInsertar!!)
+        characterInsertar?.classes = classeListInsertar
+
+        //Stats
         Text(
             text = "Stats", modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
         )
@@ -307,6 +376,14 @@ fun MostrarComponentes(
 
         val StatsName = inputvalueStatsName.value.text
         val StatsValue = inputvalueStatsValue.value.text
+        val statsCh: EmStatCh? = null
+        statsCh?.name = StatsName
+        statsCh?.value = StatsValue.toInt()
+
+        val statsListInsertar: RealmList<EmStatCh>? = null
+        statsListInsertar?.add(statsCh!!)
+
+        characterInsertar?.stats = statsListInsertar
 
         //SkillProficiencies
         Text(text = "SkillProficiencies")
@@ -332,6 +409,14 @@ fun MostrarComponentes(
 
         val SkillProficienciesName = inputvalueSkillProficienciesName.value.text
         val SkillProficienciesBonus = inputvalueSkillProficienciesBonus.value.text
+        val skillProficiencyCh: EmSkillProficiencyCh? = null
+        skillProficiencyCh?.name = SkillProficienciesName
+        skillProficiencyCh?.bonus = SkillProficienciesBonus.toInt()
+
+        val skillProficiencyListInsertar: RealmList<EmSkillProficiencyCh>? = null
+        skillProficiencyListInsertar?.add(skillProficiencyCh!!)
+
+        characterInsertar?.skill_proficiencies = skillProficiencyListInsertar
 
         //Languages
         val languagesName: MutableList<String> = mutableListOf()
@@ -339,6 +424,15 @@ fun MostrarComponentes(
             languagesName.add(it.name)
         }
         val languages = MostrarDropDowns(list1 = languagesName, textoMostrar = "Languages")
+
+        val languagesFiltrar = languagesList.filter { it.name == languages }.firstOrNull()
+        val languagesInsertar: EmLanguageCh? = null
+        languagesInsertar?.name = languagesFiltrar?.name
+        languagesInsertar?.type = languagesFiltrar?.type
+        val languagesListInsertar: RealmList<EmLanguageCh>? = null
+        languagesListInsertar?.add(languagesInsertar!!)
+
+        characterInsertar?.languages = languagesListInsertar
 
         //OtherProficiencies
         val otherProficienciesName: MutableList<String> = mutableListOf()
@@ -348,6 +442,18 @@ fun MostrarComponentes(
         val otherProficiencies =
             MostrarDropDowns(list1 = otherProficienciesName, textoMostrar = "Other Proficiencies")
 
+        val otherProficienciesFiltrar =
+            proficienciesList.filter { it.name == otherProficiencies }.firstOrNull()
+
+        val otherProficienciesInsertar: EmProficiencyCh? = null
+        otherProficienciesInsertar?.name = otherProficienciesFiltrar?.name
+        otherProficienciesInsertar?.type = otherProficienciesFiltrar?.type
+
+        val otherProficienciesInsertarList: RealmList<EmProficiencyCh>? = null
+        otherProficienciesInsertarList?.add(otherProficienciesInsertar!!)
+
+        characterInsertar?.other_proficiencies = otherProficienciesInsertarList
+
         //Equipment
         val equipmentName: MutableList<String> = mutableListOf()
         equipmentList!!.forEach {
@@ -355,6 +461,18 @@ fun MostrarComponentes(
         }
 
         val equipment = MostrarDropDowns(list1 = equipmentName, textoMostrar = "Equipment")
+
+        val equipmentFiltrar = equipmentList.filter { it.name == equipment }.firstOrNull()
+
+        val equipmentInsertar: EmEquipmentCh? = null
+        equipmentInsertar?.name = equipmentFiltrar?.name
+        equipmentInsertar?.equipment_category = equipmentFiltrar?.equipmentCategory?.name
+        equipmentInsertar?.quantity = equipmentFiltrar?.quantity
+
+        val equipmentInsertarList: RealmList<EmEquipmentCh>? = null
+        equipmentInsertarList?.add(equipmentInsertar!!)
+
+        characterInsertar?.equipment = equipmentInsertarList
 
         //CoinPouch
         Text(text = "CoinPouch")
@@ -381,6 +499,15 @@ fun MostrarComponentes(
         val coinPouchName = inputvalueCoinPouchName.value.text
         val coinPouchQuantity = inputvalueCoinPouchQuantity.value.text
 
+        val coinPouch: EmCoinCh? = null
+        coinPouch?.name = coinPouchName
+        coinPouch?.quantity = coinPouchQuantity.toInt()
+
+        val coinPouchInsertarList: RealmList<EmCoinCh>? = null
+        coinPouchInsertarList?.add(coinPouch!!)
+
+        characterInsertar?.coin_pouch = coinPouchInsertarList
+
         //Features
         val featuresName: MutableList<String> = mutableListOf()
         featuresList!!.forEach {
@@ -388,12 +515,34 @@ fun MostrarComponentes(
         }
         val features = MostrarDropDowns(list1 = featuresName, textoMostrar = "Features")
 
+        val featuresFilter = featuresList.filter { it.name == features }.firstOrNull()
+
+        val featuresInsertar: EmFeatureCh? = null
+        featuresInsertar?.name = featuresFilter?.name
+        featuresInsertar?.description = featuresFilter?.description?.firstOrNull()
+
+        val featuresInsertarList: RealmList<EmFeatureCh>? = null
+        featuresInsertarList?.add(featuresInsertar!!)
+
+        characterInsertar?.features = featuresInsertarList
+
         //Traits
         val traitsName: MutableList<String> = mutableListOf()
         traitsList!!.forEach {
             traitsName.add(it.name)
         }
         val traits = MostrarDropDowns(list1 = traitsName, textoMostrar = "Traits")
+
+        val traitsFilter = traitsList.filter { it.name == traits }.firstOrNull()
+
+        val traitsInsertar: EmTraitCh? = null
+        traitsInsertar?.name = traitsFilter?.name
+        traitsInsertar?.description = traitsFilter?.description?.firstOrNull()
+
+        val traitsInsertarList: RealmList<EmTraitCh>? = null
+        traitsInsertarList?.add(traitsInsertar!!)
+
+        characterInsertar?.traits = traitsInsertarList
 
         //SpellAbilities
         Text(text = "SpellAbilities")
@@ -429,6 +578,15 @@ fun MostrarComponentes(
             inputvalueSpellAbilitiesSpellcastingAbility.value.text
         val SpellAbilitiesSpellSaveDC = inputvalueSpellAbilitiesSpellSaveDC.value.text
         val SpellAbilitiesSpellAttackBonus = inputvalueSpellAbilitiesSpellAttackBonus.value.text
+        val spellAbilityCh: EmSpellAbilityCh? = null
+        spellAbilityCh?.spellcasting_ability = SpellAbilitiesSpellcastingAbility
+        spellAbilityCh?.spell_save_dc = SpellAbilitiesSpellSaveDC.toInt()
+        spellAbilityCh?.spell_attack_bonus = SpellAbilitiesSpellAttackBonus.toInt()
+
+        val spellAbilityInsertarList : RealmList<EmSpellAbilityCh>? = null
+        spellAbilityInsertarList?.add(spellAbilityCh!!)
+
+        characterInsertar?.spell_abilities = spellAbilityInsertarList
 
         //PreparedSpells
         val preparedSpellsName: MutableList<String> = mutableListOf()
@@ -438,6 +596,21 @@ fun MostrarComponentes(
         val preparedSpells =
             MostrarDropDowns(list1 = preparedSpellsName, textoMostrar = "PreparedSpells")
 
+        val preparedSpellsFilter = spellList.filter { it.name == preparedSpells }.firstOrNull()
+
+        val preparedSpellsInsertar : EmSpellCh? = null
+        preparedSpellsInsertar?.name = preparedSpellsFilter?.name
+        preparedSpellsInsertar?.casting_time = preparedSpellsFilter?.castingTime
+        preparedSpellsInsertar?.level = preparedSpellsFilter?.level
+        preparedSpellsInsertar?.description = preparedSpellsFilter?.description?.firstOrNull()
+        preparedSpellsInsertar?.school = preparedSpellsFilter?.from?.name
+        preparedSpellsInsertar?.duration = preparedSpellsFilter?.duration
+
+        val preparedSpellsInsertarList : RealmList<EmSpellCh>? = null
+        preparedSpellsInsertarList?.add(preparedSpellsInsertar!!)
+
+        characterInsertar?.prepared_spells = preparedSpellsInsertarList
+
         //KnownSpells
         val knownSpellsName: MutableList<String> = mutableListOf()
         spellList!!.forEach {
@@ -445,57 +618,81 @@ fun MostrarComponentes(
         }
         val knownSpells = MostrarDropDowns(list1 = knownSpellsName, textoMostrar = "KnownSpells")
 
+        val knownSpellsFilter = spellList.filter { it.name == knownSpells }.firstOrNull()
+
+        val knownSpellsInsertar : EmSpellCh? = null
+        knownSpellsInsertar?.name = knownSpellsFilter?.name
+        knownSpellsInsertar?.casting_time = knownSpellsFilter?.castingTime
+        knownSpellsInsertar?.level = knownSpellsFilter?.level
+        knownSpellsInsertar?.description = knownSpellsFilter?.description?.firstOrNull()
+        knownSpellsInsertar?.school = knownSpellsFilter?.from?.name
+        knownSpellsInsertar?.duration = knownSpellsFilter?.duration
+
+        val knownSpellsInsertarList : RealmList<EmSpellCh>? = null
+        knownSpellsInsertarList?.add(knownSpellsInsertar!!)
+
+        characterInsertar?.known_spells = knownSpellsInsertarList
 
         //SavingThrows
         val savingThrows = MostrarTextFieldArray("SavingThrows")
 
+        characterInsertar?.saving_throws = savingThrows
+
         //Exhaustion
-        Mostrar1TextField(textoMostrar = "Exhaustion")
+        characterInsertar?.exhaustion = Mostrar1TextField(textoMostrar = "Exhaustion").toInt()
 
         //ExperienciePoints
-        Mostrar1TextField(textoMostrar = "ExperienciePoints")
+        characterInsertar?.experience_Points =
+            Mostrar1TextField(textoMostrar = "ExperienciePoints").toInt()
 
         //PassiveWisdom
-        Mostrar1TextField(textoMostrar = "PassiveWisdom")
+        characterInsertar?.passive_wisdom =
+            Mostrar1TextField(textoMostrar = "PassiveWisdom").toInt()
 
         //Initiative
-        Mostrar1TextField(textoMostrar = "Initiative")
+        characterInsertar?.initiative = Mostrar1TextField(textoMostrar = "Initiative").toInt()
 
         //Speed
-        Mostrar1TextField(textoMostrar = "Speed")
+        characterInsertar?.speed = Mostrar1TextField(textoMostrar = "Speed").toInt()
 
         //ProficiencyBonus
-        Mostrar1TextField(textoMostrar = "ProficiencyBonus")
+        characterInsertar?.proficiency_bonus =
+            Mostrar1TextField(textoMostrar = "ProficiencyBonus").toInt()
 
         //PersonalityTraits
-        Mostrar1TextField(textoMostrar = "PersonalityTraits")
+        characterInsertar?.personality_traits =
+            Mostrar1TextField(textoMostrar = "PersonalityTraits")
 
         //Ideals
-        Mostrar1TextField(textoMostrar = "Ideals")
+        characterInsertar?.ideals = Mostrar1TextField(textoMostrar = "Ideals")
 
         //Bonds
-        Mostrar1TextField(textoMostrar = "Bonds")
+        characterInsertar?.bonds = Mostrar1TextField(textoMostrar = "Bonds")
 
         //Claws
-        Mostrar1TextField(textoMostrar = "Claws")
+        characterInsertar?.flaws = Mostrar1TextField(textoMostrar = "Flaws")
 
         //CharacterBackstory
-        Mostrar1TextField(textoMostrar = "CharacterBackstory")
+        characterInsertar?.character_backstory =
+            Mostrar1TextField(textoMostrar = "CharacterBackstory")
 
         //AlliesOrganizations
-        Mostrar1TextField(textoMostrar = "AlliesOrganizations")
+        characterInsertar?.allies_organizations =
+            Mostrar1TextField(textoMostrar = "AlliesOrganizations")
 
         //Symbol
-        Mostrar1TextField(textoMostrar = "Symbol")
+        characterInsertar?.symbol = Mostrar1TextField(textoMostrar = "Symbol")
 
         //Boton añadir character
-        BotonAnadir(context)
+        BotonAnadir(
+            context = context, characterInsertar = characterInsertar!!, viewModel = viewModel
+        )
     }
 }
 
 //Esto mostrará un textfield para que se escriba el string
 @Composable
-fun Mostrar1TextField(textoMostrar: String): String {
+private fun Mostrar1TextField(textoMostrar: String): String {
     val context = LocalContext.current
     val res = remember { mutableStateOf(("")) }
     Text(text = textoMostrar)
@@ -518,7 +715,7 @@ fun Mostrar1TextField(textoMostrar: String): String {
 //Esto mostrará dos exposeddropdownmenusbox
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MostrarDropDowns(list1: List<String>, textoMostrar: String): String {
+private fun MostrarDropDowns(list1: List<String>, textoMostrar: String): String {
     val context = LocalContext.current
     var expanded1 by remember { mutableStateOf(false) }
     var selectedText1 by remember { mutableStateOf(list1[0]) }
@@ -544,8 +741,7 @@ fun MostrarDropDowns(list1: List<String>, textoMostrar: String): String {
                     modifier = Modifier.menuAnchor()
                 )
 
-                ExposedDropdownMenu(
-                    expanded = expanded1,
+                ExposedDropdownMenu(expanded = expanded1,
                     onDismissRequest = { expanded1 = false }) {
                     list1.forEach { item ->
                         DropdownMenuItem(text = { Text(text = item) }, onClick = {
@@ -562,7 +758,7 @@ fun MostrarDropDowns(list1: List<String>, textoMostrar: String): String {
 }
 
 @Composable
-fun MostrarTextFieldArray(textoMostrar: String): RealmList<String> {
+private fun MostrarTextFieldArray(textoMostrar: String): RealmList<String> {
     Text(text = textoMostrar)
     var stringArray by rememberSaveable { mutableStateOf(mutableListOf("")) }
     Row(Modifier.fillMaxWidth()) {
@@ -580,7 +776,8 @@ fun MostrarTextFieldArray(textoMostrar: String): RealmList<String> {
                         stringArray = newList
                     }, label = {
                         Text(
-                            "Saving Throws $index", color = MaterialTheme.colorScheme.onBackground
+                            "Saving Throws $index",
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     }, colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = Color.Black,
@@ -617,7 +814,24 @@ fun MostrarTextFieldArray(textoMostrar: String): RealmList<String> {
 }
 
 @Composable
-fun BotonAnadir(context: Context){
+private fun MostrarCheckBox(): Boolean {
+    val inspirationRemember = remember { mutableStateOf(true) }
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = "Inspiration")
+        Checkbox(checked = inspirationRemember.value,
+            onCheckedChange = { inspirationRemember.value = it })
+    }
+    return inspirationRemember.value
+}
+
+@Composable
+private fun BotonAnadir(
+    context: Context, characterInsertar: CharacterRealm, viewModel: MainViewModel
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -626,7 +840,17 @@ fun BotonAnadir(context: Context){
         Box(modifier = Modifier.weight(1f)) {
             //Almacenar todos los elementos
             Button(onClick = {
-                Toast.makeText(context, "Character Añadido", Toast.LENGTH_SHORT).show()
+                val data = try {
+                    viewModel.insertNewCharacter(characterInsertar)
+                    Toast.makeText(
+                        context, "Has afegit character", Toast.LENGTH_LONG
+                    ).show()
+                } catch (error: Throwable) {
+                    Toast.makeText(
+                        context, "No se ha podido insertar el character", Toast.LENGTH_LONG
+                    ).show()
+                    null
+                }
             }) {
                 Text("Afegir Character", color = MaterialTheme.colorScheme.onBackground)
             }
