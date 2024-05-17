@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.sp
 import com.example.dndcharacterapp.R
 import com.example.dndcharacterapp.models.characterRealm.CharacterRealm
 import com.example.dndcharacterapp.realm.MainViewModel
-import com.example.dndcharacterapp.ui.ui.theme.DNDCharacterAppTheme
+import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
 
 class CharacterActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()

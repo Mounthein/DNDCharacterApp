@@ -2,6 +2,7 @@ package com.example.dndcharacterapp.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,7 +31,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,7 +44,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dndcharacterapp.api.CrudApi
-import com.example.dndcharacterapp.models.character.HitDie
 import com.example.dndcharacterapp.models.characterRealm.CharacterRealm
 import com.example.dndcharacterapp.models.characterRealm.EmAlignmentCh
 import com.example.dndcharacterapp.models.characterRealm.EmArmorClassCh
@@ -73,11 +72,13 @@ import com.example.dndcharacterapp.models.spell.Spell
 import com.example.dndcharacterapp.models.trait.Trait
 import com.example.dndcharacterapp.realm.MainViewModel
 import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
+import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.ext.toRealmList
 import io.realm.kotlin.types.RealmList
 
 class CharacterInsertarActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
+    private var characterInsertar: CharacterRealm = CharacterRealm()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -97,6 +98,7 @@ class CharacterInsertarActivity : ComponentActivity() {
                     val spells = CrudApi().getSpellList()?.toList()
                     if (races != null && alignments != null && classes != null && languages != null && proficiencies != null && equipment != null && features != null && traits != null && spells != null) {
                         MostrarComponentes(
+                            characterInsertar,
                             races,
                             alignments,
                             classes,
@@ -115,9 +117,9 @@ class CharacterInsertarActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MostrarComponentes(
+    characterInsertar: CharacterRealm,
     racesList: List<Race>?,
     alignmentsList: List<com.example.dndcharacterapp.models.alignment.Alignment>?,
     classeslist: List<ClassesItem>?,
@@ -130,15 +132,7 @@ fun MostrarComponentes(
     viewModel: MainViewModel
 ) {
     val context = LocalContext.current
-    var expandedClasses by remember { mutableStateOf(false) }
-    var expandedOtherProficiency by remember { mutableStateOf(false) }
-    var expandedEquipment by remember { mutableStateOf(false) }
-    var expandedLanguages by remember { mutableStateOf(false) }
-    var expandedFeatures by remember { mutableStateOf(false) }
-    var expandedTraits by remember { mutableStateOf(false) }
-    var expandedPreparedSpells by remember { mutableStateOf(false) }
-    var expandedKnownSpells by remember { mutableStateOf(false) }
-    val characterInsertar: CharacterRealm? = null
+    var posibleInsertar: Boolean = false
 
     Column(
         modifier = Modifier
@@ -150,19 +144,34 @@ fun MostrarComponentes(
         ) {
         //Name
         val name = Mostrar1TextField(textoMostrar = "Name")
-        characterInsertar?.name = name
+        characterInsertar.name = name
+
+        //Username
+        val userName = Mostrar1TextField(textoMostrar = "UserName")
+        characterInsertar.username = userName
 
         //Level
         val level = Mostrar1TextField(textoMostrar = "Level")
-        characterInsertar?.level = level.toInt()
+        if (level.isNotEmpty()) {
+            val parsedInt = level.toIntOrNull()
+            if (parsedInt != null) {
+                characterInsertar.level = parsedInt.toInt()
+                posibleInsertar = true
+            } else {
+                Toast.makeText(
+                    context, "Level no és un valor correcte, ha de ser Int", Toast.LENGTH_LONG
+                ).show()
+                posibleInsertar = false
+            }
+        }
 
         //Inspiration
         val inspiration = MostrarCheckBox()
-        characterInsertar?.inspiration = inspiration
+        characterInsertar.inspiration = inspiration
 
         //Background
         val background = Mostrar1TextField(textoMostrar = "Background")
-        characterInsertar?.background = background
+        characterInsertar.background = background
 
         //Race
         val racesName: MutableList<String> = mutableListOf()
@@ -176,7 +185,7 @@ fun MostrarComponentes(
         raceInsertar?.size = raceFiltrado?.size
         raceInsertar?.speed = raceFiltrado?.speed
         raceInsertar?.subrace = raceFiltrado?.subraces?.get(0)?.name
-        characterInsertar?.race = raceInsertar
+        characterInsertar.race = raceInsertar
 
 
         //Alignment
@@ -186,10 +195,10 @@ fun MostrarComponentes(
         }
         val alignment = MostrarDropDowns(list1 = alignmentsName, "Alignment")
         val alignmentInsertar: EmAlignmentCh? = null
-        val alignmentFiltrado = alignmentsList.filter { it.name == race }.firstOrNull()
+        val alignmentFiltrado = alignmentsList.filter { it.name == alignment }.firstOrNull()
         alignmentInsertar?.name = alignmentFiltrado?.name
         alignmentInsertar?.abbreviation = alignmentFiltrado?.abbreviation
-        characterInsertar?.alignment = alignmentInsertar
+        characterInsertar.alignment = alignmentInsertar
 
         //HitPoint
         Text(text = "HitPoints")
@@ -225,11 +234,28 @@ fun MostrarComponentes(
         //Esto es lo que se inserta
         val hitPointsCh: EmHitPointsCh? = null
 
-        hitPointsCh?.maximum = HitPointsMaximum.toInt()
-        hitPointsCh?.current = HitPointsCurrent.toInt()
-        hitPointsCh?.temporary = HitPointsTemporary.toInt()
+        val maximum = HitPointsMaximum
+        val current = HitPointsCurrent
+        val temporary = HitPointsTemporary
 
-        characterInsertar?.hitPoints = hitPointsCh
+        if (maximum.isNotEmpty() && current.isNotEmpty() && temporary.isNotEmpty()) {
+            val parsedIntMaximum = maximum.toIntOrNull()
+            val parsedIntCurrent = current.toIntOrNull()
+            val parsedIntTemporary = temporary.toIntOrNull()
+            if (parsedIntMaximum != null && parsedIntCurrent != null && parsedIntTemporary != null) {
+                hitPointsCh?.maximum = parsedIntMaximum.toInt()
+                hitPointsCh?.current = parsedIntCurrent.toInt()
+                hitPointsCh?.temporary = parsedIntTemporary.toInt()
+                characterInsertar.hitPoints = hitPointsCh
+                posibleInsertar = true
+            } else {
+                Toast.makeText(
+                    context, "HitPoint no són valors correctes, han de ser Int", Toast.LENGTH_LONG
+                ).show()
+                posibleInsertar = false
+            }
+        }
+
 
         //HitDie
         Text(text = "HitDie")
@@ -256,14 +282,27 @@ fun MostrarComponentes(
         val HitDieQuantity = inputvalueHitDieQuantity.value.text
         //Esto es lo que se inserta
         val hitDieCh: EmHitDieCh? = null
-        hitDieCh?.type = HitDieType
-        hitDieCh?.type = HitDieQuantity
-
-        val hitDieListInsertar: RealmList<EmHitDieCh>? = null
-        if (hitDieCh != null) {
-            hitDieListInsertar?.add(hitDieCh)
+        if (HitDieType.isNotEmpty() && HitDieQuantity.isNotEmpty()) {
+            val parsedIntQuantity = HitDieQuantity.toIntOrNull()
+            if (parsedIntQuantity != null) {
+                hitDieCh?.type = HitDieType
+                hitDieCh?.quantity = parsedIntQuantity.toInt()
+                val hitDieListInsertar: RealmList<EmHitDieCh>? = realmListOf<EmHitDieCh>()
+                if (hitDieCh != null) {
+                    hitDieListInsertar?.add(hitDieCh)
+                }
+                characterInsertar.hit_die = hitDieListInsertar
+                posibleInsertar = true
+            } else {
+                Toast.makeText(
+                    context,
+                    "HitDie quantity no és un valor correcte, ha de ser Int",
+                    Toast.LENGTH_LONG
+                ).show()
+                posibleInsertar = false
+            }
         }
-        characterInsertar?.hit_die = hitDieListInsertar
+
 
         //DeathSaves
         Text(text = "DeathSaves")
@@ -291,10 +330,21 @@ fun MostrarComponentes(
         val DeathSavesFailures = inputvalueDeathSavesFailures.value.text
         //Esto es lo que se inserta
         val deathSavesCh: EmDeathSavesCh? = null
-        deathSavesCh?.success = DeathSavesSuccess.toInt()
-        deathSavesCh?.failures = DeathSavesFailures.toInt()
-
-        characterInsertar?.death_saves = deathSavesCh
+        if (DeathSavesSuccess.isNotEmpty() && DeathSavesFailures.isNotEmpty()) {
+            val parsedIntDeathSavesSuccess = DeathSavesSuccess.toIntOrNull()
+            val parsedIntDeathSavesFailures = DeathSavesFailures.toIntOrNull()
+            if (parsedIntDeathSavesSuccess != null && parsedIntDeathSavesFailures != null) {
+                deathSavesCh?.success = parsedIntDeathSavesSuccess.toInt()
+                deathSavesCh?.failures = parsedIntDeathSavesFailures.toInt()
+                characterInsertar.death_saves = deathSavesCh
+                posibleInsertar = true
+            } else {
+                Toast.makeText(
+                    context, "DeathSaves no són valors correctes, han de ser Int", Toast.LENGTH_LONG
+                ).show()
+                posibleInsertar = false
+            }
+        }
 
         //ArmorClass
         Text(text = "ArmorClass")
@@ -330,11 +380,24 @@ fun MostrarComponentes(
         val ArmorClassValue = inputvalueArmorClassValue.value.text
         //Esto es lo que se inserta
         val armorClassCh: EmArmorClassCh? = null
-        armorClassCh?.name = ArmorClassName
-        armorClassCh?.type = ArmorClassType
-        armorClassCh?.value = ArmorClassValue.toInt()
 
-        characterInsertar?.armor_Class = armorClassCh
+        if (ArmorClassName.isNotEmpty() && ArmorClassType.isNotEmpty() && ArmorClassValue.isNotEmpty()) {
+            val parsedInt = ArmorClassValue.toIntOrNull()
+            if (parsedInt != null) {
+                armorClassCh?.name = ArmorClassName
+                armorClassCh?.type = ArmorClassType
+                armorClassCh?.value = parsedInt.toInt()
+                characterInsertar.armor_Class = armorClassCh
+                posibleInsertar = true
+            } else {
+                Toast.makeText(
+                    context,
+                    "ArmorClassValue no és un valor correcte, ha de ser Int",
+                    Toast.LENGTH_LONG
+                ).show()
+                posibleInsertar = false
+            }
+        }
 
         //Classes
         val classesName: MutableList<String> = mutableListOf()
@@ -349,7 +412,7 @@ fun MostrarComponentes(
         classeInsertar?.name = classeFiltrar?.name
         classeInsertar?.subclass = classeFiltrar?.subclasses?.get(0)?.name
         classeListInsertar?.add(classeInsertar!!)
-        characterInsertar?.classes = classeListInsertar
+        characterInsertar.classes = classeListInsertar
 
         //Stats
         Text(
@@ -377,13 +440,25 @@ fun MostrarComponentes(
         val StatsName = inputvalueStatsName.value.text
         val StatsValue = inputvalueStatsValue.value.text
         val statsCh: EmStatCh? = null
-        statsCh?.name = StatsName
-        statsCh?.value = StatsValue.toInt()
 
-        val statsListInsertar: RealmList<EmStatCh>? = null
-        statsListInsertar?.add(statsCh!!)
+        if (StatsName.isNotEmpty() && StatsValue.isNotEmpty()) {
+            val parsedIntValue = StatsValue.toIntOrNull()
+            if (parsedIntValue != null) {
+                statsCh?.name = StatsName
+                statsCh?.value = parsedIntValue.toInt()
 
-        characterInsertar?.stats = statsListInsertar
+                val statsListInsertar: RealmList<EmStatCh>? = null
+                statsListInsertar?.add(statsCh!!)
+
+                characterInsertar.stats = statsListInsertar
+                posibleInsertar = true
+            } else {
+                Toast.makeText(
+                    context, "StatsValue no és un valor correcte, ha de ser Int", Toast.LENGTH_LONG
+                ).show()
+                posibleInsertar = false
+            }
+        }
 
         //SkillProficiencies
         Text(text = "SkillProficiencies")
@@ -410,14 +485,27 @@ fun MostrarComponentes(
         val SkillProficienciesName = inputvalueSkillProficienciesName.value.text
         val SkillProficienciesBonus = inputvalueSkillProficienciesBonus.value.text
         val skillProficiencyCh: EmSkillProficiencyCh? = null
-        skillProficiencyCh?.name = SkillProficienciesName
-        skillProficiencyCh?.bonus = SkillProficienciesBonus.toInt()
 
-        val skillProficiencyListInsertar: RealmList<EmSkillProficiencyCh>? = null
-        skillProficiencyListInsertar?.add(skillProficiencyCh!!)
+        if (SkillProficienciesName.isNotEmpty() && SkillProficienciesBonus.isNotEmpty()) {
+            val parsedIntSkillProficienciesBonus = SkillProficienciesBonus.toIntOrNull()
+            if (parsedIntSkillProficienciesBonus != null) {
+                skillProficiencyCh?.name = SkillProficienciesName
+                skillProficiencyCh?.bonus = parsedIntSkillProficienciesBonus.toInt()
 
-        characterInsertar?.skill_proficiencies = skillProficiencyListInsertar
+                val skillProficiencyListInsertar: RealmList<EmSkillProficiencyCh>? = null
+                skillProficiencyListInsertar?.add(skillProficiencyCh!!)
 
+                characterInsertar.skill_proficiencies = skillProficiencyListInsertar
+                posibleInsertar = true
+            } else {
+                Toast.makeText(
+                    context,
+                    "SkillProficienciesBonus no és un valor correcte, ha de ser Int",
+                    Toast.LENGTH_LONG
+                ).show()
+                posibleInsertar = false
+            }
+        }
         //Languages
         val languagesName: MutableList<String> = mutableListOf()
         languagesList!!.forEach {
@@ -432,7 +520,7 @@ fun MostrarComponentes(
         val languagesListInsertar: RealmList<EmLanguageCh>? = null
         languagesListInsertar?.add(languagesInsertar!!)
 
-        characterInsertar?.languages = languagesListInsertar
+        characterInsertar.languages = languagesListInsertar
 
         //OtherProficiencies
         val otherProficienciesName: MutableList<String> = mutableListOf()
@@ -452,7 +540,7 @@ fun MostrarComponentes(
         val otherProficienciesInsertarList: RealmList<EmProficiencyCh>? = null
         otherProficienciesInsertarList?.add(otherProficienciesInsertar!!)
 
-        characterInsertar?.other_proficiencies = otherProficienciesInsertarList
+        characterInsertar.other_proficiencies = otherProficienciesInsertarList
 
         //Equipment
         val equipmentName: MutableList<String> = mutableListOf()
@@ -472,7 +560,7 @@ fun MostrarComponentes(
         val equipmentInsertarList: RealmList<EmEquipmentCh>? = null
         equipmentInsertarList?.add(equipmentInsertar!!)
 
-        characterInsertar?.equipment = equipmentInsertarList
+        characterInsertar.equipment = equipmentInsertarList
 
         //CoinPouch
         Text(text = "CoinPouch")
@@ -500,14 +588,27 @@ fun MostrarComponentes(
         val coinPouchQuantity = inputvalueCoinPouchQuantity.value.text
 
         val coinPouch: EmCoinCh? = null
-        coinPouch?.name = coinPouchName
-        coinPouch?.quantity = coinPouchQuantity.toInt()
 
-        val coinPouchInsertarList: RealmList<EmCoinCh>? = null
-        coinPouchInsertarList?.add(coinPouch!!)
+        if (coinPouchName.isNotEmpty() && coinPouchQuantity.isNotEmpty()) {
+            val parsedIntQuantity = coinPouchQuantity.toIntOrNull()
+            if (parsedIntQuantity != null) {
+                coinPouch?.name = coinPouchName
+                coinPouch?.quantity = parsedIntQuantity.toInt()
 
-        characterInsertar?.coin_pouch = coinPouchInsertarList
+                val coinPouchInsertarList: RealmList<EmCoinCh>? = null
+                coinPouchInsertarList?.add(coinPouch!!)
 
+                characterInsertar.coin_pouch = coinPouchInsertarList
+                posibleInsertar = true
+            } else {
+                Toast.makeText(
+                    context,
+                    "CoinPouchQuantity no és un valor correcte, ha de ser Int",
+                    Toast.LENGTH_LONG
+                ).show()
+                posibleInsertar = false
+            }
+        }
         //Features
         val featuresName: MutableList<String> = mutableListOf()
         featuresList!!.forEach {
@@ -524,7 +625,7 @@ fun MostrarComponentes(
         val featuresInsertarList: RealmList<EmFeatureCh>? = null
         featuresInsertarList?.add(featuresInsertar!!)
 
-        characterInsertar?.features = featuresInsertarList
+        characterInsertar.features = featuresInsertarList
 
         //Traits
         val traitsName: MutableList<String> = mutableListOf()
@@ -542,7 +643,7 @@ fun MostrarComponentes(
         val traitsInsertarList: RealmList<EmTraitCh>? = null
         traitsInsertarList?.add(traitsInsertar!!)
 
-        characterInsertar?.traits = traitsInsertarList
+        characterInsertar.traits = traitsInsertarList
 
         //SpellAbilities
         Text(text = "SpellAbilities")
@@ -579,14 +680,30 @@ fun MostrarComponentes(
         val SpellAbilitiesSpellSaveDC = inputvalueSpellAbilitiesSpellSaveDC.value.text
         val SpellAbilitiesSpellAttackBonus = inputvalueSpellAbilitiesSpellAttackBonus.value.text
         val spellAbilityCh: EmSpellAbilityCh? = null
-        spellAbilityCh?.spellcasting_ability = SpellAbilitiesSpellcastingAbility
-        spellAbilityCh?.spell_save_dc = SpellAbilitiesSpellSaveDC.toInt()
-        spellAbilityCh?.spell_attack_bonus = SpellAbilitiesSpellAttackBonus.toInt()
 
-        val spellAbilityInsertarList : RealmList<EmSpellAbilityCh>? = null
-        spellAbilityInsertarList?.add(spellAbilityCh!!)
 
-        characterInsertar?.spell_abilities = spellAbilityInsertarList
+        if (SpellAbilitiesSpellcastingAbility.isNotEmpty() && SpellAbilitiesSpellSaveDC.isNotEmpty() && SpellAbilitiesSpellAttackBonus.isNotEmpty()) {
+            val parsedIntSpellSaveDC = SpellAbilitiesSpellSaveDC.toIntOrNull()
+            val parsedIntSpellAttackBonus = SpellAbilitiesSpellAttackBonus.toIntOrNull()
+            if (parsedIntSpellSaveDC != null && parsedIntSpellAttackBonus != null) {
+                spellAbilityCh?.spellcasting_ability = SpellAbilitiesSpellcastingAbility
+                spellAbilityCh?.spell_save_dc = parsedIntSpellSaveDC.toInt()
+                spellAbilityCh?.spell_attack_bonus = parsedIntSpellAttackBonus.toInt()
+
+                val spellAbilityInsertarList: RealmList<EmSpellAbilityCh> = realmListOf(EmSpellAbilityCh())
+                spellAbilityInsertarList.add(spellAbilityCh!!)
+
+                characterInsertar.spell_abilities = spellAbilityInsertarList
+                posibleInsertar = true
+            } else {
+                Toast.makeText(
+                    context,
+                    "SpellSaveDC i SpellAttackBonus no són valors correctes, han de ser Int",
+                    Toast.LENGTH_LONG
+                ).show()
+                posibleInsertar = false
+            }
+        }
 
         //PreparedSpells
         val preparedSpellsName: MutableList<String> = mutableListOf()
@@ -598,7 +715,7 @@ fun MostrarComponentes(
 
         val preparedSpellsFilter = spellList.filter { it.name == preparedSpells }.firstOrNull()
 
-        val preparedSpellsInsertar : EmSpellCh? = null
+        val preparedSpellsInsertar: EmSpellCh? = null
         preparedSpellsInsertar?.name = preparedSpellsFilter?.name
         preparedSpellsInsertar?.casting_time = preparedSpellsFilter?.castingTime
         preparedSpellsInsertar?.level = preparedSpellsFilter?.level
@@ -606,21 +723,21 @@ fun MostrarComponentes(
         preparedSpellsInsertar?.school = preparedSpellsFilter?.from?.name
         preparedSpellsInsertar?.duration = preparedSpellsFilter?.duration
 
-        val preparedSpellsInsertarList : RealmList<EmSpellCh>? = null
+        val preparedSpellsInsertarList: RealmList<EmSpellCh>? = null
         preparedSpellsInsertarList?.add(preparedSpellsInsertar!!)
 
-        characterInsertar?.prepared_spells = preparedSpellsInsertarList
+        characterInsertar.prepared_spells = preparedSpellsInsertarList
 
         //KnownSpells
         val knownSpellsName: MutableList<String> = mutableListOf()
-        spellList!!.forEach {
+        spellList.forEach {
             knownSpellsName.add(it.name)
         }
         val knownSpells = MostrarDropDowns(list1 = knownSpellsName, textoMostrar = "KnownSpells")
 
         val knownSpellsFilter = spellList.filter { it.name == knownSpells }.firstOrNull()
 
-        val knownSpellsInsertar : EmSpellCh? = null
+        val knownSpellsInsertar: EmSpellCh? = null
         knownSpellsInsertar?.name = knownSpellsFilter?.name
         knownSpellsInsertar?.casting_time = knownSpellsFilter?.castingTime
         knownSpellsInsertar?.level = knownSpellsFilter?.level
@@ -628,65 +745,175 @@ fun MostrarComponentes(
         knownSpellsInsertar?.school = knownSpellsFilter?.from?.name
         knownSpellsInsertar?.duration = knownSpellsFilter?.duration
 
-        val knownSpellsInsertarList : RealmList<EmSpellCh>? = null
+        val knownSpellsInsertarList: RealmList<EmSpellCh>? = null
         knownSpellsInsertarList?.add(knownSpellsInsertar!!)
 
-        characterInsertar?.known_spells = knownSpellsInsertarList
+        characterInsertar.known_spells = knownSpellsInsertarList
 
         //SavingThrows
         val savingThrows = MostrarTextFieldArray("SavingThrows")
 
-        characterInsertar?.saving_throws = savingThrows
+        characterInsertar.saving_throws = savingThrows
 
         //Exhaustion
-        characterInsertar?.exhaustion = Mostrar1TextField(textoMostrar = "Exhaustion").toInt()
+        val exhaustion = Mostrar1TextField(textoMostrar = "Exhaustion")
+        if (exhaustion.isNotEmpty()) {
+            val parsedInt = exhaustion.toIntOrNull()
+            if (parsedInt != null) {
+                characterInsertar.exhaustion = parsedInt.toInt()
+
+            } else {
+                Toast.makeText(
+                    context, "Exhaustion no és un valor correcte, ha de ser Int", Toast.LENGTH_LONG
+                ).show()
+            }
+        }
 
         //ExperienciePoints
-        characterInsertar?.experience_Points =
-            Mostrar1TextField(textoMostrar = "ExperienciePoints").toInt()
+        val experiencePoints = Mostrar1TextField(textoMostrar = "ExperienciePoints")
+        if (experiencePoints.isNotEmpty()) {
+            val parsedInt = experiencePoints.toIntOrNull()
+            if (parsedInt != null) {
+                characterInsertar.experience_Points = parsedInt.toInt()
+
+            } else {
+                Toast.makeText(
+                    context,
+                    "ExperienciePoints no és un valor correcte, ha de ser Int",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
 
         //PassiveWisdom
-        characterInsertar?.passive_wisdom =
-            Mostrar1TextField(textoMostrar = "PassiveWisdom").toInt()
+        val passiveWisdom = Mostrar1TextField(textoMostrar = "PassiveWisdom")
+        if (passiveWisdom.isNotEmpty()) {
+            val parsedInt = passiveWisdom.toIntOrNull()
+            if (parsedInt != null) {
+                characterInsertar.passive_wisdom = parsedInt.toInt()
+            } else {
+                Toast.makeText(
+                    context,
+                    "PassiveWisdom no és un valor correcte, ha de ser Int",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
 
         //Initiative
-        characterInsertar?.initiative = Mostrar1TextField(textoMostrar = "Initiative").toInt()
+        val initiative = Mostrar1TextField(textoMostrar = "Initiative")
+        if (initiative.isNotEmpty()) {
+            val parsedInt = initiative.toIntOrNull()
+            if (parsedInt != null) {
+                characterInsertar.initiative = parsedInt.toInt()
+            } else {
+                Toast.makeText(
+                    context, "Initiative no és un valor correcte, ha de ser Int", Toast.LENGTH_LONG
+                ).show()
+            }
+        }
 
         //Speed
-        characterInsertar?.speed = Mostrar1TextField(textoMostrar = "Speed").toInt()
+        val speed = Mostrar1TextField(textoMostrar = "Speed")
+        if (speed.isNotEmpty()) {
+            val parsedInt = speed.toIntOrNull()
+            if (parsedInt != null) {
+                characterInsertar.speed = parsedInt.toInt()
+            } else {
+                Toast.makeText(
+                    context, "Speed no és un valor correcte, ha de ser Int", Toast.LENGTH_LONG
+                ).show()
+            }
+        }
 
         //ProficiencyBonus
-        characterInsertar?.proficiency_bonus =
-            Mostrar1TextField(textoMostrar = "ProficiencyBonus").toInt()
+        val proficiencyBonus = Mostrar1TextField(textoMostrar = "ProficiencyBonus")
+        if (proficiencyBonus.isNotEmpty()) {
+            val parsedInt = proficiencyBonus.toIntOrNull()
+            if (parsedInt != null) {
+                characterInsertar.proficiency_bonus = parsedInt.toInt()
+            } else {
+                Toast.makeText(
+                    context,
+                    "ProficiencyBonus no és un valor correcte, ha de ser Int",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
 
         //PersonalityTraits
-        characterInsertar?.personality_traits =
-            Mostrar1TextField(textoMostrar = "PersonalityTraits")
+        val personalityTraits = Mostrar1TextField(textoMostrar = "PersonalityTraits")
+
+        characterInsertar.personality_traits = personalityTraits
 
         //Ideals
-        characterInsertar?.ideals = Mostrar1TextField(textoMostrar = "Ideals")
+        val ideals = Mostrar1TextField(textoMostrar = "Ideals")
+
+        characterInsertar.ideals = ideals
 
         //Bonds
-        characterInsertar?.bonds = Mostrar1TextField(textoMostrar = "Bonds")
+        val bonds = Mostrar1TextField(textoMostrar = "Bonds")
+
+        characterInsertar.bonds = bonds
 
         //Claws
-        characterInsertar?.flaws = Mostrar1TextField(textoMostrar = "Flaws")
+        val flaws = Mostrar1TextField(textoMostrar = "Flaws")
+
+        characterInsertar.flaws = flaws
 
         //CharacterBackstory
-        characterInsertar?.character_backstory =
-            Mostrar1TextField(textoMostrar = "CharacterBackstory")
+        val characterBackstory = Mostrar1TextField(textoMostrar = "CharacterBackstory")
+
+        characterInsertar.character_backstory = characterBackstory
 
         //AlliesOrganizations
-        characterInsertar?.allies_organizations =
-            Mostrar1TextField(textoMostrar = "AlliesOrganizations")
+        val alliesOrganizations = Mostrar1TextField(textoMostrar = "AlliesOrganizations")
+
+        characterInsertar.allies_organizations = alliesOrganizations
 
         //Symbol
-        characterInsertar?.symbol = Mostrar1TextField(textoMostrar = "Symbol")
+        val symbol = Mostrar1TextField(textoMostrar = "Symbol")
+
+        characterInsertar.symbol = symbol
+
+        Log.i("character", characterInsertar.toString())
 
         //Boton añadir character
-        BotonAnadir(
-            context = context, characterInsertar = characterInsertar!!, viewModel = viewModel
-        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                //Almacenar todos los elementos
+                Button(onClick = {
+                    val data = try {
+                        if (posibleInsertar) {
+                            viewModel.insertNewCharacter(characterInsertar)
+                            Toast.makeText(
+                                context, "Has afegit character", Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "Revisa els continguts per si t'has deixat algún buit!",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    } catch (error: Throwable) {
+                        Toast.makeText(
+                            context, "No se ha podido insertar el character", Toast.LENGTH_LONG
+                        ).show()
+                        Log.i("character", characterInsertar.toString())
+                        null
+                    }
+                }) {
+                    Text("Afegir Character", color = MaterialTheme.colorScheme.onBackground)
+                }
+            }
+        }
+
     }
 }
 
@@ -709,7 +936,7 @@ private fun Mostrar1TextField(textoMostrar: String): String {
         }
     }
     Spacer(modifier = Modifier.width(8.dp))
-    return inputValue.value.text
+    return res.value
 }
 
 //Esto mostrará dos exposeddropdownmenusbox
@@ -849,6 +1076,7 @@ private fun BotonAnadir(
                     Toast.makeText(
                         context, "No se ha podido insertar el character", Toast.LENGTH_LONG
                     ).show()
+                    Log.i("character", characterInsertar.toString())
                     null
                 }
             }) {

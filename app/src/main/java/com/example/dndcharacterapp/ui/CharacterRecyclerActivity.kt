@@ -67,6 +67,7 @@ class CharacterRecyclerActivity : ComponentActivity() {
                                 .height(15.dp)
                                 .fillMaxWidth()
                         )
+                        BotonIrInsertarCharacters()
 
                         if (filtre.value.text.isNotEmpty()) {
                             val filtrats =
@@ -112,10 +113,7 @@ class CharacterRecyclerActivity : ComponentActivity() {
 
                             }
                         }
-
                     }
-                    BotonIrInsertarCharacters()
-
                 }
             }
         }
