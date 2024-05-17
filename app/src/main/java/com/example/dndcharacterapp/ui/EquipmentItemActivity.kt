@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -58,6 +59,7 @@ class EquipmentItemActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Column (modifier = Modifier
+                        .background(MaterialTheme.colorScheme.primaryContainer)
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())) {
                         if (isMagic.equals("y")){
@@ -77,30 +79,7 @@ class EquipmentItemActivity : ComponentActivity() {
 fun PrintMagicItem(magicItem: MagicItem){
     Header(name = magicItem.name)
 
-    TextBox(title = "Rarity", content = magicItem.rarity.name)
-    if (magicItem.variant) TextBox(title = "Variant", content = "Yes") else TextBox(title = "Variant", content = "No")
-
-    Spacer(modifier = Modifier
-        .fillMaxWidth()
-        .height(40.dp))
-
-    Text(text = "Variants",
-        fontFamily = FontFamily.Cursive,
-        fontSize = 20.sp)
-    magicItem.variants.forEach {
-        Text(text = ".- ${it.name}")
-    }
-
-    Spacer(modifier = Modifier
-        .fillMaxWidth()
-        .height(40.dp))
-
-    Text(text = "Description",
-        fontFamily = FontFamily.Cursive,
-        fontSize = 20.sp)
-    magicItem.desc.forEach {
-        Text(text = ".- $it\n")
-    }
+    Body(magicItem = magicItem)
 }
 
 @Composable
@@ -149,7 +128,7 @@ fun PrintNormalEquipment(equipment: Equipment){
 
 @Composable
 fun NormalTools(equipment: Equipment){
-    TextBox(title = "Tool Category", content = equipment.toolCategory!!)
+    Text(text = "Tool Category: " + equipment.toolCategory)
     Spacer(modifier = Modifier
         .fillMaxWidth()
         .height(40.dp))
@@ -164,9 +143,10 @@ fun NormalTools(equipment: Equipment){
 fun NormalAdventuring(equipment: Equipment){
 
     if (equipment.quantity != null){
-        TextBox(title = "Quantity", content = equipment.quantity.toString())
+        Text(text = "Quantity: " + equipment.quantity.toString(), color = MaterialTheme.colorScheme.onSurface)
     }
-    if (equipment.weight != null) TextBox(title = "Weight", content = equipment.weight.toString())
+
+    if (equipment.weight != null) Text(text = "Weight: " + equipment.weight.toString(), color = MaterialTheme.colorScheme.onSurface)
     Spacer(modifier = Modifier
         .fillMaxWidth()
         .height(40.dp))
@@ -187,17 +167,17 @@ fun NormalAdventuring(equipment: Equipment){
     
 @Composable
 fun NormalArmor(equipment: Equipment){
-    TextBox(title = "Armor Category", content = equipment.armorCategory)
-    TextBox(title = "Armor Class", content = equipment.armorName!!.base.toString())
+    Text(text = "Armor Category: " + equipment.armorCategory, color = MaterialTheme.colorScheme.onSurface)
+    Text(text = "Armor Class: " + equipment.armorName!!.base.toString(), color = MaterialTheme.colorScheme.onSurface)
     var dexbonus = ""
     dexbonus = if (equipment.armorName.dexBonus){
         "Yes"
     } else {
         "No"
     }
-    TextBox(title = "Dex bonus", content = dexbonus)
+    Text(text = "Dex bonus: $dexbonus", color = MaterialTheme.colorScheme.onSurface)
     if (equipment.armorName.maxBonus != null){
-        TextBox(title = "Max Dex Bonus", content = equipment.armorName.maxBonus.toString())
+        Text(text = "Max Dex Bonus: " + equipment.armorName.maxBonus.toString(), color = MaterialTheme.colorScheme.onSurface)
     }
     Spacer(modifier = Modifier
         .fillMaxWidth()
@@ -214,20 +194,20 @@ fun NormalWeapon(equipment: Equipment){
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top)
     {
-        TextBox(title = "Category", content = equipment.weaponCategory!!)
-        TextBox(title = "Type", content = equipment.weaponRange!!)
-        TextBox(title = "Weight", content = equipment.weight.toString())
-        TextBox(title = "Damage Type", content = equipment.unitQuantity!!.damageType.name)
-        TextBox(title = "Damage Dealt", content = equipment.unitQuantity.damageDice)
+        Text(text = "Category: " + equipment.weaponCategory)
+        Text(text = "Type: " + equipment.weaponRange, color = MaterialTheme.colorScheme.onSurface)
+        Text(text = "Weight: " + equipment.weight.toString(), color = MaterialTheme.colorScheme.onSurface)
+        Text(text = "Damage Type: " + equipment.unitQuantity!!.damageType.name, color = MaterialTheme.colorScheme.onSurface)
+        Text(text = "Damage Dealt: " + equipment.unitQuantity.damageDice, color = MaterialTheme.colorScheme.onSurface)
         if (equipment.weaponRange == "Ranged") {
             val range: String = equipment.range.normal.toString()+"/"+equipment.range.long
-            TextBox(title = "Range", content = range)
+            Text(text = "Range: $range", color = MaterialTheme.colorScheme.onSurface)
         }
         if (equipment.throwRange != null){
-            TextBox(title = "Throwable Range", content = equipment.throwRange.normal.toString()+"/"+equipment.throwRange.long)
+            Text(text = "Throwable Range: " + equipment.throwRange.normal, color = MaterialTheme.colorScheme.onSurface)
         }
         if (equipment.special != null){
-            TextBox(title = "Special", content = equipment.special)
+            Text(text = "Special: " + equipment.special, color = MaterialTheme.colorScheme.onSurface)
         }
         Spacer(modifier = Modifier
             .fillMaxWidth()
@@ -292,7 +272,7 @@ fun CostBox(equipment: Equipment){
                 fontFamily = FontFamily.Cursive,
                 fontSize = 20.sp)
         }
-        TextBox(title = equipment.cost.unit, content = equipment.cost.quantity.toString())
+        Text(text = equipment.cost.unit + ": " + equipment.cost.quantity, color = MaterialTheme.colorScheme.onSurface)
     }
 }
 @Composable
