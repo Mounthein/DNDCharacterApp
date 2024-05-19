@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
@@ -36,15 +35,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -80,7 +76,6 @@ import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.ext.toRealmList
 import io.realm.kotlin.types.RealmList
-import kotlinx.coroutines.launch
 
 class CharacterInsertarActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
@@ -205,7 +200,7 @@ fun MostrarComponentes(
         val raceFiltrado = racesList.filter { it.name == race }.firstOrNull()
         raceInsertar.name = raceFiltrado?.name
         raceInsertar.size = raceFiltrado?.size
-        raceInsertar.speed = raceFiltrado?.speed
+        raceInsertar.speed = raceFiltrado?.speed.toString()
         raceInsertar.subrace = raceFiltrado?.subraces?.get(0)?.name
         characterInsertar.race = raceInsertar
 
@@ -305,24 +300,24 @@ fun MostrarComponentes(
         //Esto es lo que se inserta
         val hitDieCh: EmHitDieCh = EmHitDieCh()
         if (HitDieType.isNotEmpty() && HitDieQuantity.isNotEmpty()) {
-            val parsedIntQuantity = HitDieQuantity.toIntOrNull()
-            if (parsedIntQuantity != null) {
+//            val parsedIntQuantity = HitDieQuantity.toIntOrNull()
+//            if (parsedIntQuantity != null) {
                 hitDieCh.type = HitDieType
-                hitDieCh.quantity = parsedIntQuantity.toInt()
+                hitDieCh.quantity = HitDieQuantity
                 val hitDieListInsertar: RealmList<EmHitDieCh> = realmListOf<EmHitDieCh>()
                 if (hitDieCh != null) {
                     hitDieListInsertar.add(hitDieCh)
                 }
                 characterInsertar.hit_die = hitDieListInsertar
                 posibleInsertar = true
-            } else {
-                Toast.makeText(
-                    context,
-                    "HitDie quantity no és un valor correcte, ha de ser Int",
-                    Toast.LENGTH_LONG
-                ).show()
-                posibleInsertar = false
-            }
+//            } else {
+//                Toast.makeText(
+//                    context,
+//                    "HitDie quantity no és un valor correcte, ha de ser Int",
+//                    Toast.LENGTH_LONG
+//                ).show()
+//                posibleInsertar = false
+//            }
         }
 
 
@@ -519,10 +514,10 @@ fun MostrarComponentes(
         val skillProficiencyCh: EmSkillProficiencyCh = EmSkillProficiencyCh()
 
         if (SkillProficienciesName.isNotEmpty() && SkillProficienciesBonus.isNotEmpty()) {
-            val parsedIntSkillProficienciesBonus = SkillProficienciesBonus.toIntOrNull()
-            if (parsedIntSkillProficienciesBonus != null) {
+            val parsedDoubleSkillProficienciesBonus = SkillProficienciesBonus.toDoubleOrNull()
+            if (parsedDoubleSkillProficienciesBonus != null) {
                 skillProficiencyCh.name = SkillProficienciesName
-                skillProficiencyCh.bonus = parsedIntSkillProficienciesBonus.toInt()
+                skillProficiencyCh.bonus = parsedDoubleSkillProficienciesBonus.toDouble()
 
                 val skillProficiencyListInsertar: RealmList<EmSkillProficiencyCh> = realmListOf(
                     EmSkillProficiencyCh()

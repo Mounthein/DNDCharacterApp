@@ -6,3 +6,4 @@ class EmAlignmentCh : EmbeddedRealmObject {
     var name: String? = null
     var abbreviation: String? = null
 }
+

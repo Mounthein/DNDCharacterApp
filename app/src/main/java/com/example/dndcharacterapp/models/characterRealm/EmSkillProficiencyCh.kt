@@ -4,5 +4,5 @@ import io.realm.kotlin.types.EmbeddedRealmObject
 
 class EmSkillProficiencyCh : EmbeddedRealmObject {
     var name: String? = null
-    var bonus: Int? = null
+    var bonus: Double? = null
 }

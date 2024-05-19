@@ -43,8 +43,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dndcharacterapp.api.CrudApi
+import com.example.dndcharacterapp.models.characterRealm.CharacterRealm
 import com.example.dndcharacterapp.models.user.Message
 import com.example.dndcharacterapp.models.user.User
 import com.example.dndcharacterapp.models.user.apiUser
@@ -52,7 +52,6 @@ import com.example.dndcharacterapp.realm.MainViewModel
 import com.example.dndcharacterapp.realm.RealmApp
 import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
 import io.realm.kotlin.UpdatePolicy
-import org.mongodb.kbson.BsonObjectId
 
 class ConfigurationActivity : ComponentActivity() {
     private val viewModel: ConfigViewModel by viewModels()
@@ -64,8 +63,7 @@ class ConfigurationActivity : ComponentActivity() {
             DNDCharacterAppTheme(darkTheme = false) {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
                     val user by viewModel.user.collectAsState()
                     val character by viewModelCharacter.characters.collectAsState()
@@ -76,6 +74,8 @@ class ConfigurationActivity : ComponentActivity() {
                         } else {
                             isLogued.value = true
                         }
+
+                        DatabaseSelector(viewModelCharacter)
                     }
                 }
             }
@@ -97,11 +97,13 @@ fun LoginMenu(register: Boolean, logedin: MutableState<Boolean>, returner: Mutab
             .background(MaterialTheme.colorScheme.primaryContainer),
         contentAlignment = Alignment.Center
     ) {
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 15.dp),
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 15.dp),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,) {
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
 
             TextField(
                 placeholder = { Text(text = "Your Username Here") },
@@ -139,7 +141,7 @@ fun LoginMenu(register: Boolean, logedin: MutableState<Boolean>, returner: Mutab
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             )
-            if (register){
+            if (register) {
                 TextField(
                     placeholder = { Text(text = "Your Password Here") },
                     value = pass2,
@@ -160,19 +162,18 @@ fun LoginMenu(register: Boolean, logedin: MutableState<Boolean>, returner: Mutab
                 )
             }
 
-            Row (
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+            Row(
+                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(
                     onClick = {
-                        if (!register && user.isNotEmpty() && pass.isNotEmpty() || register && user.isNotEmpty() && pass.isNotEmpty() && pass2.isNotEmpty()){
+                        if (!register && user.isNotEmpty() && pass.isNotEmpty() || register && user.isNotEmpty() && pass.isNotEmpty() && pass2.isNotEmpty()) {
                             var missatge: Message? = null
-                            if (!register){
-                                missatge = CrudApi().getUserOk(user,pass)
+                            if (!register) {
+                                missatge = CrudApi().getUserOk(user, pass)
                             } else {
-                                if (pass.equals(pass2)){
-                                    var usuari: apiUser = apiUser( user, pass)
+                                if (pass.equals(pass2)) {
+                                    var usuari: apiUser = apiUser(user, pass)
 
                                     missatge = CrudApi().postUserOk(usuari)
                                 }
@@ -181,19 +182,28 @@ fun LoginMenu(register: Boolean, logedin: MutableState<Boolean>, returner: Mutab
                             var test1 = missatge?.Message == "Login Incorrect"
                             var test2 = missatge?.Message.equals("User alredy exists")
                             var test3 = missatge == null
-                            if (test1 || test2 || test3){
+                            if (test1 || test2 || test3) {
                                 if (missatge != null) {
                                     if (missatge.Message.equals("User already exists")) {
-                                        Toast.makeText(cont, "Error with the username, try another", Toast.LENGTH_LONG)
-                                            .show()
-                                    } else if (missatge.Message.equals("Login Incorrect")){
-                                        Toast.makeText(cont, "Error with user/password", Toast.LENGTH_LONG).show()
+                                        Toast.makeText(
+                                            cont,
+                                            "Error with the username, try another",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    } else if (missatge.Message.equals("Login Incorrect")) {
+                                        Toast.makeText(
+                                            cont, "Error with user/password", Toast.LENGTH_LONG
+                                        ).show()
                                     }
                                 } else {
-                                    Toast.makeText(cont, "Something looks wrong, try again later", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(
+                                        cont,
+                                        "Something looks wrong, try again later",
+                                        Toast.LENGTH_LONG
+                                    ).show()
                                 }
                             } else {
-                                if (missatge!!.Message == "Login Correct"){
+                                if (missatge!!.Message == "Login Correct") {
                                     var us: User = User()
                                     us.username = user
                                     us.password = pass
@@ -204,7 +214,8 @@ fun LoginMenu(register: Boolean, logedin: MutableState<Boolean>, returner: Mutab
                                     Toast.makeText(cont, "Login Correct", Toast.LENGTH_LONG).show()
                                     logedin.value = true
                                 } else {
-                                    Toast.makeText(cont, "Register Correct", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(cont, "Register Correct", Toast.LENGTH_LONG)
+                                        .show()
                                 }
                             }
                         }
@@ -213,9 +224,9 @@ fun LoginMenu(register: Boolean, logedin: MutableState<Boolean>, returner: Mutab
                     modifier = Modifier
                         .width(150.dp)
                         .height(40.dp),
-                )
-                {
-                    Text(text = "Send",
+                ) {
+                    Text(
+                        text = "Send",
                         color = MaterialTheme.colorScheme.onTertiaryContainer,
                         textAlign = TextAlign.Center,
                     )
@@ -229,18 +240,15 @@ fun LoginMenu(register: Boolean, logedin: MutableState<Boolean>, returner: Mutab
                     modifier = Modifier
                         .width(150.dp)
                         .height(40.dp),
-                )
-                {
-                    Text(text = "Return",
+                ) {
+                    Text(
+                        text = "Return",
                         color = MaterialTheme.colorScheme.onTertiaryContainer,
                         textAlign = TextAlign.Center,
                     )
                 }
             }
-
         }
-
-
     }
 }
 
@@ -248,19 +256,18 @@ fun LoginMenu(register: Boolean, logedin: MutableState<Boolean>, returner: Mutab
 fun LoginSelector(logedin: MutableState<Boolean>) {
     val what = remember { mutableIntStateOf(0) }
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (what.intValue == 0){
+        if (what.intValue == 0) {
             LoginButton(MaterialTheme.shapes.large, "Login") { what.intValue = 1 }
             LoginButton(MaterialTheme.shapes.large, "Register") { what.intValue = 2 }
-        } else if (what.intValue == 1){
+        } else if (what.intValue == 1) {
             LoginMenu(register = false, logedin = logedin, returner = what)
-        } else{
+        } else {
             LoginMenu(register = true, logedin = logedin, returner = what)
         }
-
     }
 }
 
@@ -285,10 +292,141 @@ fun LoginButton(shape: Shape, text: String, click: () -> Unit) {
 }
 
 @Composable
+fun DatabaseSelector(viewModel: MainViewModel) {
+    val what = remember { mutableIntStateOf(0) }
+    val context = LocalContext.current
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        if (what.intValue == 0) {
+            InsertDatabaseToApi(MaterialTheme.shapes.large, "SaveToApi") {
+                what.intValue = 1
+            }
+            LoadDatabaseButton(MaterialTheme.shapes.large, "LoadFromApi") {
+                what.intValue = 2
+            }
+        } else if (what.intValue == 1) {
+            DatabaseMenu("insert", returner = what, viewModel)
+        } else {
+            DatabaseMenu("load", returner = what, viewModel)
+        }
+
+
+    }
+}
+
+@Composable
+fun DatabaseMenu(loadInsert: String, returner: MutableIntState, viewModel: MainViewModel) {
+    val context = LocalContext.current
+    Box(
+        modifier = Modifier
+            .fillMaxWidth(0.9f)
+            .wrapContentSize()
+            .clip(MaterialTheme.shapes.medium)
+            .background(MaterialTheme.colorScheme.primaryContainer),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 15.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                if (loadInsert.equals("load")) {
+                    Text(text = "Vols carregar els characters de la api?")
+                    val charactersLoadApi = CrudApi().getCharacterList()?.toList()
+                    Button(
+                        onClick = {
+                            if (charactersLoadApi != null) {
+                                charactersLoadApi.forEach{
+                                    viewModel.insertNewCharacterToRealm(it)
+                                }
+                                Toast.makeText(context, "Heu carregat tots els characters de l'API", Toast.LENGTH_LONG).show()
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
+                        modifier = Modifier
+                            .width(150.dp)
+                            .height(40.dp),
+                    ) {
+                        Text(
+                            text = "",
+                            color = MaterialTheme.colorScheme.onTertiaryContainer,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                }
+
+                Button(
+                    onClick = {
+                        returner.value = 0
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
+                    modifier = Modifier
+                        .width(150.dp)
+                        .height(40.dp),
+                ) {
+                    Text(
+                        text = "Return",
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun InsertDatabaseToApi(shape: Shape, text: String, click: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .padding(20.dp)
+            .fillMaxWidth()
+            .height(100.dp)
+            .clip(shape)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .clickable(onClick = click),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.displayLarge,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+@Composable
+fun LoadDatabaseButton(shape: Shape, text: String, click: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .padding(20.dp)
+            .fillMaxWidth()
+            .height(100.dp)
+            .clip(shape)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .clickable(onClick = click),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.displayLarge,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+@Composable
 fun Greeting6(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Hello $name!",
-        modifier = modifier
+        text = "Hello $name!", modifier = modifier
     )
 }
 
