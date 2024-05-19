@@ -48,6 +48,7 @@ import com.example.dndcharacterapp.api.CrudApi
 import com.example.dndcharacterapp.models.user.Message
 import com.example.dndcharacterapp.models.user.User
 import com.example.dndcharacterapp.models.user.apiUser
+import com.example.dndcharacterapp.realm.MainViewModel
 import com.example.dndcharacterapp.realm.RealmApp
 import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
 import io.realm.kotlin.UpdatePolicy
@@ -55,6 +56,7 @@ import org.mongodb.kbson.BsonObjectId
 
 class ConfigurationActivity : ComponentActivity() {
     private val viewModel: ConfigViewModel by viewModels()
+    private val viewModelCharacter: MainViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //val x = CrudApi().getUserOk("663bb77966105878580551c7", "string")
@@ -66,6 +68,7 @@ class ConfigurationActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val user by viewModel.user.collectAsState()
+                    val character by viewModelCharacter.characters.collectAsState()
                     val isLogued = remember { mutableStateOf(false) }
                     Column(modifier = Modifier.fillMaxSize()) {
                         if (user.isNullOrEmpty()) {

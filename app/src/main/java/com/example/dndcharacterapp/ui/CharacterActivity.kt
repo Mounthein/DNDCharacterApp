@@ -127,7 +127,7 @@ fun BodyCharacter(character: CharacterRealm) {
             title = "hitPointsCurrent", content = character.hitPoints?.current.toString()
         )
         TextBoxCharacter(
-            title = "hitPointsTemporary", content = character.hitPoints?.temporary.toString()
+            title = "hitPointsTemporary" , content = character.hitPoints?.temporary.toString()
         )
         character.hit_die?.get(0)?.type?.let {
             TextBoxCharacter(

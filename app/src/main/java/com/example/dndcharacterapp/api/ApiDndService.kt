@@ -44,7 +44,8 @@ import com.example.dndcharacterapp.models.subrace.Subrace
 import com.example.dndcharacterapp.models.subrace.Subraces
 import com.example.dndcharacterapp.models.trait.Trait
 import com.example.dndcharacterapp.models.trait.Traits
-import com.example.dndcharacterapp.models.user.Message
+import com.example.dndcharacterapp.models.character.Message as characterMessage
+import com.example.dndcharacterapp.models.user.Message as userMessage
 import com.example.dndcharacterapp.models.user.apiUser
 import com.example.dndcharacterapp.models.weaponproperty.WeaponProperties
 import com.example.dndcharacterapp.models.weaponproperty.WeaponProperty
@@ -60,13 +61,13 @@ interface ApiDndService {
     suspend fun getUserOk(
         @Path("id") id: String,
         @Path("pass") pass: String
-    ): Response<Message>
+    ): Response<userMessage>
 
 
     @POST("/api/User/")
     suspend fun postUserOk(
         @Body user: apiUser
-    ): Response<Message>
+    ): Response<userMessage>
 
     @GET("/api/AbilityScore/")
     suspend fun getAbilityScoreList(): Response<AbilityScores>
@@ -316,4 +317,9 @@ interface ApiDndService {
     suspend fun getCharacter(
         @Path("id") id: String
     ): Response<Character>
+
+    @POST("/api/Character/")
+    suspend fun postCharacter(
+        @Body character: Character
+    ): Response<characterMessage>
 }

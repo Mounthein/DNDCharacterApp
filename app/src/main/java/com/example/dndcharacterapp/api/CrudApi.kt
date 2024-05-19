@@ -9,6 +9,7 @@ import com.example.dndcharacterapp.models.background.Background
 import com.example.dndcharacterapp.models.background.Backgrounds
 import com.example.dndcharacterapp.models.character.Character
 import com.example.dndcharacterapp.models.character.Characters
+import com.example.dndcharacterapp.models.character.Message
 import com.example.dndcharacterapp.models.classes.Classes
 import com.example.dndcharacterapp.models.classes.ClassesItem
 import com.example.dndcharacterapp.models.condition.Condition
@@ -45,7 +46,8 @@ import com.example.dndcharacterapp.models.subrace.Subrace
 import com.example.dndcharacterapp.models.subrace.Subraces
 import com.example.dndcharacterapp.models.trait.Trait
 import com.example.dndcharacterapp.models.trait.Traits
-import com.example.dndcharacterapp.models.user.Message
+import com.example.dndcharacterapp.models.user.Message as userMessage
+import com.example.dndcharacterapp.models.character.Message as characterMessage
 import com.example.dndcharacterapp.models.user.apiUser
 import com.example.dndcharacterapp.models.weaponproperty.WeaponProperties
 import com.example.dndcharacterapp.models.weaponproperty.WeaponProperty
@@ -70,8 +72,8 @@ class CrudApi() : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    private val urlapi = "https://api.mounthein.es/"
-    //private val urlapi = "https://newtealshop98.conveyor.cloud/"
+    //private val urlapi = "https://api.mounthein.es/"
+    private val urlapi = "https://differentblueshop8.conveyor.cloud/"
 
     private fun getClient(): OkHttpClient {
         var login = HttpLoggingInterceptor()
@@ -90,8 +92,8 @@ class CrudApi() : CoroutineScope {
     // ========================================================== //
     // ========================================================== //
 
-    fun getUserOk(user: String, pass: String): Message?{
-        var resposta: Response<Message>? = null
+    fun getUserOk(user: String, pass: String): userMessage?{
+        var resposta: Response<userMessage>? = null
 
         runBlocking {
             val corrutina = launch {
@@ -104,12 +106,12 @@ class CrudApi() : CoroutineScope {
         } else {
             val errorBodyString = resposta!!.errorBody()!!.string()
 
-            return Gson().fromJson(errorBodyString, Message::class.java)
+            return Gson().fromJson(errorBodyString, userMessage::class.java)
         }
     }
     //postUserOk
-    fun postUserOk(apiUser: apiUser): Message?{
-        var resposta: Response<Message>? = null
+    fun postUserOk(apiUser: apiUser): userMessage?{
+        var resposta: Response<userMessage>? = null
 
         runBlocking {
             val corrutina = launch {
@@ -125,7 +127,7 @@ class CrudApi() : CoroutineScope {
         } else {
             val errorBodyString = resposta!!.errorBody()!!.string()
 
-            return Gson().fromJson(errorBodyString, Message::class.java)
+            return Gson().fromJson(errorBodyString, userMessage::class.java)
         }
     }
 
@@ -951,6 +953,27 @@ class CrudApi() : CoroutineScope {
             return resposta!!.body()!!
         } else {
             return null
+        }
+    }
+
+    fun postCharacter(character: Character): characterMessage?{
+        var resposta: Response<characterMessage>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                Log.d("resposta2",character.toString())
+                resposta = getRetrofit().create(ApiDndService::class.java).postCharacter(character)
+
+            }
+            corrutina.join()
+            Log.d("resposta: ", resposta.toString())
+        }
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        } else {
+            val errorBodyString = resposta!!.errorBody()!!.string()
+
+            return Gson().fromJson(errorBodyString, Message::class.java)
         }
     }
 
