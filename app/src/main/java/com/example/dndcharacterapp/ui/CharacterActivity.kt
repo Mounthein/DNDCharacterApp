@@ -57,10 +57,10 @@ class CharacterActivity : ComponentActivity() {
                     val character by viewModel.characters.collectAsState()
                     val characterImportado = intent.getStringExtra("character")
                     val filtrats = character.filter { it.idString == characterImportado }
+
                     Box(modifier = Modifier.fillMaxSize()) {
                         Column(
-                            modifier = Modifier
-                                .fillMaxSize()
+                            modifier = Modifier.fillMaxSize()
                         ) {
                             LazyColumn(
                                 contentPadding = PaddingValues(10.dp),
@@ -68,7 +68,7 @@ class CharacterActivity : ComponentActivity() {
                                     .fillMaxSize()
                                     .padding(15.dp)
                             ) {
-                                items(filtrats!!) {
+                                items(filtrats) {
                                     HeaderCharacter(name = it.name!!)
                                     BodyCharacter(character = it)
                                 }
@@ -115,66 +115,143 @@ fun BodyCharacter(character: CharacterRealm) {
         ) {
         TextBoxCharacter(title = "Level", content = character.level.toString())
         TextBoxCharacter(title = "Inspiration", content = character.inspiration.toString())
+        //if (character.background != null) {
         character.background?.let { TextBoxCharacter(title = "background", content = it) }
-//        TextBoxCharacter(title = "race", content = character.race)
-//        TextBoxCharacter(title = "alignment", content = character.alignment)
-//        TextBoxCharacter(title = "hitPoints", content = character.hitPoints)
-//        TextBoxCharacter(title = "hit_die", content = character.hit_die)
-//        TextBoxCharacter(title = "death_saves", content = character.death_saves)
-//        TextBoxCharacter(title = "temporary_HitPoints", content = character.temporary_HitPoints)
-//        TextBoxCharacter(title = "exhaustion", content = character.exhaustion)
-//        TextBoxCharacter(title = "armor_Class", content = character.armor_Class)
-//        TextBoxCharacter(title = "classes", content = character.classes)
+        //}
+        character.race?.name?.let { TextBoxCharacter(title = "race", content = it) }
+        character.alignment?.name?.let { TextBoxCharacter(title = "alignment", content = it) }
+        TextBoxCharacter(
+            title = "hitPointsMaximum", content = character.hitPoints?.maximum.toString()
+        )
+        TextBoxCharacter(
+            title = "hitPointsCurrent", content = character.hitPoints?.current.toString()
+        )
+        TextBoxCharacter(
+            title = "hitPointsTemporary", content = character.hitPoints?.temporary.toString()
+        )
+        character.hit_die?.get(0)?.type?.let {
+            TextBoxCharacter(
+                title = "hit_dieType", content = it
+            )
+        }
+        TextBoxCharacter(
+            title = "hit_dieQuantity", content = character.hit_die?.get(0)?.quantity.toString()
+        )
+        TextBoxCharacter(
+            title = "death_savesSuccess", content = character.death_saves?.success.toString()
+        )
+        TextBoxCharacter(
+            title = "death_savesFailure", content = character.death_saves?.failures.toString()
+        )
+        TextBoxCharacter(
+            title = "temporary_HitPoints", content = character.temporary_HitPoints.toString()
+        )
+        TextBoxCharacter(title = "exhaustion", content = character.exhaustion.toString())
+        character.armor_Class?.name?.let {
+            TextBoxCharacter(
+                title = "armor_ClassName", content = it
+            )
+        }
+        character.armor_Class?.type?.let {
+            TextBoxCharacter(
+                title = "armor_ClassType", content = it
+            )
+        }
+        TextBoxCharacter(
+            title = "armor_ClassValue", content = character.armor_Class?.value.toString()
+        )
+        character.classes?.get(0)?.name?.let { TextBoxCharacter(title = "classes", content = it) }
+        character.classes?.get(0)?.subclass?.let {
+            TextBoxCharacter(
+                title = "classes", content = it
+            )
+        }
         TextBoxCharacter(
             title = "experience_Points", content = character.experience_Points.toString()
         )
-        TextBoxCharacter(title = "statsName", content = character.stats!!.get(0).name!!)
+
+        //if(character.stats?.get(0)?.name != null){
+        character.stats?.get(0)?.name?.let { TextBoxCharacter(title = "statsName", content = it) }
+        //}
+        //if(character.stats?.get(0)?.value != null){
         TextBoxCharacter(
-            title = "statsValue", content = character.stats!!.get(0).value!!.toString()
+            title = "statsValue", content = character.stats?.get(0)?.value.toString()
         )
-        TextBoxCharacter(
-            title = "skill_proficienciesName",
-            content = character.skill_proficiencies!!.get(0).name!!
-        )
+        //}
+
+        //if(character.skill_proficiencies?.get(0)?.name != null){
+        character.skill_proficiencies?.get(0)?.name?.let {
+            TextBoxCharacter(
+                title = "skill_proficienciesName", content = it
+            )
+        }
+        //}
+
+        //if(character.skill_proficiencies?.get(0)?.bonus != null){
         TextBoxCharacter(
             title = "skill_proficienciesBonus",
-            content = character.skill_proficiencies!!.get(0).bonus!!.toString()
+            content = character.skill_proficiencies?.get(0)?.bonus.toString()
         )
-        TextBoxCharacter(title = "languagesName", content = character.languages!!.get(0).name!!)
-        TextBoxCharacter(title = "languagesType", content = character.languages!!.get(0).type!!)
-        TextBoxCharacter(
-            title = "other_proficienciesName",
-            content = character.other_proficiencies!!.get(0).name!!
-        )
-        TextBoxCharacter(
-            title = "other_proficienciesType",
-            content = character.other_proficiencies!!.get(0).type!!
-        )
-        TextBoxCharacter(title = "equipmentName", content = character.equipment!!.get(0).name!!)
-        TextBoxCharacter(
-            title = "equipmentCategory", content = character.equipment!!.get(0).equipment_category!!
-        )
-        TextBoxCharacter(title = "coin_pouch", content = character.coin_pouch!!.get(0).name!!)
+        //}
+
+        //if(character.languages?.get(0)?.name != null){
+        character.languages?.get(0)?.name?.let {
+            TextBoxCharacter(
+                title = "languagesName", content = it
+            )
+        }
+        //}
+        //if(character.languages?.get(0)?.type != null){
+        character.languages?.get(0)?.type?.let {
+            TextBoxCharacter(
+                title = "languagesType", content = it
+            )
+        }
+        //}
+        character.other_proficiencies?.get(0)?.name?.let {
+            TextBoxCharacter(
+                title = "other_proficienciesName", content = it
+            )
+        }
+        character.other_proficiencies?.get(0)?.type?.let {
+            TextBoxCharacter(
+                title = "other_proficienciesType", content = it
+            )
+        }
+        character.equipment?.get(0)?.name?.let {
+            TextBoxCharacter(
+                title = "equipmentName", content = it
+            )
+        }
+        character.equipment?.get(0)?.equipment_category?.let {
+            TextBoxCharacter(
+                title = "equipmentCategory", content = it
+            )
+        }
+        character.coin_pouch?.get(0)?.name?.let {
+            TextBoxCharacter(
+                title = "coin_pouch", content = it
+            )
+        }
         character.features?.get(0)
             ?.let { it.name?.let { it1 -> TextBoxCharacter(title = "features", content = it1) } }
         character.traits?.get(0)
             ?.let { it.name?.let { it1 -> TextBoxCharacter(title = "traits", content = it1) } }
-        if (character.spell_abilities != null) {
-            character.spell_abilities!![0].spellcasting_ability?.let {
-                TextBoxCharacter(
-                    title = "spell_abilities", content = it
-                )
-            }
-            TextBoxCharacter(
-                title = "spell_abilities",
-                content = character.spell_abilities!![0].spell_save_dc.toString()
-            )
-            TextBoxCharacter(
-                title = "spell_abilities",
-                content = character.spell_abilities!![0].spell_attack_bonus.toString()
-            )
+        //if (character.spell_abilities != null) {
+        TextBoxCharacter(
+            title = "spell_abilitiesSpellcastingAbility",
+            content = character.spell_abilities?.get(0)?.spellcasting_ability.toString()
+        )
+        TextBoxCharacter(
+            title = "spell_abilitiesSpellSaveDC",
+            content = character.spell_abilities?.get(0)?.spell_save_dc.toString()
+        )
+        TextBoxCharacter(
+            title = "spell_abilitiesSpellAttackBonus",
+            content = character.spell_abilities?.get(0)?.spell_attack_bonus.toString()
+        )
 
-        }
+        //}
         character.prepared_spells?.get(0)?.let {
             it.name?.let { it1 ->
                 TextBoxCharacter(

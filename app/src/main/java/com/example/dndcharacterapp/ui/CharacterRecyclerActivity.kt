@@ -155,7 +155,7 @@ fun CharacterCard(character: CharacterRealm, click: () -> Unit) {
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "Name: " + (character.classes?.get(0)?.name),
+                text = "Class: " + (character.classes?.get(0)?.name),
                 modifier = Modifier.padding(16.dp),
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurface

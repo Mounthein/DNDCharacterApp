@@ -368,6 +368,16 @@ fun MostrarComponentes(
             }
         }
 
+        //TemporaryHitPoints
+        val temporaryHitPoint = Mostrar1TextField(textoMostrar = "TemporaryHitPoints")
+
+        if (temporaryHitPoint.isNotEmpty()) {
+            val parsedTemporaryHitPoint = temporaryHitPoint.toIntOrNull()
+            if (parsedTemporaryHitPoint != null) {
+                characterInsertar.temporary_HitPoints = temporaryHitPoint.toInt()
+            }
+        }
+
         //ArmorClass
         Text(text = "ArmorClass")
         val inputvalueArmorClassName = remember { mutableStateOf(TextFieldValue()) }
@@ -1072,7 +1082,8 @@ private fun MostrarDropDowns(list1: List<String>, textoMostrar: String): String 
             ExposedDropdownMenuBox(expanded = expanded1, onExpandedChange = {
                 expanded1 = it
             }) {
-                TextField(value = selectedText1,
+                TextField(
+                    value = selectedText1,
                     onValueChange = { selectedText1 = it },
                     readOnly = true,
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded1) },
