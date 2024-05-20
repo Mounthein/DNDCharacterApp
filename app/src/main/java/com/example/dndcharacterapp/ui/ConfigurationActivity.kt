@@ -301,19 +301,22 @@ fun DatabaseSelector(viewModel: MainViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (what.intValue == 0) {
-            InsertDatabaseToApi(MaterialTheme.shapes.large, "SaveToApi") {
+            InsertDatabaseToApi(MaterialTheme.shapes.large, "SaveApi") {
                 what.intValue = 1
             }
-            LoadDatabaseButton(MaterialTheme.shapes.large, "LoadFromApi") {
+            LoadDatabaseButton(MaterialTheme.shapes.large, "LoadApi") {
                 what.intValue = 2
+            }
+            LoadDatabaseButton(MaterialTheme.shapes.large, "ExampleCharacter") {
+                what.intValue = 3
             }
         } else if (what.intValue == 1) {
             DatabaseMenu("insert", returner = what, viewModel)
-        } else {
+        } else if(what.intValue == 2){
             DatabaseMenu("load", returner = what, viewModel)
+        }else if(what.intValue == 3){
+            DatabaseMenu("example", returner = what, viewModel)
         }
-
-
     }
 }
 
@@ -322,6 +325,7 @@ fun DatabaseMenu(loadInsert: String, returner: MutableIntState, viewModel: MainV
     val crudApi = CrudApi()
     val characterRealm by viewModel.characters.collectAsState()
     val context = LocalContext.current
+
     Box(
         modifier = Modifier
             .fillMaxWidth(0.9f)
@@ -333,76 +337,82 @@ fun DatabaseMenu(loadInsert: String, returner: MutableIntState, viewModel: MainV
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 15.dp),
+                .padding(15.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                if (loadInsert.equals("load")) {
-                    Text(text = "Vols carregar els characters de la api?")
-                    val charactersLoadApi = crudApi.getCharacterList()?.toList()
-                    Button(
-                        onClick = {
-                            if (charactersLoadApi != null) {
-                                charactersLoadApi.forEach {
-                                    viewModel.insertNewCharacterToRealm(it)
-                                }
-                                Toast.makeText(
-                                    context,
-                                    "Heu carregat tots els characters de l'API",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
-                        modifier = Modifier
-                            .width(150.dp)
-                            .height(40.dp),
-                    ) {
-                        Text(
-                            text = "",
-                            color = MaterialTheme.colorScheme.onTertiaryContainer,
-                            textAlign = TextAlign.Center,
-                        )
-                    }
-                } else if (loadInsert.equals("insert")) {
-                    Text(text = "Vols insertar els characters de Realm a la API?")
-                    Toast.makeText(
-                        context, "Heu insertat els characters a la API", Toast.LENGTH_LONG
-                    ).show()
-                    Button(
-                        onClick = {
-                            characterRealm.forEach {
-                                crudApi.postCharacter(viewModel.convertRealmCharacterToNormal(it))
-                            }
-
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
-                        modifier = Modifier
-                            .width(150.dp)
-                            .height(40.dp),
-                    ) {
-                        Text(
-                            text = "Insertar en API",
-                            color = MaterialTheme.colorScheme.onTertiaryContainer,
-                            textAlign = TextAlign.Center,
-                        )
-                    }
-                }
-
+            if (loadInsert.equals("load")) {
+                Text(text = "Vols carregar els characters de la api?")
+                val charactersLoadApi = crudApi.getCharacterList()?.toList()
                 Button(
                     onClick = {
+                        if (charactersLoadApi != null) {
+                            charactersLoadApi.forEach {
+                                viewModel.insertNewCharacterToRealm(it)
+                            }
+                            Toast.makeText(
+                                context,
+                                "Heu carregat tots els characters de l'API",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            returner.value = 0
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
+                    modifier = Modifier
+                        .width(150.dp)
+                        .height(40.dp)
+                        .padding(top = 8.dp),
+                ) {
+                    Text(
+                        text = "Load",
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            } else if (loadInsert.equals("insert")) {
+                Text(text = "Vols insertar els characters de Realm a la API?")
+                Button(
+                    onClick = {
+                        characterRealm.forEach {
+                            crudApi.postCharacter(viewModel.convertRealmCharacterToNormal(it))
+                            Toast.makeText(
+                                context, "Heu insertat els characters a la API", Toast.LENGTH_LONG
+                            ).show()
+                            returner.value = 0
+                        }
+
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
+                    modifier = Modifier
+                        .width(150.dp)
+                        .height(40.dp)
+                        .padding(top = 8.dp),
+                ) {
+                    Text(
+                        text = "Insert",
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            } else if (loadInsert.equals("example")) {
+                Text(text = "Vols insertar un character d'exemple?")
+                Button(
+                    onClick = {
+                        viewModel.createSampleEntriesCharacter()
+                        Toast.makeText(
+                            context, "Has insertat un character d'exemple", Toast.LENGTH_LONG
+                        ).show()
                         returner.value = 0
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
                     modifier = Modifier
                         .width(150.dp)
-                        .height(40.dp),
+                        .height(40.dp)
+                        .padding(top = 8.dp),
                 ) {
                     Text(
-                        text = "SaveToAPI",
+                        text = "Example",
                         color = MaterialTheme.colorScheme.onTertiaryContainer,
                         textAlign = TextAlign.Center,
                     )
@@ -411,6 +421,7 @@ fun DatabaseMenu(loadInsert: String, returner: MutableIntState, viewModel: MainV
         }
     }
 }
+
 
 @Composable
 fun InsertDatabaseToApi(shape: Shape, text: String, click: () -> Unit) {
@@ -438,7 +449,7 @@ fun LoadDatabaseButton(shape: Shape, text: String, click: () -> Unit) {
         modifier = Modifier
             .padding(20.dp)
             .fillMaxWidth()
-            .height(100.dp)
+            .height(150.dp)
             .clip(shape)
             .background(MaterialTheme.colorScheme.surfaceVariant)
             .clickable(onClick = click),

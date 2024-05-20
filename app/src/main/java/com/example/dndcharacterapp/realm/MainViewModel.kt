@@ -289,7 +289,7 @@ class MainViewModel : ViewModel() {
         val statsInsertar = EmStatCh()
         val statsIndividualInsertar = realmListOf(EmStatCh())
         statsInsertar.name = characterRealm.stats!!.first().name
-        statsInsertar.value = characterRealm.stats!!.first().value
+        statsInsertar.value = characterRealm.stats.first().value
         statsIndividualInsertar.add(statsInsertar)
         val skillProficiencyInsertar = EmSkillProficiencyCh()
         val skillProficiencyIndividualInsertar = realmListOf(EmSkillProficiencyCh())
@@ -464,7 +464,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    private fun createSampleEntriesCharacter() {
+    fun createSampleEntriesCharacter() {
         viewModelScope.launch {
             realm.write {
                 var usernameCharacter = "seancoca"

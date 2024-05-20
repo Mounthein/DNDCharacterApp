@@ -134,9 +134,11 @@ fun BodyCharacter(character: CharacterRealm) {
                 title = "hit_dieType", content = it
             )
         }
-        TextBoxCharacter(
-            title = "hit_dieQuantity", content = character.hit_die?.get(0)?.quantity.toString()
-        )
+        character.hit_die?.get(0)?.quantity?.let {
+            TextBoxCharacter(
+                title = "hit_dieQuantity", content = it
+            )
+        }
         TextBoxCharacter(
             title = "death_savesSuccess", content = character.death_saves?.success.toString()
         )
