@@ -201,7 +201,7 @@ fun MostrarComponentes(
         raceInsertar.name = raceFiltrado?.name
         raceInsertar.size = raceFiltrado?.size
         raceInsertar.speed = raceFiltrado?.speed.toString()
-        raceInsertar.subrace = raceFiltrado?.subraces?.get(0)?.name
+//        raceInsertar.subrace = raceFiltrado?.subraces?.firstOrNull()?.name
         characterInsertar.race = raceInsertar
 
 
@@ -302,14 +302,14 @@ fun MostrarComponentes(
         if (HitDieType.isNotEmpty() && HitDieQuantity.isNotEmpty()) {
 //            val parsedIntQuantity = HitDieQuantity.toIntOrNull()
 //            if (parsedIntQuantity != null) {
-                hitDieCh.type = HitDieType
-                hitDieCh.quantity = HitDieQuantity
-                val hitDieListInsertar: RealmList<EmHitDieCh> = realmListOf<EmHitDieCh>()
-                if (hitDieCh != null) {
-                    hitDieListInsertar.add(hitDieCh)
-                }
-                characterInsertar.hit_die = hitDieListInsertar
-                posibleInsertar = true
+            hitDieCh.type = HitDieType
+            hitDieCh.quantity = HitDieQuantity
+            val hitDieListInsertar = realmListOf(hitDieCh)
+//                if (hitDieCh != null) {
+//                    hitDieListInsertar.add(hitDieCh)
+//                }
+            characterInsertar.hit_die = hitDieListInsertar
+            posibleInsertar = true
 //            } else {
 //                Toast.makeText(
 //                    context,
@@ -433,12 +433,12 @@ fun MostrarComponentes(
         }
         val classes = MostrarDropDowns(list1 = classesName, textoMostrar = "Classes")
 
-        val classeListInsertar: RealmList<EmClassItemCh> = realmListOf(EmClassItemCh())
         val classeFiltrar = classeslist.filter { it.name == classes }.firstOrNull()
         val classeInsertar: EmClassItemCh = EmClassItemCh()
         classeInsertar.name = classeFiltrar?.name
         classeInsertar.subclass = classeFiltrar?.subclasses?.get(0)?.name
-        classeListInsertar.add(classeInsertar)
+        val classeListInsertar = realmListOf(classeInsertar)
+//        classeListInsertar.add(classeInsertar)
         characterInsertar.classes = classeListInsertar
 
         //Stats
@@ -474,8 +474,8 @@ fun MostrarComponentes(
                 statsCh.name = StatsName
                 statsCh.value = parsedIntValue.toInt()
 
-                val statsListInsertar: RealmList<EmStatCh> = realmListOf(EmStatCh())
-                statsListInsertar.add(statsCh)
+                val statsListInsertar = realmListOf(statsCh)
+//                statsListInsertar.add(statsCh)
 
                 characterInsertar.stats = statsListInsertar
                 posibleInsertar = true
@@ -519,10 +519,8 @@ fun MostrarComponentes(
                 skillProficiencyCh.name = SkillProficienciesName
                 skillProficiencyCh.bonus = parsedDoubleSkillProficienciesBonus.toDouble()
 
-                val skillProficiencyListInsertar: RealmList<EmSkillProficiencyCh> = realmListOf(
-                    EmSkillProficiencyCh()
-                )
-                skillProficiencyListInsertar.add(skillProficiencyCh)
+                val skillProficiencyListInsertar = realmListOf(skillProficiencyCh)
+//                skillProficiencyListInsertar.add(skillProficiencyCh)
 
                 characterInsertar.skill_proficiencies = skillProficiencyListInsertar
                 posibleInsertar = true
@@ -546,7 +544,7 @@ fun MostrarComponentes(
         val languagesInsertar: EmLanguageCh = EmLanguageCh()
         languagesInsertar.name = languagesFiltrar?.name
         languagesInsertar.type = languagesFiltrar?.type
-        val languagesListInsertar: RealmList<EmLanguageCh> = realmListOf(EmLanguageCh())
+        val languagesListInsertar = realmListOf(languagesInsertar)
         languagesListInsertar.add(languagesInsertar)
 
         characterInsertar.languages = languagesListInsertar
@@ -566,10 +564,8 @@ fun MostrarComponentes(
         otherProficienciesInsertar.name = otherProficienciesFiltrar?.name
         otherProficienciesInsertar.type = otherProficienciesFiltrar?.type
 
-        val otherProficienciesInsertarList: RealmList<EmProficiencyCh> = realmListOf(
-            EmProficiencyCh()
-        )
-        otherProficienciesInsertarList?.add(otherProficienciesInsertar!!)
+        val otherProficienciesInsertarList = realmListOf(otherProficienciesInsertar)
+//        otherProficienciesInsertarList?.add(otherProficienciesInsertar!!)
 
         characterInsertar.other_proficiencies = otherProficienciesInsertarList
 
@@ -588,8 +584,8 @@ fun MostrarComponentes(
         equipmentInsertar.equipment_category = equipmentFiltrar?.equipmentCategory?.name
         equipmentInsertar.quantity = equipmentFiltrar?.quantity
 
-        val equipmentInsertarList: RealmList<EmEquipmentCh> = realmListOf(EmEquipmentCh())
-        equipmentInsertarList.add(equipmentInsertar)
+        val equipmentInsertarList = realmListOf(equipmentInsertar)
+//        equipmentInsertarList.add(equipmentInsertar)
 
         characterInsertar.equipment = equipmentInsertarList
 
@@ -626,7 +622,7 @@ fun MostrarComponentes(
                 coinPouch.name = coinPouchName
                 coinPouch.quantity = parsedIntQuantity.toInt()
 
-                val coinPouchInsertarList: RealmList<EmCoinCh> = realmListOf(EmCoinCh())
+                val coinPouchInsertarList = realmListOf(coinPouch)
                 coinPouchInsertarList.add(coinPouch)
 
                 characterInsertar.coin_pouch = coinPouchInsertarList
@@ -653,7 +649,7 @@ fun MostrarComponentes(
         featuresInsertar.name = featuresFilter?.name
         featuresInsertar.description = featuresFilter?.description?.firstOrNull()
 
-        val featuresInsertarList: RealmList<EmFeatureCh> = realmListOf(EmFeatureCh())
+        val featuresInsertarList = realmListOf(featuresInsertar)
         featuresInsertarList.add(featuresInsertar)
 
         characterInsertar.features = featuresInsertarList
@@ -671,7 +667,7 @@ fun MostrarComponentes(
         traitsInsertar.name = traitsFilter?.name
         traitsInsertar.description = traitsFilter?.description?.firstOrNull()
 
-        val traitsInsertarList: RealmList<EmTraitCh> = realmListOf(EmTraitCh())
+        val traitsInsertarList = realmListOf(traitsInsertar)
         traitsInsertarList.add(traitsInsertar)
 
         characterInsertar.traits = traitsInsertarList
@@ -712,7 +708,6 @@ fun MostrarComponentes(
         val SpellAbilitiesSpellAttackBonus = inputvalueSpellAbilitiesSpellAttackBonus.value.text
         val spellAbilityCh: EmSpellAbilityCh = EmSpellAbilityCh()
 
-
         if (SpellAbilitiesSpellcastingAbility.isNotEmpty() && SpellAbilitiesSpellSaveDC.isNotEmpty() && SpellAbilitiesSpellAttackBonus.isNotEmpty()) {
             val parsedIntSpellSaveDC = SpellAbilitiesSpellSaveDC.toIntOrNull()
             val parsedIntSpellAttackBonus = SpellAbilitiesSpellAttackBonus.toIntOrNull()
@@ -721,8 +716,7 @@ fun MostrarComponentes(
                 spellAbilityCh.spell_save_dc = parsedIntSpellSaveDC.toInt()
                 spellAbilityCh.spell_attack_bonus = parsedIntSpellAttackBonus.toInt()
 
-                val spellAbilityInsertarList: RealmList<EmSpellAbilityCh> =
-                    realmListOf(EmSpellAbilityCh())
+                val spellAbilityInsertarList = realmListOf(spellAbilityCh)
                 spellAbilityInsertarList.add(spellAbilityCh)
 
                 characterInsertar.spell_abilities = spellAbilityInsertarList
@@ -755,7 +749,7 @@ fun MostrarComponentes(
         preparedSpellsInsertar.school = preparedSpellsFilter?.from?.name
         preparedSpellsInsertar.duration = preparedSpellsFilter?.duration
 
-        val preparedSpellsInsertarList: RealmList<EmSpellCh> = realmListOf(EmSpellCh())
+        val preparedSpellsInsertarList = realmListOf(preparedSpellsInsertar)
         preparedSpellsInsertarList.add(preparedSpellsInsertar)
 
         characterInsertar.prepared_spells = preparedSpellsInsertarList
@@ -777,7 +771,7 @@ fun MostrarComponentes(
         knownSpellsInsertar.school = knownSpellsFilter?.from?.name
         knownSpellsInsertar.duration = knownSpellsFilter?.duration
 
-        val knownSpellsInsertarList: RealmList<EmSpellCh> = realmListOf(EmSpellCh())
+        val knownSpellsInsertarList = realmListOf(knownSpellsInsertar)
         knownSpellsInsertarList.add(knownSpellsInsertar)
 
         characterInsertar.known_spells = knownSpellsInsertarList
@@ -1077,8 +1071,7 @@ private fun MostrarDropDowns(list1: List<String>, textoMostrar: String): String 
             ExposedDropdownMenuBox(expanded = expanded1, onExpandedChange = {
                 expanded1 = it
             }) {
-                TextField(
-                    value = selectedText1,
+                TextField(value = selectedText1,
                     onValueChange = { selectedText1 = it },
                     readOnly = true,
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded1) },

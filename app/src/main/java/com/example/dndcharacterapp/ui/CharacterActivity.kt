@@ -120,15 +120,20 @@ fun BodyCharacter(character: CharacterRealm) {
         //}
         character.race?.name?.let { TextBoxCharacter(title = "race", content = it) }
         character.alignment?.name?.let { TextBoxCharacter(title = "alignment", content = it) }
-        TextBoxCharacter(
-            title = "hitPointsMaximum", content = character.hitPoints?.maximum.toString()
-        )
-        TextBoxCharacter(
-            title = "hitPointsCurrent", content = character.hitPoints?.current.toString()
-        )
-        TextBoxCharacter(
-            title = "hitPointsTemporary" , content = character.hitPoints?.temporary.toString()
-        )
+//        TextBoxCharacter(
+//            title = "hitPointsMaximum", content = character.hitPoints?.maximum.toString()
+//        )
+//        TextBoxCharacter(
+//            title = "hitPointsCurrent", content = character.hitPoints?.current.toString()
+//        )
+//        TextBoxCharacter(
+//            title = "hitPointsTemporary", content = character.hitPoints?.temporary.toString()
+//        )
+        character.hitPoints?.let {
+            TextBoxCharacter(title = "hitPointsMaximum", content = it.maximum.toString())
+            TextBoxCharacter(title = "hitPointsCurrent", content = it.current.toString())
+            TextBoxCharacter(title = "hitPointsTemporary", content = it.temporary.toString())
+        }
         character.hit_die?.get(0)?.type?.let {
             TextBoxCharacter(
                 title = "hit_dieType", content = it
@@ -173,21 +178,30 @@ fun BodyCharacter(character: CharacterRealm) {
         )
 
         //if(character.stats?.get(0)?.name != null){
-        character.stats?.get(0)?.name?.let { TextBoxCharacter(title = "statsName", content = it) }
-        //}
-        //if(character.stats?.get(0)?.value != null){
-        TextBoxCharacter(
-            title = "statsValue", content = character.stats?.get(0)?.value.toString()
-        )
+//        character.stats?.get(0)?.name?.let { TextBoxCharacter(title = "statsName", content = it) }
+//        //}
+//        if (character.stats?.get(0)?.value != null) {
+//            TextBoxCharacter(
+//                title = "statsValue", content = character.stats?.get(0)?.value.toString()
+//            )
+//        }
+
+        character.stats?.get(0)?.let {
+            it.name?.let { TextBoxCharacter(title = "statsName", content = it) }
+            it.value?.let { TextBoxCharacter(title = "statsValue", content = it.toString()) }
+        }
+        //if(character.skill_proficiencies?.get(0)?.name != null){
+//        character.skill_proficiencies?.get(0)?.name?.let {
+//            TextBoxCharacter(
+//                title = "skill_proficienciesName", content = it
+//            )
+//        }
         //}
 
-        //if(character.skill_proficiencies?.get(0)?.name != null){
-        character.skill_proficiencies?.get(0)?.name?.let {
-            TextBoxCharacter(
-                title = "skill_proficienciesName", content = it
-            )
+        character.skill_proficiencies?.get(0)?.let {
+            it.name?.let { TextBoxCharacter(title = "skill_proficienciesName", content = it) }
+            it.bonus?.let { TextBoxCharacter(title = "skill_proficienciesBonus", content = it.toString()) }
         }
-        //}
 
         //if(character.skill_proficiencies?.get(0)?.bonus != null){
         TextBoxCharacter(
@@ -240,18 +254,20 @@ fun BodyCharacter(character: CharacterRealm) {
         character.traits?.get(0)
             ?.let { it.name?.let { it1 -> TextBoxCharacter(title = "traits", content = it1) } }
         //if (character.spell_abilities != null) {
-        TextBoxCharacter(
-            title = "spell_abilitiesSpellcastingAbility",
-            content = character.spell_abilities?.get(0)?.spellcasting_ability.toString()
-        )
-        TextBoxCharacter(
-            title = "spell_abilitiesSpellSaveDC",
-            content = character.spell_abilities?.get(0)?.spell_save_dc.toString()
-        )
-        TextBoxCharacter(
-            title = "spell_abilitiesSpellAttackBonus",
-            content = character.spell_abilities?.get(0)?.spell_attack_bonus.toString()
-        )
+//        TextBoxCharacter(
+//            title = "spell_abilitiesSpellcastingAbility",
+//            content = character.spell_abilities?.get(0)?.spellcasting_ability.toString()
+//        )
+//        TextBoxCharacter(
+//            title = "spell_abilitiesSpellSaveDC",
+//            content = character.spell_abilities?.get(0)?.spell_save_dc.toString()
+//        )
+//        TextBoxCharacter(
+//            title = "spell_abilitiesSpellAttackBonus",
+//            content = character.spell_abilities?.get(0)?.spell_attack_bonus.toString()
+//        )
+
+
 
         //}
         character.prepared_spells?.get(0)?.let {
@@ -360,35 +376,42 @@ fun TextBoxCharacter(title: String, content: List<String>) {
             .height(80.dp), contentAlignment = Alignment.CenterStart
     ) {
         Row(modifier = Modifier.fillMaxSize()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(180.dp)
-                    .padding()
-                    .background(color = colorResource(id = R.color.darkbrown))
-                    .border(BorderStroke(2.dp, colorResource(id = R.color.black))),
-                contentAlignment = Alignment.Center,
-            ) {
-
-                Text(
-                    text = title, fontFamily = FontFamily.Cursive, fontSize = 20.sp
-                )
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .border(BorderStroke(2.dp, colorResource(id = R.color.black))),
-                contentAlignment = Alignment.Center
-            ) {
+            content.forEach {
                 var showContent: String = ""
-                content.forEach {
-                    showContent += "$it, "
-                }
+                showContent += "$it, "
+
                 showContent =
                     showContent.removeRange(showContent.length - 2, showContent.length - 1)
-                Text(
-                    text = showContent, fontFamily = FontFamily.Cursive, fontSize = 20.sp
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(180.dp)
+                        .padding()
+                        .background(color = colorResource(id = R.color.darkbrown))
+                        .border(BorderStroke(2.dp, colorResource(id = R.color.black))),
+                    contentAlignment = Alignment.Center,
+                ) {
+
+                    Text(
+                        text = title, fontFamily = FontFamily.Cursive, fontSize = 20.sp
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .border(BorderStroke(2.dp, colorResource(id = R.color.black))),
+                    contentAlignment = Alignment.Center
+                ) {
+//                var showContent: String = ""
+//                content.forEach {
+//                    showContent += "$it, "
+//                }
+//                showContent =
+//                    showContent.removeRange(showContent.length - 2, showContent.length - 1)
+                    Text(
+                        text = showContent, fontFamily = FontFamily.Cursive, fontSize = 20.sp
+                    )
+                }
             }
         }
     }

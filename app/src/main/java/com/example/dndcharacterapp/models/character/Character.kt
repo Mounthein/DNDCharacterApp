@@ -1,5 +1,8 @@
 package com.example.dndcharacterapp.models.character
 
+import io.realm.kotlin.ext.realmListOf
+import io.realm.kotlin.types.RealmList
+
 data class Character(
     //val _id: String,
     val username: String?,
@@ -32,6 +35,7 @@ data class Character(
     val initiative: Int? = null,
     val speed: Int? = null,
     val proficiencyBonus: Int? = null,
+    var saving_throws: List<String> = listOf(""),
     val personalityTrait: String? = null,
     val ideals: String? = null,
     val bonds: String? = null,

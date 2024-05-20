@@ -168,7 +168,9 @@ class MainViewModel : ViewModel() {
         } ?: emptyList()
 
         val equipment = characterRealm.equipment?.map {
-            Equipment(name = it.name, equipmentCategory = it.equipment_category, quantity = it.quantity)
+            Equipment(
+                name = it.name, equipmentCategory = it.equipment_category, quantity = it.quantity
+            )
         } ?: emptyList()
 
         val coinPouch = characterRealm.coin_pouch?.map {
@@ -269,11 +271,11 @@ class MainViewModel : ViewModel() {
         hitPointsInsertar.current = characterRealm.hitPoints!!.current
         hitPointsInsertar.temporary = characterRealm.hitPoints.temporary
         hitPointsInsertar.maximum = characterRealm.hitPoints.maximum
-        val hitDieinsertar = realmListOf(EmHitDieCh())
         val hitDieIndividualInsertar = EmHitDieCh()
         hitDieIndividualInsertar.type = characterRealm.hitDie!!.first().type
         hitDieIndividualInsertar.quantity = characterRealm.hitDie.first().quantity
-        hitDieinsertar.add(hitDieIndividualInsertar)
+        val hitDieinsertar = realmListOf(hitDieIndividualInsertar)
+//        hitDieinsertar.add(hitDieIndividualInsertar)
         val deathSavesInsertar = EmDeathSavesCh()
         deathSavesInsertar.success = characterRealm.deathSaves?.success
         deathSavesInsertar.failures = characterRealm.deathSaves?.failures
@@ -282,77 +284,77 @@ class MainViewModel : ViewModel() {
         armorClassInsertar.type = characterRealm.armorClass?.type
         armorClassInsertar.value = characterRealm.armorClass?.value
         val classesInsertar = EmClassItemCh()
-        val classesIndividualInsertar = realmListOf(EmClassItemCh())
         classesInsertar.name = characterRealm.classes?.first()?.name
         classesInsertar.subclass = characterRealm.classes?.first()?.subclass
-        classesIndividualInsertar.add(classesInsertar)
+        val classesIndividualInsertar = realmListOf(classesInsertar)
+//        classesIndividualInsertar.add(classesInsertar)
         val statsInsertar = EmStatCh()
-        val statsIndividualInsertar = realmListOf(EmStatCh())
         statsInsertar.name = characterRealm.stats!!.first().name
         statsInsertar.value = characterRealm.stats.first().value
-        statsIndividualInsertar.add(statsInsertar)
+        val statsIndividualInsertar = realmListOf(statsInsertar)
+//        statsIndividualInsertar.add(statsInsertar)
         val skillProficiencyInsertar = EmSkillProficiencyCh()
-        val skillProficiencyIndividualInsertar = realmListOf(EmSkillProficiencyCh())
         skillProficiencyInsertar.name = characterRealm.skillProficiencies?.first()?.name
         skillProficiencyInsertar.bonus = characterRealm.skillProficiencies?.first()?.bonus
-        skillProficiencyIndividualInsertar.add(skillProficiencyInsertar)
+        val skillProficiencyIndividualInsertar = realmListOf(skillProficiencyInsertar)
+//        skillProficiencyIndividualInsertar.add(skillProficiencyInsertar)
         val otherProficienciesInsertar = EmProficiencyCh()
-        val otherProficienciesIndividualInsertar = realmListOf(EmProficiencyCh())
         otherProficienciesInsertar.name = characterRealm.otherProficiencies?.first()?.name
         otherProficienciesInsertar.type = characterRealm.otherProficiencies?.first()?.type
-        otherProficienciesIndividualInsertar.add(otherProficienciesInsertar)
+        val otherProficienciesIndividualInsertar = realmListOf(otherProficienciesInsertar)
+//        otherProficienciesIndividualInsertar.add(otherProficienciesInsertar)
         val languagesInsertar = EmLanguageCh()
-        val languagesIndividualInsertar = realmListOf(EmLanguageCh())
         languagesInsertar.type = characterRealm.languages?.first()?.type
         languagesInsertar.name = characterRealm.languages?.first()?.name
-        languagesIndividualInsertar.add(languagesInsertar)
+        val languagesIndividualInsertar = realmListOf(languagesInsertar)
+//        languagesIndividualInsertar.add(languagesInsertar)
         val equipmentInsertar = EmEquipmentCh()
-        val equipmentIndividualInsertar = realmListOf(EmEquipmentCh())
         equipmentInsertar.name = characterRealm.equipment?.first()?.name
         equipmentInsertar.equipment_category = characterRealm.equipment?.first()?.equipmentCategory
         equipmentInsertar.quantity = characterRealm.equipment?.first()?.quantity
-        equipmentIndividualInsertar.add(equipmentInsertar)
+        val equipmentIndividualInsertar = realmListOf(equipmentInsertar)
+//        equipmentIndividualInsertar.add(equipmentInsertar)
         val coinPouch = EmCoinCh()
-        val coinPouchIndividualInsertar = realmListOf(EmCoinCh())
         coinPouch.name = characterRealm.coinPouch?.first()?.name
         coinPouch.quantity = characterRealm.coinPouch?.first()?.quantity
-        coinPouchIndividualInsertar.add(coinPouch)
+        val coinPouchIndividualInsertar = realmListOf(coinPouch)
+//        coinPouchIndividualInsertar.add(coinPouch)
         val featuresInsertar = EmFeatureCh()
-        val featuresIndividualInsertar = realmListOf(EmFeatureCh())
         featuresInsertar.name = characterRealm.features?.first()?.name
         featuresInsertar.description = characterRealm.features?.first()?.description
-        featuresIndividualInsertar.add(featuresInsertar)
+        val featuresIndividualInsertar = realmListOf(featuresInsertar)
+//        featuresIndividualInsertar.add(featuresInsertar)
         val traitsInsertar = EmTraitCh()
-        val traitsIndividualInsertar = realmListOf(EmTraitCh())
         traitsInsertar.name = characterRealm.traits?.first()?.name
         traitsInsertar.description = characterRealm.traits?.first()?.description
-        traitsIndividualInsertar.add(traitsInsertar)
+        val traitsIndividualInsertar = realmListOf(traitsInsertar)
+//        traitsIndividualInsertar.add(traitsInsertar)
         val spellAbilityInsertar = EmSpellAbilityCh()
-        val spellAbilityIndividualInsertar = realmListOf(EmSpellAbilityCh())
         spellAbilityInsertar.spellcasting_ability =
             characterRealm.spellAbilities?.first()?.spellcastingAbility
         spellAbilityInsertar.spell_save_dc = characterRealm.spellAbilities?.first()?.spellSaveDc
         spellAbilityInsertar.spell_attack_bonus =
             characterRealm.spellAbilities?.first()?.spellAttackBonus
-        spellAbilityIndividualInsertar.add(spellAbilityInsertar)
+        val spellAbilityIndividualInsertar = realmListOf(spellAbilityInsertar)
+//        spellAbilityIndividualInsertar.add(spellAbilityInsertar)
         val knownSpellsInsertar = EmSpellCh()
-        val knownSpellsIndividualInsertar = realmListOf(EmSpellCh())
         knownSpellsInsertar.name = characterRealm.knownSpells?.first()?.name
         knownSpellsInsertar.level = characterRealm.knownSpells?.first()?.level
         knownSpellsInsertar.school = characterRealm.knownSpells?.first()?.school
         knownSpellsInsertar.casting_time = characterRealm.knownSpells?.first()?.castingTime
         knownSpellsInsertar.duration = characterRealm.knownSpells?.first()?.duration
         knownSpellsInsertar.description = characterRealm.knownSpells?.first()?.description
-        knownSpellsIndividualInsertar.add(knownSpellsInsertar)
+        val knownSpellsIndividualInsertar = realmListOf(knownSpellsInsertar)
+//        knownSpellsIndividualInsertar.add(knownSpellsInsertar)
         val preparedSpellsInsertar = EmSpellCh()
-        val preparedSpellsIndividualInsertar = realmListOf(EmSpellCh())
         preparedSpellsInsertar.name = characterRealm.preparedSpells!!.first().name
         preparedSpellsInsertar.level = characterRealm.preparedSpells!!.first().level
         preparedSpellsInsertar.school = characterRealm.preparedSpells!!.first().school
         preparedSpellsInsertar.casting_time = characterRealm.preparedSpells!!.first().castingTime
         preparedSpellsInsertar.duration = characterRealm.preparedSpells!!.first().duration
         preparedSpellsInsertar.description = characterRealm.preparedSpells!!.first().description
-        preparedSpellsIndividualInsertar.add(preparedSpellsInsertar)
+        val preparedSpellsIndividualInsertar = realmListOf(preparedSpellsInsertar)
+//        preparedSpellsIndividualInsertar.add(preparedSpellsInsertar)
         viewModelScope.launch {
             realm.write {
                 val characterRealmInsertar = CharacterRealm().apply {
@@ -449,7 +451,7 @@ class MainViewModel : ViewModel() {
                     initiative = characterRealm.initiative
                     speed = characterRealm.speed
                     proficiency_bonus = characterRealm.proficiencyBonus
-                    //saving_throws = characterRealm.sa
+//                    saving_throws = characterRealm.saving_throws.toRealmList()
                     personality_traits = characterRealm.personalityTrait
                     ideals = characterRealm.ideals
                     bonds = characterRealm.bonds

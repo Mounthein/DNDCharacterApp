@@ -2,6 +2,8 @@ package com.example.dndcharacterapp.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -57,6 +59,7 @@ class CharacterRecyclerActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
                     val character by viewModel.characters.collectAsState()
+                    val context = LocalContext.current
                     Column(modifier = Modifier.fillMaxSize()) {
                         val filtre = remember { mutableStateOf(TextFieldValue()) }
                         Text(text = "Filtre")
@@ -71,7 +74,7 @@ class CharacterRecyclerActivity : ComponentActivity() {
 
                         if (filtre.value.text.isNotEmpty()) {
                             val filtrats =
-                                character!!.filter { it.name!!.contains(filtre.value.text) }
+                                character.filter { it.name!!.contains(filtre.value.text) }
 
                             LazyColumn(
                                 contentPadding = PaddingValues(10.dp),
@@ -99,18 +102,17 @@ class CharacterRecyclerActivity : ComponentActivity() {
                                     .fillMaxSize()
                                     .padding(15.dp)
                             ) {
-                                items(character!!) {
+                                items(character) {
                                     CharacterCard(character = it) {
                                         val intent = Intent(
                                             this@CharacterRecyclerActivity,
                                             CharacterActivity::class.java
                                         )
+                                        Log.e("Character", it.toString())
                                         intent.putExtra("character", it.idString)
                                         startActivity(intent)
                                     }
-
                                 }
-
                             }
                         }
                     }
