@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -79,6 +80,8 @@ import io.realm.kotlin.types.RealmList
 
 class CharacterInsertarActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
+    private val userViewModel: ConfigViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -110,7 +113,8 @@ class CharacterInsertarActivity : ComponentActivity() {
                             features,
                             traits,
                             spells,
-                            viewModel
+                            viewModel,
+                            userViewModel
                         )
                     }
                 }
@@ -131,10 +135,12 @@ fun MostrarComponentes(
     featuresList: List<Feature>?,
     traitsList: List<Trait>?,
     spellList: List<Spell>?,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    userViewModel: ConfigViewModel
 ) {
     val context = LocalContext.current
-    var posibleInsertar: Boolean = false
+    var posibleInsertar: Boolean
+    val user by userViewModel.user.collectAsState()
 
     Column(
         modifier = Modifier
@@ -153,13 +159,19 @@ fun MostrarComponentes(
             posibleInsertar = false
         }
 
+        var userName = ""
         //Username
-        val userName = Mostrar1TextField(textoMostrar = "UserName")
+        if (user.firstOrNull()?.username != null) {
+            userName = MostrarTextFieldUserNameReadOnly(userName = user.firstOrNull()?.username!!)
+        } else if (user.firstOrNull()?.username == null) {
+            userName = MostrarTextFieldUserNameReadOnly(userName = "")
+        }
         if (userName.isNotEmpty()) {
             characterInsertar.username = userName
             posibleInsertar = true
         } else {
-            posibleInsertar = false
+            characterInsertar.username = ""
+            posibleInsertar = true
         }
 
         //Level
@@ -1049,6 +1061,28 @@ private fun Mostrar1TextField(textoMostrar: String): String {
     return inputValue.value.text
 }
 
+@Composable
+private fun MostrarTextFieldUserNameReadOnly(userName: String): String {
+    var userNameValue by remember { mutableStateOf(userName) }
+
+    Text(text = "UserName:")
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(modifier = Modifier.weight(1f)) {
+            TextField(value = userNameValue,
+                onValueChange = { userNameValue = it },
+                label = { Text("Usuario:") },
+                enabled = false,
+                readOnly = true
+            )
+        }
+    }
+    return userNameValue
+}
+
 //Esto mostrará dos exposeddropdownmenusbox
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -1078,7 +1112,8 @@ private fun MostrarDropDowns(list1: List<String>, textoMostrar: String): String 
                     modifier = Modifier.menuAnchor()
                 )
 
-                ExposedDropdownMenu(expanded = expanded1,
+                ExposedDropdownMenu(
+                    expanded = expanded1,
                     onDismissRequest = { expanded1 = false }) {
                     list1.forEach { item ->
                         DropdownMenuItem(text = { Text(text = item) }, onClick = {

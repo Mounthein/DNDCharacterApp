@@ -115,6 +115,7 @@ fun BodyCharacter(character: CharacterRealm) {
         ) {
         TextBoxCharacter(title = "Level", content = character.level.toString())
         TextBoxCharacter(title = "Inspiration", content = character.inspiration.toString())
+        TextBoxCharacter(title = "UserName", content = character.username.toString())
         //if (character.background != null) {
         character.background?.let { TextBoxCharacter(title = "background", content = it) }
         //}

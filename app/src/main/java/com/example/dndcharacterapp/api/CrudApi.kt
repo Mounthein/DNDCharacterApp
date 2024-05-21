@@ -46,8 +46,6 @@ import com.example.dndcharacterapp.models.subrace.Subrace
 import com.example.dndcharacterapp.models.subrace.Subraces
 import com.example.dndcharacterapp.models.trait.Trait
 import com.example.dndcharacterapp.models.trait.Traits
-import com.example.dndcharacterapp.models.user.Message as userMessage
-import com.example.dndcharacterapp.models.character.Message as characterMessage
 import com.example.dndcharacterapp.models.user.apiUser
 import com.example.dndcharacterapp.models.weaponproperty.WeaponProperties
 import com.example.dndcharacterapp.models.weaponproperty.WeaponProperty
@@ -64,6 +62,8 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.coroutines.CoroutineContext
+import com.example.dndcharacterapp.models.character.Message as characterMessage
+import com.example.dndcharacterapp.models.user.Message as userMessage
 
 
 class CrudApi() : CoroutineScope {
@@ -72,8 +72,8 @@ class CrudApi() : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    private val urlapi = "https://api.mounthein.es/"
-    //private val urlapi = "https://littletandog79.conveyor.cloud/"
+    //private val urlapi = "https://api.mounthein.es/"
+    private val urlapi = "https://losttealcat30.conveyor.cloud/"
 
     private fun getClient(): OkHttpClient {
         var login = HttpLoggingInterceptor()
@@ -95,7 +95,8 @@ class CrudApi() : CoroutineScope {
         runBlocking {
             val corrutina = launch {
                 try {
-                    val response = getRetrofit().create(ApiDndService::class.java).getAbilityScoreList()
+                    val response =
+                        getRetrofit().create(ApiDndService::class.java).getAbilityScoreList()
                     if (response.isSuccessful) {
                         connected = true
                     }
@@ -111,7 +112,7 @@ class CrudApi() : CoroutineScope {
     // ========================================================== //
     // ========================================================== //
 
-    fun getUserOk(user: String, pass: String): userMessage?{
+    fun getUserOk(user: String, pass: String): userMessage? {
         var resposta: Response<userMessage>? = null
 
         runBlocking {
@@ -128,13 +129,14 @@ class CrudApi() : CoroutineScope {
             return Gson().fromJson(errorBodyString, userMessage::class.java)
         }
     }
+
     //postUserOk
-    fun postUserOk(apiUser: apiUser): userMessage?{
+    fun postUserOk(apiUser: apiUser): userMessage? {
         var resposta: Response<userMessage>? = null
 
         runBlocking {
             val corrutina = launch {
-                Log.d("resposta2",apiUser.toString())
+                Log.d("resposta2", apiUser.toString())
                 resposta = getRetrofit().create(ApiDndService::class.java).postUserOk(apiUser)
 
             }
@@ -959,12 +961,12 @@ class CrudApi() : CoroutineScope {
         }
     }
 
-    fun getCharacter(id: String): Character? {
+    fun getCharacterById(id: String): Character? {
         var resposta: Response<Character>? = null
 
         runBlocking {
             val corrutina = launch {
-                resposta = getRetrofit().create(ApiDndService::class.java).getCharacter(id)
+                resposta = getRetrofit().create(ApiDndService::class.java).getCharacterById(id)
             }
             corrutina.join()
         }
@@ -975,12 +977,29 @@ class CrudApi() : CoroutineScope {
         }
     }
 
-    fun postCharacter(character: Character): characterMessage?{
+    fun getCharacterByUserName(username: String): Characters? {
+        var resposta: Response<Characters>? = null
+
+        runBlocking {
+            val corrutina = launch {
+                resposta = getRetrofit().create(ApiDndService::class.java).getCharacterByUserName(username)
+            }
+            corrutina.join()
+        }
+
+        if (resposta!!.isSuccessful) {
+            return resposta!!.body()!!
+        } else {
+            return null
+        }
+    }
+
+    fun postCharacter(character: Character): characterMessage? {
         var resposta: Response<characterMessage>? = null
 
         runBlocking {
             val corrutina = launch {
-                Log.d("resposta2",character.toString())
+                Log.d("resposta2", character.toString())
                 resposta = getRetrofit().create(ApiDndService::class.java).postCharacter(character)
 
             }

@@ -44,8 +44,6 @@ import com.example.dndcharacterapp.models.subrace.Subrace
 import com.example.dndcharacterapp.models.subrace.Subraces
 import com.example.dndcharacterapp.models.trait.Trait
 import com.example.dndcharacterapp.models.trait.Traits
-import com.example.dndcharacterapp.models.character.Message as characterMessage
-import com.example.dndcharacterapp.models.user.Message as userMessage
 import com.example.dndcharacterapp.models.user.apiUser
 import com.example.dndcharacterapp.models.weaponproperty.WeaponProperties
 import com.example.dndcharacterapp.models.weaponproperty.WeaponProperty
@@ -54,13 +52,14 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import com.example.dndcharacterapp.models.character.Message as characterMessage
+import com.example.dndcharacterapp.models.user.Message as userMessage
 
 interface ApiDndService {
 
     @GET("/api/User/{id}/{pass}")
     suspend fun getUserOk(
-        @Path("id") id: String,
-        @Path("pass") pass: String
+        @Path("id") id: String, @Path("pass") pass: String
     ): Response<userMessage>
 
 
@@ -314,9 +313,14 @@ interface ApiDndService {
     suspend fun getCharacterList(): Response<Characters>
 
     @GET("/api/Character/{id}/")
-    suspend fun getCharacter(
+    suspend fun getCharacterById(
         @Path("id") id: String
     ): Response<Character>
+
+    @GET("/api/Character/{username}/")
+    suspend fun getCharacterByUserName(
+        @Path("username") username: String
+    ): Response<Characters>
 
     @POST("/api/Character/")
     suspend fun postCharacter(
