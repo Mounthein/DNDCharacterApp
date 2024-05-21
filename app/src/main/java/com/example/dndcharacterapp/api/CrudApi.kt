@@ -72,8 +72,8 @@ class CrudApi() : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    //private val urlapi = "https://api.mounthein.es/"
-    private val urlapi = "https://littletandog79.conveyor.cloud/"
+    private val urlapi = "https://api.mounthein.es/"
+    //private val urlapi = "https://littletandog79.conveyor.cloud/"
 
     private fun getClient(): OkHttpClient {
         var login = HttpLoggingInterceptor()
@@ -89,6 +89,25 @@ class CrudApi() : CoroutineScope {
             .addConverterFactory(GsonConverterFactory.create(gson)).build()
     }
 
+    fun canConnectToApi(): Boolean {
+        var connected = false
+
+        runBlocking {
+            val corrutina = launch {
+                try {
+                    val response = getRetrofit().create(ApiDndService::class.java).getAbilityScoreList()
+                    if (response.isSuccessful) {
+                        connected = true
+                    }
+                } catch (e: Exception) {
+                    Log.e("ConexionAPI", e.message.toString())
+                }
+            }
+            corrutina.join()
+        }
+
+        return connected
+    }
     // ========================================================== //
     // ========================================================== //
 

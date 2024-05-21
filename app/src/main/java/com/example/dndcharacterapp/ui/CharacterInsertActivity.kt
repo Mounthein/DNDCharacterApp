@@ -1137,13 +1137,13 @@ private fun MostrarTextFieldArray(textoMostrar: String): RealmList<String> {
                     Text("Eliminar element", color = MaterialTheme.colorScheme.onBackground)
                 }
                 //Con este código se almacena la información
-                Button(onClick = {
+                /*Button(onClick = {
                     val stringArrayArray: Array<String> = stringArray.toTypedArray()
                     // Use the stringArrayArray variable as a String array
                     println(stringArrayArray.contentToString())
                 }) {
                     Text("Save to String array", color = MaterialTheme.colorScheme.onBackground)
-                }
+                }*/
             }
         }
     }

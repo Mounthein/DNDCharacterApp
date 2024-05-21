@@ -58,7 +58,7 @@ import com.example.dndcharacterapp.ui.theme.DNDCharacterAppTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-var collected = false
+private var collected = false
 class MagicReciclerView : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,7 +120,7 @@ fun CardList(magicList: List<Spell>){
     }
 }
 
-suspend fun fetchData(): Spells? {
+private suspend fun fetchData(): Spells? {
     collected = true
     return withContext(Dispatchers.IO) {
         CrudApi().getSpellList()
