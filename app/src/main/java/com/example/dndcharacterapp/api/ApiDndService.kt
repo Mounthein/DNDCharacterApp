@@ -309,20 +309,20 @@ interface ApiDndService {
     // ========================================================== //
     // ========================================================== //
 
-    @GET("/api/Character/")
+    @GET("/api/Get/")
     suspend fun getCharacterList(): Response<Characters>
 
-    @GET("/api/Character/{id}/")
+    @GET("/api/Get/{id}/")
     suspend fun getCharacterById(
         @Path("id") id: String
     ): Response<Character>
 
-    @GET("/api/Character/{username}/")
+    @GET("/api/GetByUserName/{user}/")
     suspend fun getCharacterByUserName(
-        @Path("username") username: String
+        @Path("user") user: String
     ): Response<Characters>
 
-    @POST("/api/Character/")
+    @POST("/api/Post/")
     suspend fun postCharacter(
         @Body character: Character
     ): Response<characterMessage>

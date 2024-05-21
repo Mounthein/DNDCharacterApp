@@ -1,6 +1,7 @@
 package com.example.dndcharacterapp.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -347,6 +348,7 @@ fun DatabaseMenu(loadInsert: String, returner: MutableIntState, viewModel: MainV
                 Button(
                     onClick = {
                         if (charactersLoadApi != null) {
+                            Log.e("CargarCharactersAPI", "Recoge los characters")
                             charactersLoadApi.forEach {
                                 viewModel.insertNewCharacterToRealm(it)
                             }

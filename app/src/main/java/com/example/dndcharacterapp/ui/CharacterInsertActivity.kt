@@ -1042,8 +1042,6 @@ fun MostrarComponentes(
 //Esto mostrará un textfield para que se escriba el string
 @Composable
 private fun Mostrar1TextField(textoMostrar: String): String {
-    val context = LocalContext.current
-    val res = remember { mutableStateOf(("")) }
     Text(text = textoMostrar)
     val inputValue = remember { mutableStateOf(TextFieldValue()) }
     Row(
@@ -1111,9 +1109,7 @@ private fun MostrarDropDowns(list1: List<String>, textoMostrar: String): String 
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded1) },
                     modifier = Modifier.menuAnchor()
                 )
-
-                ExposedDropdownMenu(
-                    expanded = expanded1,
+                ExposedDropdownMenu(expanded = expanded1,
                     onDismissRequest = { expanded1 = false }) {
                     list1.forEach { item ->
                         DropdownMenuItem(text = { Text(text = item) }, onClick = {
@@ -1171,14 +1167,6 @@ private fun MostrarTextFieldArray(textoMostrar: String): RealmList<String> {
                 }) {
                     Text("Eliminar element", color = MaterialTheme.colorScheme.onBackground)
                 }
-                //Con este código se almacena la información
-                /*Button(onClick = {
-                    val stringArrayArray: Array<String> = stringArray.toTypedArray()
-                    // Use the stringArrayArray variable as a String array
-                    println(stringArrayArray.contentToString())
-                }) {
-                    Text("Save to String array", color = MaterialTheme.colorScheme.onBackground)
-                }*/
             }
         }
     }
