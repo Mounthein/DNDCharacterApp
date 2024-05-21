@@ -5,7 +5,7 @@ import io.realm.kotlin.types.RealmList
 
 data class Character(
     //val _id: String,
-    val username: String?,
+    val userName: String? = null,
     val name: String? = null,
     val level: Int? = null,
     val inspiration: Boolean = false,

@@ -167,10 +167,10 @@ fun MostrarComponentes(
             userName = MostrarTextFieldUserNameReadOnly(userName = "")
         }
         if (userName.isNotEmpty()) {
-            characterInsertar.username = userName
+            characterInsertar.userName = userName
             posibleInsertar = true
         } else {
-            characterInsertar.username = ""
+            characterInsertar.userName = ""
             posibleInsertar = true
         }
 

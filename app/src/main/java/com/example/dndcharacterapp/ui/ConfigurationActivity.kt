@@ -76,7 +76,7 @@ class ConfigurationActivity : ComponentActivity() {
                             isLogued.value = true
                         }
 
-                        DatabaseSelector(viewModelCharacter)
+                        DatabaseSelector(viewModelCharacter, user)
                     }
                 }
             }
@@ -293,7 +293,7 @@ fun LoginButton(shape: Shape, text: String, click: () -> Unit) {
 }
 
 @Composable
-fun DatabaseSelector(viewModel: MainViewModel) {
+fun DatabaseSelector(viewModel: MainViewModel, user : List<User>) {
     val what = remember { mutableIntStateOf(0) }
     val context = LocalContext.current
     Column(
@@ -312,17 +312,17 @@ fun DatabaseSelector(viewModel: MainViewModel) {
                 what.intValue = 3
             }
         } else if (what.intValue == 1) {
-            DatabaseMenu("insert", returner = what, viewModel)
+            DatabaseMenu("insert", returner = what, viewModel, user)
         } else if(what.intValue == 2){
-            DatabaseMenu("load", returner = what, viewModel)
+            DatabaseMenu("load", returner = what, viewModel, user)
         }else if(what.intValue == 3){
-            DatabaseMenu("example", returner = what, viewModel)
+            DatabaseMenu("example", returner = what, viewModel, user)
         }
     }
 }
 
 @Composable
-fun DatabaseMenu(loadInsert: String, returner: MutableIntState, viewModel: MainViewModel) {
+fun DatabaseMenu(loadInsert: String, returner: MutableIntState, viewModel: MainViewModel, user : List<User>) {
     val crudApi = CrudApi()
     val characterRealm by viewModel.characters.collectAsState()
     val context = LocalContext.current
@@ -344,20 +344,27 @@ fun DatabaseMenu(loadInsert: String, returner: MutableIntState, viewModel: MainV
         ) {
             if (loadInsert.equals("load")) {
                 Text(text = "Vols carregar els characters de la api?")
-                val charactersLoadApi = crudApi.getCharacterList()?.toList()
+                val logedUser = user.first()
+                val charactersLoadApi = logedUser.let { crudApi.getCharacterByUserName(it.username) }
                 Button(
                     onClick = {
                         if (charactersLoadApi != null) {
-                            Log.e("CargarCharactersAPI", "Recoge los characters")
+//                            Log.e("CargarCharactersAPI", "Recoge los characters")
                             charactersLoadApi.forEach {
                                 viewModel.insertNewCharacterToRealm(it)
                             }
                             Toast.makeText(
                                 context,
-                                "Heu carregat tots els characters de l'API",
+                                "Carregat character de l'usuari -> ${logedUser.username}",
                                 Toast.LENGTH_LONG
                             ).show()
                             returner.value = 0
+                        }else{
+                            Toast.makeText(
+                                context,
+                                "No hi ha characters amb aquest usuari",
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),

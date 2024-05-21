@@ -11,7 +11,7 @@ class CharacterRealm(): RealmObject {
     @PrimaryKey
     var _id: ObjectId = ObjectId()
     var idString: String = _id.toString()
-    var username: String? = null
+    var userName: String? = null
     var name: String? = null
     var level: Int? = null
     var inspiration: Boolean = false
@@ -97,7 +97,7 @@ class CharacterRealm(): RealmObject {
     ) : this() {
         this._id = _id
         this.idString = idString
-        this.username = username
+        this.userName = username
         this.name = name
         this.level = level
         this.inspiration = inspiration
@@ -139,7 +139,7 @@ class CharacterRealm(): RealmObject {
     }
 
     override fun toString(): String {
-        return "CharacterRealm(_id=$_id, idString='$idString', username=$username, name=$name, level=$level, inspiration=$inspiration, background=$background, race=$race, alignment=$alignment, hitPoints=$hitPoints, hit_die=$hit_die, death_saves=$death_saves, temporary_HitPoints=$temporary_HitPoints, exhaustion=$exhaustion, armor_Class=$armor_Class, classes=$classes, experience_Points=$experience_Points, stats=$stats, skill_proficiencies = [${skill_proficiencies?.first()?.name}, ${skill_proficiencies?.first()?.bonus} ], languages=$languages, other_proficiencies=$other_proficiencies, equipment=$equipment, coin_pouch=$coin_pouch, features=$features, traits=$traits, spell_abilities=$spell_abilities, prepared_spells=$prepared_spells, known_spells=$known_spells, passive_wisdom=$passive_wisdom, initiative=$initiative, speed=$speed, proficiency_bonus=$proficiency_bonus, saving_throws=$saving_throws, personality_traits=$personality_traits, ideals=$ideals, bonds=$bonds, flaws=$flaws, character_appearance=$character_appearance, character_backstory=$character_backstory, allies_organizations=$allies_organizations, symbol=$symbol)"
+        return "CharacterRealm(_id=$_id, idString='$idString', username=$userName, name=$name, level=$level, inspiration=$inspiration, background=$background, race=$race, alignment=$alignment, hitPoints=$hitPoints, hit_die=$hit_die, death_saves=$death_saves, temporary_HitPoints=$temporary_HitPoints, exhaustion=$exhaustion, armor_Class=$armor_Class, classes=$classes, experience_Points=$experience_Points, stats=$stats, skill_proficiencies = [${skill_proficiencies?.first()?.name}, ${skill_proficiencies?.first()?.bonus} ], languages=$languages, other_proficiencies=$other_proficiencies, equipment=$equipment, coin_pouch=$coin_pouch, features=$features, traits=$traits, spell_abilities=$spell_abilities, prepared_spells=$prepared_spells, known_spells=$known_spells, passive_wisdom=$passive_wisdom, initiative=$initiative, speed=$speed, proficiency_bonus=$proficiency_bonus, saving_throws=$saving_throws, personality_traits=$personality_traits, ideals=$ideals, bonds=$bonds, flaws=$flaws, character_appearance=$character_appearance, character_backstory=$character_backstory, allies_organizations=$allies_organizations, symbol=$symbol)"
     }
 //    fun fromCharacter(character: Character): CharacterRealm {
 //        val characterRealm = CharacterRealm()

@@ -67,7 +67,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             realm.write {
                 val characterRealmInsertar = CharacterRealm().apply {
-                    username = characterRealm.username
+                    userName = characterRealm.userName
                     name = characterRealm.name
                     level = characterRealm.level
                     inspiration = characterRealm.inspiration
@@ -216,7 +216,7 @@ class MainViewModel : ViewModel() {
         } ?: emptyList()
 
         return Character(
-            username = characterRealm.username,
+            userName = characterRealm.userName,
             name = characterRealm.name,
             level = characterRealm.level,
             inspiration = characterRealm.inspiration,
@@ -358,7 +358,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             realm.write {
                 val characterRealmInsertar = CharacterRealm().apply {
-                    username = characterRealm.username
+                    userName = characterRealm.userName
                     name = characterRealm.name
                     level = characterRealm.level
                     inspiration = characterRealm.inspiration
@@ -572,7 +572,7 @@ class MainViewModel : ViewModel() {
                 var alliesOrganizations = "alliesorganizations"
                 var symbolCharacter = "symbol"
                 val character = CharacterRealm().apply {
-                    username = usernameCharacter
+                    userName = usernameCharacter
                     name = nameCharacter
                     level = levelCharacter
                     inspiration = inspirationCharacter
