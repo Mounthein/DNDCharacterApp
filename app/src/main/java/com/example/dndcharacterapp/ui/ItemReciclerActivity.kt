@@ -62,13 +62,12 @@ class ItemReciclerActivity : ComponentActivity() {
                 ) {
                     Column (modifier = Modifier.fillMaxSize()) {
                         val filtre = remember { mutableStateOf(TextFieldValue())}
-                        Box (modifier = Modifier.fillMaxWidth()) {
                             Text(text = "Filtre")
                             TextField(value = filtre.value, onValueChange = {newFilter -> filtre.value = newFilter})
                             Spacer(modifier = Modifier
                                 .height(15.dp)
                                 .fillMaxWidth())
-                        }
+
                         if (filtre.value.text.isNotEmpty()){
                             val equipmentFiltrat = equipmentList!!.filter { it.name.toLowerCase(Locale.ROOT).contains(filtre.value.text.toLowerCase(Locale.ROOT)) }
                             val magicFiltrat = equipmentMagicList!!.filter { it.name.toLowerCase(Locale.ROOT).contains(filtre.value.text.toLowerCase(Locale.ROOT)) }
