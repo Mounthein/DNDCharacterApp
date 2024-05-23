@@ -506,8 +506,8 @@ class MainViewModel : ViewModel() {
                     value = 1
                 }
                 var classItem = EmClassItemCh().apply {
-                    name = "Chaqueta"
-                    subclass = "Camiseta"
+                    name = "Fighter"
+                    subclass = "Champion"
                 }
                 var experiencePoints = 1
                 var statsCharacter = EmStatCh().apply {
