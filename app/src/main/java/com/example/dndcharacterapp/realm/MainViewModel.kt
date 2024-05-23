@@ -469,7 +469,7 @@ class MainViewModel : ViewModel() {
     fun createSampleEntriesCharacter() {
         viewModelScope.launch {
             realm.write {
-                var usernameCharacter = "seancoca"
+                var usernameCharacter = "cocant"
                 var nameCharacter = "Jironiah"
                 var levelCharacter = 1
                 var inspirationCharacter = true

@@ -388,29 +388,38 @@ fun DatabaseMenu(
                     returner.value = 0
                 }
             } else if (loadInsert.equals("insert")) {
-                Text(text = "Vols insertar els characters de Realm a la API?")
-                Button(
-                    onClick = {
-                        characterRealm.forEach {
-                            crudApi.postCharacter(viewModel.convertRealmCharacterToNormal(it))
-                            Toast.makeText(
-                                context, "Heu insertat els characters a la API", Toast.LENGTH_LONG
-                            ).show()
-                            returner.value = 0
-                        }
+                if (!user.isNullOrEmpty()) {
+                    Text(text = "Vols insertar els characters de Realm a la API?")
+                    Button(
+                        onClick = {
+                            characterRealm.forEach {
+                                crudApi.postCharacter(viewModel.convertRealmCharacterToNormal(it))
+                                Toast.makeText(
+                                    context,
+                                    "Heu insertat els characters a la API",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                returner.value = 0
+                            }
 
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
-                    modifier = Modifier
-                        .width(150.dp)
-                        .height(40.dp)
-                        .padding(top = 8.dp),
-                ) {
-                    Text(
-                        text = "Insert",
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
-                        textAlign = TextAlign.Center,
-                    )
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
+                        modifier = Modifier
+                            .width(150.dp)
+                            .height(40.dp)
+                            .padding(top = 8.dp),
+                    ) {
+                        Text(
+                            text = "Insert",
+                            color = MaterialTheme.colorScheme.onTertiaryContainer,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                } else {
+                    Toast.makeText(
+                        context, "Fes un LogIn abans de carregar characters", Toast.LENGTH_LONG
+                    ).show()
+                    returner.value = 0
                 }
             } else if (loadInsert.equals("example")) {
                 Text(text = "Vols insertar un character d'exemple?")
