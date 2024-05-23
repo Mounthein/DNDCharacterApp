@@ -1,7 +1,6 @@
 package com.example.dndcharacterapp.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -45,7 +44,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dndcharacterapp.api.CrudApi
-import com.example.dndcharacterapp.models.characterRealm.CharacterRealm
 import com.example.dndcharacterapp.models.user.Message
 import com.example.dndcharacterapp.models.user.User
 import com.example.dndcharacterapp.models.user.apiUser
@@ -293,7 +291,7 @@ fun LoginButton(shape: Shape, text: String, click: () -> Unit) {
 }
 
 @Composable
-fun DatabaseSelector(viewModel: MainViewModel, user : List<User>) {
+fun DatabaseSelector(viewModel: MainViewModel, user: List<User>?) {
     val what = remember { mutableIntStateOf(0) }
     val context = LocalContext.current
     Column(
@@ -313,16 +311,18 @@ fun DatabaseSelector(viewModel: MainViewModel, user : List<User>) {
             }
         } else if (what.intValue == 1) {
             DatabaseMenu("insert", returner = what, viewModel, user)
-        } else if(what.intValue == 2){
+        } else if (what.intValue == 2) {
             DatabaseMenu("load", returner = what, viewModel, user)
-        }else if(what.intValue == 3){
-            DatabaseMenu("example", returner = what, viewModel, user)
+        } else if (what.intValue == 3) {
+            DatabaseMenu("example", returner = what, viewModel, null)
         }
     }
 }
 
 @Composable
-fun DatabaseMenu(loadInsert: String, returner: MutableIntState, viewModel: MainViewModel, user : List<User>) {
+fun DatabaseMenu(
+    loadInsert: String, returner: MutableIntState, viewModel: MainViewModel, user: List<User>?
+) {
     val crudApi = CrudApi()
     val characterRealm by viewModel.characters.collectAsState()
     val context = LocalContext.current
@@ -343,41 +343,49 @@ fun DatabaseMenu(loadInsert: String, returner: MutableIntState, viewModel: MainV
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             if (loadInsert.equals("load")) {
-                Text(text = "Vols carregar els characters de la api?")
-                val logedUser = user.first()
-                val charactersLoadApi = logedUser.let { crudApi.getCharacterByUserName(it.username) }
-                Button(
-                    onClick = {
-                        if (charactersLoadApi != null) {
+                if (!user.isNullOrEmpty()) {
+                    Text(text = "Vols carregar els characters de la api?")
+                    val logedUser = user.first()
+                    val charactersLoadApi =
+                        logedUser.let { crudApi.getCharacterByUserName(it.username) }
+                    Button(
+                        onClick = {
+                            if (charactersLoadApi != null) {
 //                            Log.e("CargarCharactersAPI", "Recoge los characters")
-                            charactersLoadApi.forEach {
-                                viewModel.insertNewCharacterToRealm(it)
+                                charactersLoadApi.forEach {
+                                    viewModel.insertNewCharacterToRealm(it)
+                                }
+                                Toast.makeText(
+                                    context,
+                                    "Carregat character de l'usuari -> ${logedUser.username}",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                returner.value = 0
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "No hi ha characters amb aquest usuari",
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
-                            Toast.makeText(
-                                context,
-                                "Carregat character de l'usuari -> ${logedUser.username}",
-                                Toast.LENGTH_LONG
-                            ).show()
-                            returner.value = 0
-                        }else{
-                            Toast.makeText(
-                                context,
-                                "No hi ha characters amb aquest usuari",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
-                    modifier = Modifier
-                        .width(150.dp)
-                        .height(40.dp)
-                        .padding(top = 8.dp),
-                ) {
-                    Text(
-                        text = "Load",
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
-                        textAlign = TextAlign.Center,
-                    )
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
+                        modifier = Modifier
+                            .width(150.dp)
+                            .height(40.dp)
+                            .padding(top = 8.dp),
+                    ) {
+                        Text(
+                            text = "Load",
+                            color = MaterialTheme.colorScheme.onTertiaryContainer,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                } else {
+                    Toast.makeText(
+                        context, "Fes un LogIn abans de carregar characters", Toast.LENGTH_LONG
+                    ).show()
+                    returner.value = 0
                 }
             } else if (loadInsert.equals("insert")) {
                 Text(text = "Vols insertar els characters de Realm a la API?")
