@@ -72,9 +72,8 @@ class ConfigurationActivity : ComponentActivity() {
                             LoginSelector(isLogued)
                         } else {
                             isLogued.value = true
+                            DatabaseSelector(viewModelCharacter, user)
                         }
-
-                        DatabaseSelector(viewModelCharacter, user)
                     }
                 }
             }
@@ -300,13 +299,13 @@ fun DatabaseSelector(viewModel: MainViewModel, user: List<User>?) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (what.intValue == 0) {
-            InsertDatabaseToApi(MaterialTheme.shapes.large, "SaveApi") {
+            InsertDatabaseToApi(MaterialTheme.shapes.large, "Save to Api") {
                 what.intValue = 1
             }
-            LoadDatabaseButton(MaterialTheme.shapes.large, "LoadApi") {
+            LoadDatabaseButton(MaterialTheme.shapes.large, "Load from Api") {
                 what.intValue = 2
             }
-            LoadDatabaseButton(MaterialTheme.shapes.large, "ExampleCharacter") {
+            LoadDatabaseButton(MaterialTheme.shapes.large, "Example Character") {
                 what.intValue = 3
             }
         } else if (what.intValue == 1) {
@@ -438,7 +437,7 @@ fun DatabaseMenu(
                         .padding(top = 8.dp),
                 ) {
                     Text(
-                        text = "Example",
+                        text = "Insert",
                         color = MaterialTheme.colorScheme.onTertiaryContainer,
                         textAlign = TextAlign.Center,
                     )

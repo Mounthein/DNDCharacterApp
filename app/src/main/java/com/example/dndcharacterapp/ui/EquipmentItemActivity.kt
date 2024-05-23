@@ -87,8 +87,7 @@ fun PrintMagicItem(magicItem: MagicItem) {
 fun Body(magicItem: MagicItem) {
     Column(
         modifier = Modifier
-            .padding(top = 40.dp)
-            .verticalScroll(rememberScrollState()),
+            .padding(top = 40.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(text = "Rarity: " + magicItem.rarity.name)
