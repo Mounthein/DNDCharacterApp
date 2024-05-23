@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
                     if (!canConnect) {
                         Toast.makeText(
                             this,
-                            "No hi ha connexió amb la api, reinicia l'aplicació  o espera a tenir connexió",
+                            "There is no connection with the api, please restart the app or wait for a connection",
                             Toast.LENGTH_LONG
                         ).show()
                     }
@@ -75,7 +75,7 @@ class MainActivity : ComponentActivity() {
                                                 Toast
                                                     .makeText(
                                                         context,
-                                                        "Ja tens connexió, espera...",
+                                                        "You are now connected, please wait...",
                                                         Toast.LENGTH_LONG
                                                     )
                                                     .show()
@@ -99,7 +99,7 @@ class MainActivity : ComponentActivity() {
                                                 Toast
                                                     .makeText(
                                                         context,
-                                                        "Ja tens connexió, espera...",
+                                                        "You are now connected, please wait...",
                                                         Toast.LENGTH_LONG
                                                     )
                                                     .show()
@@ -127,7 +127,7 @@ class MainActivity : ComponentActivity() {
                                                 Toast
                                                     .makeText(
                                                         context,
-                                                        "Ja tens connexió, espera...",
+                                                        "You are now connected, please wait...",
                                                         Toast.LENGTH_LONG
                                                     )
                                                     .show()
@@ -153,7 +153,7 @@ class MainActivity : ComponentActivity() {
                                                 Toast
                                                     .makeText(
                                                         context,
-                                                        "Ja tens connexió, espera...",
+                                                        "You are now connected, please wait...",
                                                         Toast.LENGTH_LONG
                                                     )
                                                     .show()
@@ -168,14 +168,7 @@ class MainActivity : ComponentActivity() {
                                     .shadow(elevation = 15.dp), id = R.drawable.cog)
                             }
                         }
-
-                    }/*} else {
-                        Toast.makeText(
-                            this,
-                            "No hi ha connexió amb la api, reinicia l'aplicació  o espera a tenir connexió",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }*/
+                    }
                 }
             }
         }

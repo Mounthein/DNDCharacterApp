@@ -343,7 +343,7 @@ fun DatabaseMenu(
         ) {
             if (loadInsert.equals("load")) {
                 if (!user.isNullOrEmpty()) {
-                    Text(text = "Vols carregar els characters de la api?")
+                    Text(text = "Do you want to load the characters from the API?")
                     val logedUser = user.first()
                     val charactersLoadApi =
                         logedUser.let { crudApi.getCharacterByUserName(it.username) }
@@ -356,14 +356,14 @@ fun DatabaseMenu(
                                 }
                                 Toast.makeText(
                                     context,
-                                    "Carregat character de l'usuari -> ${logedUser.username}",
+                                    "Load character from user -> ${logedUser.username}",
                                     Toast.LENGTH_LONG
                                 ).show()
                                 returner.value = 0
                             } else {
                                 Toast.makeText(
                                     context,
-                                    "No hi ha characters amb aquest usuari",
+                                    "There are no characters with this user",
                                     Toast.LENGTH_LONG
                                 ).show()
                             }
@@ -382,20 +382,20 @@ fun DatabaseMenu(
                     }
                 } else {
                     Toast.makeText(
-                        context, "Fes un LogIn abans de carregar characters", Toast.LENGTH_LONG
+                        context, "You must Log In before load any character", Toast.LENGTH_LONG
                     ).show()
                     returner.value = 0
                 }
             } else if (loadInsert.equals("insert")) {
                 if (!user.isNullOrEmpty()) {
-                    Text(text = "Vols insertar els characters de Realm a la API?")
+                    Text(text = "Do you want to save the characters to the API?")
                     Button(
                         onClick = {
                             characterRealm.forEach {
                                 crudApi.postCharacter(viewModel.convertRealmCharacterToNormal(it))
                                 Toast.makeText(
                                     context,
-                                    "Heu insertat els characters a la API",
+                                    "You have inserted a character",
                                     Toast.LENGTH_LONG
                                 ).show()
                                 returner.value = 0
@@ -416,17 +416,17 @@ fun DatabaseMenu(
                     }
                 } else {
                     Toast.makeText(
-                        context, "Fes un LogIn abans de carregar characters", Toast.LENGTH_LONG
+                        context, "You must Log In before insert any character", Toast.LENGTH_LONG
                     ).show()
                     returner.value = 0
                 }
             } else if (loadInsert.equals("example")) {
-                Text(text = "Vols insertar un character d'exemple?")
+                Text(text = "Do you want to insert an example character?")
                 Button(
                     onClick = {
                         viewModel.createSampleEntriesCharacter()
                         Toast.makeText(
-                            context, "Has insertat un character d'exemple", Toast.LENGTH_LONG
+                            context, "You have inserted an example character", Toast.LENGTH_LONG
                         ).show()
                         returner.value = 0
                     },

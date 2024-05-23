@@ -1,6 +1,7 @@
 package com.example.dndcharacterapp.ui
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -183,7 +184,7 @@ fun MostrarComponentes(
                 posibleInsertar = true
             } else {
                 Toast.makeText(
-                    context, "Level no és un valor correcte, ha de ser Int", Toast.LENGTH_LONG
+                    context, "Level is not a correct value, it must be an Int", Toast.LENGTH_LONG
                 ).show()
                 posibleInsertar = false
             }
@@ -279,7 +280,7 @@ fun MostrarComponentes(
                 posibleInsertar = true
             } else {
                 Toast.makeText(
-                    context, "HitPoint no són valors correctes, han de ser Int", Toast.LENGTH_LONG
+                    context, "HitPoint is not a correct value, it must be an Int", Toast.LENGTH_LONG
                 ).show()
                 posibleInsertar = false
             }
@@ -312,24 +313,12 @@ fun MostrarComponentes(
         //Esto es lo que se inserta
         val hitDieCh: EmHitDieCh = EmHitDieCh()
         if (HitDieType.isNotEmpty() && HitDieQuantity.isNotEmpty()) {
-//            val parsedIntQuantity = HitDieQuantity.toIntOrNull()
-//            if (parsedIntQuantity != null) {
             hitDieCh.type = HitDieType
             hitDieCh.quantity = HitDieQuantity
             val hitDieListInsertar = realmListOf(hitDieCh)
-//                if (hitDieCh != null) {
-//                    hitDieListInsertar.add(hitDieCh)
-//                }
             characterInsertar.hit_die = hitDieListInsertar
             posibleInsertar = true
-//            } else {
-//                Toast.makeText(
-//                    context,
-//                    "HitDie quantity no és un valor correcte, ha de ser Int",
-//                    Toast.LENGTH_LONG
-//                ).show()
-//                posibleInsertar = false
-//            }
+
         }
 
 
@@ -369,7 +358,9 @@ fun MostrarComponentes(
                 posibleInsertar = true
             } else {
                 Toast.makeText(
-                    context, "DeathSaves no són valors correctes, han de ser Int", Toast.LENGTH_LONG
+                    context,
+                    "DeathSaves is not a correct value, it must be an Int",
+                    Toast.LENGTH_LONG
                 ).show()
                 posibleInsertar = false
             }
@@ -431,7 +422,7 @@ fun MostrarComponentes(
             } else {
                 Toast.makeText(
                     context,
-                    "ArmorClassValue no és un valor correcte, ha de ser Int",
+                    "ArmorClassValue is not a correct value, it must be an Int",
                     Toast.LENGTH_LONG
                 ).show()
                 posibleInsertar = false
@@ -493,7 +484,9 @@ fun MostrarComponentes(
                 posibleInsertar = true
             } else {
                 Toast.makeText(
-                    context, "StatsValue no és un valor correcte, ha de ser Int", Toast.LENGTH_LONG
+                    context,
+                    "StatsValue is not a correct value, it must be an Int",
+                    Toast.LENGTH_LONG
                 ).show()
                 posibleInsertar = false
             }
@@ -539,7 +532,7 @@ fun MostrarComponentes(
             } else {
                 Toast.makeText(
                     context,
-                    "SkillProficienciesBonus no és un valor correcte, ha de ser Int",
+                    "SkillProficienciesBonus is not a correct value, it must be an Int",
                     Toast.LENGTH_LONG
                 ).show()
                 posibleInsertar = false
@@ -642,7 +635,7 @@ fun MostrarComponentes(
             } else {
                 Toast.makeText(
                     context,
-                    "CoinPouchQuantity no és un valor correcte, ha de ser Int",
+                    "CoinPouchQuantity is not a correct value, it must be an Int",
                     Toast.LENGTH_LONG
                 ).show()
                 posibleInsertar = false
@@ -736,7 +729,7 @@ fun MostrarComponentes(
             } else {
                 Toast.makeText(
                     context,
-                    "SpellSaveDC i SpellAttackBonus no són valors correctes, han de ser Int",
+                    "SpellSaveDC & SpellAttackBonus are not a correct valuev, it must be an Int",
                     Toast.LENGTH_LONG
                 ).show()
                 posibleInsertar = false
@@ -807,7 +800,9 @@ fun MostrarComponentes(
                 posibleInsertar = true
             } else {
                 Toast.makeText(
-                    context, "Exhaustion no és un valor correcte, ha de ser Int", Toast.LENGTH_LONG
+                    context,
+                    "Exhaustion is not a correct value, it must be an Int",
+                    Toast.LENGTH_LONG
                 ).show()
                 posibleInsertar = false
             }
@@ -823,7 +818,7 @@ fun MostrarComponentes(
             } else {
                 Toast.makeText(
                     context,
-                    "ExperienciePoints no és un valor correcte, ha de ser Int",
+                    "ExperienciePoints is not a correct value, it must be an Int",
                     Toast.LENGTH_LONG
                 ).show()
                 posibleInsertar = false
@@ -840,7 +835,7 @@ fun MostrarComponentes(
             } else {
                 Toast.makeText(
                     context,
-                    "PassiveWisdom no és un valor correcte, ha de ser Int",
+                    "PassiveWisdom is not a correct value, it must be an Int",
                     Toast.LENGTH_LONG
                 ).show()
                 posibleInsertar = false
@@ -856,7 +851,9 @@ fun MostrarComponentes(
                 posibleInsertar = true
             } else {
                 Toast.makeText(
-                    context, "Initiative no és un valor correcte, ha de ser Int", Toast.LENGTH_LONG
+                    context,
+                    "Initiative is not a correct value, it must be an Int",
+                    Toast.LENGTH_LONG
                 ).show()
                 posibleInsertar = false
             }
@@ -871,7 +868,7 @@ fun MostrarComponentes(
                 posibleInsertar = true
             } else {
                 Toast.makeText(
-                    context, "Speed no és un valor correcte, ha de ser Int", Toast.LENGTH_LONG
+                    context, "Speed is not a correct value, it must be an Int", Toast.LENGTH_LONG
                 ).show()
                 posibleInsertar = false
             }
@@ -887,7 +884,7 @@ fun MostrarComponentes(
             } else {
                 Toast.makeText(
                     context,
-                    "ProficiencyBonus no és un valor correcte, ha de ser Int",
+                    "ProficiencyBonus is not a correct value, it must be an Int",
                     Toast.LENGTH_LONG
                 ).show()
                 posibleInsertar = false
@@ -901,11 +898,6 @@ fun MostrarComponentes(
             characterInsertar.personality_traits = personalityTraits
             posibleInsertar = true
         } else {
-//            Toast.makeText(
-//                context,
-//                "PersonalityTraits no pot estar buit",
-//                Toast.LENGTH_LONG
-//            ).show()
             posibleInsertar = false
         }
 
@@ -915,11 +907,6 @@ fun MostrarComponentes(
             characterInsertar.ideals = ideals
             posibleInsertar = true
         } else {
-//            Toast.makeText(
-//                context,
-//                "Ideals no pot estar buit",
-//                Toast.LENGTH_LONG
-//            ).show()
             posibleInsertar = false
         }
 
@@ -931,11 +918,6 @@ fun MostrarComponentes(
 
             posibleInsertar = true
         } else {
-//            Toast.makeText(
-//                context,
-//                "Bonds no pot estar buit",
-//                Toast.LENGTH_LONG
-//            ).show()
             posibleInsertar = false
         }
 
@@ -945,11 +927,6 @@ fun MostrarComponentes(
             characterInsertar.flaws = flaws
             posibleInsertar = true
         } else {
-//            Toast.makeText(
-//                context,
-//                "Flaws no pot estar buit",
-//                Toast.LENGTH_LONG
-//            ).show()
             posibleInsertar = false
         }
 
@@ -960,11 +937,6 @@ fun MostrarComponentes(
             characterInsertar.character_backstory = characterBackstory
             posibleInsertar = true
         } else {
-//            Toast.makeText(
-//                context,
-//                "CharacterBackstory no pot estar buit",
-//                Toast.LENGTH_LONG
-//            ).show()
             posibleInsertar = false
         }
 
@@ -975,11 +947,6 @@ fun MostrarComponentes(
             characterInsertar.allies_organizations = alliesOrganizations
             posibleInsertar = true
         } else {
-//            Toast.makeText(
-//                context,
-//                "AlliesOrganizations no pot estar buit",
-//                Toast.LENGTH_LONG
-//            ).show()
             posibleInsertar = false
         }
 
@@ -990,17 +957,10 @@ fun MostrarComponentes(
             characterInsertar.symbol = symbol
             posibleInsertar = true
         } else {
-//            Toast.makeText(
-//                context,
-//                "Symbol no pot estar buit",
-//                Toast.LENGTH_LONG
-//            ).show()
             posibleInsertar = false
         }
 
-
         //Boton añadir character
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -1014,29 +974,35 @@ fun MostrarComponentes(
                         if (posibleInsertar) {
                             viewModel.insertNewCharacter(characterInsertar)
                             Toast.makeText(
-                                context, "Has afegit character", Toast.LENGTH_LONG
+                                context, "You have inserted a character", Toast.LENGTH_LONG
                             ).show()
+                            startNewActivity(context = context)
                         } else {
                             Toast.makeText(
                                 context,
-                                "Revisa els continguts per si t'has deixat algún buit!",
+                                "Check the content if there are something empty!",
                                 Toast.LENGTH_LONG
                             ).show()
                         }
                     } catch (error: Throwable) {
                         Toast.makeText(
-                            context, "No se ha podido insertar el character", Toast.LENGTH_LONG
+                            context, "Could not insert character", Toast.LENGTH_LONG
                         ).show()
                         Log.i("character", characterInsertar.toString())
                         null
                     }
                 }) {
-                    Text("Afegir Character", color = MaterialTheme.colorScheme.onBackground)
+                    Text("Insert Character", color = MaterialTheme.colorScheme.onBackground)
                 }
             }
         }
 
     }
+}
+
+fun startNewActivity(context: Context) {
+    val intent = Intent(context, CharacterRecyclerActivity::class.java)
+    context.startActivity(intent)
 }
 
 //Esto mostrará un textfield para que se escriba el string
@@ -1072,7 +1038,7 @@ private fun MostrarTextFieldUserNameReadOnly(userName: String): String {
         Box(modifier = Modifier.weight(1f)) {
             TextField(value = userNameValue,
                 onValueChange = { userNameValue = it },
-                label = { Text("Usuario:") },
+                label = { Text("User:") },
                 enabled = false,
                 readOnly = true
             )
@@ -1109,7 +1075,8 @@ private fun MostrarDropDowns(list1: List<String>, textoMostrar: String): String 
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded1) },
                     modifier = Modifier.menuAnchor()
                 )
-                ExposedDropdownMenu(expanded = expanded1,
+                ExposedDropdownMenu(
+                    expanded = expanded1,
                     onDismissRequest = { expanded1 = false }) {
                     list1.forEach { item ->
                         DropdownMenuItem(text = { Text(text = item) }, onClick = {
@@ -1158,14 +1125,14 @@ private fun MostrarTextFieldArray(textoMostrar: String): RealmList<String> {
                     newList.add("")
                     stringArray = newList
                 }) {
-                    Text("Afegir element", color = MaterialTheme.colorScheme.onBackground)
+                    Text("Add element", color = MaterialTheme.colorScheme.onBackground)
                 }
                 Button(onClick = {
                     val newList = stringArray.toMutableList()
                     newList.remove("")
                     stringArray = newList
                 }) {
-                    Text("Eliminar element", color = MaterialTheme.colorScheme.onBackground)
+                    Text("Delete element", color = MaterialTheme.colorScheme.onBackground)
                 }
             }
         }
@@ -1188,36 +1155,37 @@ private fun MostrarCheckBox(): Boolean {
     return inspirationRemember.value
 }
 
-@Composable
-private fun BotonAnadir(
-    context: Context, characterInsertar: CharacterRealm, viewModel: MainViewModel
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(modifier = Modifier.weight(1f)) {
-            //Almacenar todos los elementos
-            Button(onClick = {
-                val data = try {
-                    viewModel.insertNewCharacter(characterInsertar)
-                    Toast.makeText(
-                        context, "Has afegit character", Toast.LENGTH_LONG
-                    ).show()
-                } catch (error: Throwable) {
-                    Toast.makeText(
-                        context, "No se ha podido insertar el character", Toast.LENGTH_LONG
-                    ).show()
-                    Log.i("character", characterInsertar.toString())
-                    null
-                }
-            }) {
-                Text("Afegir Character", color = MaterialTheme.colorScheme.onBackground)
-            }
-        }
-    }
-}
+
+//@Composable
+//private fun BotonAnadir(
+//    context: Context, characterInsertar: CharacterRealm, viewModel: MainViewModel
+//) {
+//    Row(
+//        modifier = Modifier.fillMaxWidth(),
+//        horizontalArrangement = Arrangement.SpaceBetween,
+//        verticalAlignment = Alignment.CenterVertically
+//    ) {
+//        Box(modifier = Modifier.weight(1f)) {
+//            //Almacenar todos los elementos
+//            Button(onClick = {
+//                val data = try {
+//                    viewModel.insertNewCharacter(characterInsertar)
+//                    Toast.makeText(
+//                        context, "Has afegit character", Toast.LENGTH_LONG
+//                    ).show()
+//                } catch (error: Throwable) {
+//                    Toast.makeText(
+//                        context, "No se ha podido insertar el character", Toast.LENGTH_LONG
+//                    ).show()
+//                    Log.i("character", characterInsertar.toString())
+//                    null
+//                }
+//            }) {
+//                Text("Afegir Character", color = MaterialTheme.colorScheme.onBackground)
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun showToast(message: String) {

@@ -62,7 +62,7 @@ class CharacterRecyclerActivity : ComponentActivity() {
                     val context = LocalContext.current
                     Column(modifier = Modifier.fillMaxSize()) {
                         val filtre = remember { mutableStateOf(TextFieldValue()) }
-                        Text(text = "Filtre")
+                        Text(text = "Filter")
                         TextField(value = filtre.value,
                             onValueChange = { newFilter -> filtre.value = newFilter })
                         Spacer(
@@ -182,7 +182,7 @@ fun BotonIrInsertarCharacters() {
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
             ) {
-                Text("Afegir Character", color = MaterialTheme.colorScheme.onSurface)
+                Text("Insert Character", color = MaterialTheme.colorScheme.onSurface)
             }
         }
     }
