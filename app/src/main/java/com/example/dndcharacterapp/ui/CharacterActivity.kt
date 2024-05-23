@@ -1,6 +1,10 @@
 package com.example.dndcharacterapp.ui
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -21,6 +25,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,6 +35,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -71,8 +78,8 @@ class CharacterActivity : ComponentActivity() {
                                 items(filtrats) {
                                     HeaderCharacter(name = it.name!!)
                                     BodyCharacter(character = it)
+                                    deleteCharacterButton(context = LocalContext.current, it, viewModel)
                                 }
-
                             }
                         }
                     }
@@ -116,20 +123,12 @@ fun BodyCharacter(character: CharacterRealm) {
         TextBoxCharacter(title = "Level", content = character.level.toString())
         TextBoxCharacter(title = "Inspiration", content = character.inspiration.toString())
         character.userName?.let { TextBoxCharacter(title = "UserName", content = it) }
-        //if (character.background != null) {
+
         character.background?.let { TextBoxCharacter(title = "background", content = it) }
-        //}
+
         character.race?.name?.let { TextBoxCharacter(title = "race", content = it) }
         character.alignment?.name?.let { TextBoxCharacter(title = "alignment", content = it) }
-//        TextBoxCharacter(
-//            title = "hitPointsMaximum", content = character.hitPoints?.maximum.toString()
-//        )
-//        TextBoxCharacter(
-//            title = "hitPointsCurrent", content = character.hitPoints?.current.toString()
-//        )
-//        TextBoxCharacter(
-//            title = "hitPointsTemporary", content = character.hitPoints?.temporary.toString()
-//        )
+
         character.hitPoints?.let {
             TextBoxCharacter(title = "hitPointsMaximum", content = it.maximum.toString())
             TextBoxCharacter(title = "hitPointsCurrent", content = it.current.toString())
@@ -178,53 +177,38 @@ fun BodyCharacter(character: CharacterRealm) {
             title = "experience_Points", content = character.experience_Points.toString()
         )
 
-        //if(character.stats?.get(0)?.name != null){
-//        character.stats?.get(0)?.name?.let { TextBoxCharacter(title = "statsName", content = it) }
-//        //}
-//        if (character.stats?.get(0)?.value != null) {
-//            TextBoxCharacter(
-//                title = "statsValue", content = character.stats?.get(0)?.value.toString()
-//            )
-//        }
-
         character.stats?.get(0)?.let {
             it.name?.let { TextBoxCharacter(title = "statsName", content = it) }
             it.value?.let { TextBoxCharacter(title = "statsValue", content = it.toString()) }
         }
-        //if(character.skill_proficiencies?.get(0)?.name != null){
-//        character.skill_proficiencies?.get(0)?.name?.let {
-//            TextBoxCharacter(
-//                title = "skill_proficienciesName", content = it
-//            )
-//        }
-        //}
+
 
         character.skill_proficiencies?.get(0)?.let {
             it.name?.let { TextBoxCharacter(title = "skill_proficienciesName", content = it) }
-            it.bonus?.let { TextBoxCharacter(title = "skill_proficienciesBonus", content = it.toString()) }
+            it.bonus?.let {
+                TextBoxCharacter(
+                    title = "skill_proficienciesBonus", content = it.toString()
+                )
+            }
         }
 
-        //if(character.skill_proficiencies?.get(0)?.bonus != null){
         TextBoxCharacter(
             title = "skill_proficienciesBonus",
             content = character.skill_proficiencies?.get(0)?.bonus.toString()
         )
-        //}
 
-        //if(character.languages?.get(0)?.name != null){
         character.languages?.get(0)?.name?.let {
             TextBoxCharacter(
                 title = "languagesName", content = it
             )
         }
-        //}
-        //if(character.languages?.get(0)?.type != null){
+
         character.languages?.get(0)?.type?.let {
             TextBoxCharacter(
                 title = "languagesType", content = it
             )
         }
-        //}
+
         character.other_proficiencies?.get(0)?.name?.let {
             TextBoxCharacter(
                 title = "other_proficienciesName", content = it
@@ -254,23 +238,7 @@ fun BodyCharacter(character: CharacterRealm) {
             ?.let { it.name?.let { it1 -> TextBoxCharacter(title = "features", content = it1) } }
         character.traits?.get(0)
             ?.let { it.name?.let { it1 -> TextBoxCharacter(title = "traits", content = it1) } }
-        //if (character.spell_abilities != null) {
-//        TextBoxCharacter(
-//            title = "spell_abilitiesSpellcastingAbility",
-//            content = character.spell_abilities?.get(0)?.spellcasting_ability.toString()
-//        )
-//        TextBoxCharacter(
-//            title = "spell_abilitiesSpellSaveDC",
-//            content = character.spell_abilities?.get(0)?.spell_save_dc.toString()
-//        )
-//        TextBoxCharacter(
-//            title = "spell_abilitiesSpellAttackBonus",
-//            content = character.spell_abilities?.get(0)?.spell_attack_bonus.toString()
-//        )
 
-
-
-        //}
         character.prepared_spells?.get(0)?.let {
             it.name?.let { it1 ->
                 TextBoxCharacter(
@@ -403,12 +371,6 @@ fun TextBoxCharacter(title: String, content: List<String>) {
                         .border(BorderStroke(2.dp, colorResource(id = R.color.black))),
                     contentAlignment = Alignment.Center
                 ) {
-//                var showContent: String = ""
-//                content.forEach {
-//                    showContent += "$it, "
-//                }
-//                showContent =
-//                    showContent.removeRange(showContent.length - 2, showContent.length - 1)
                     Text(
                         text = showContent, fontFamily = FontFamily.Cursive, fontSize = 20.sp
                     )
@@ -419,7 +381,34 @@ fun TextBoxCharacter(title: String, content: List<String>) {
 }
 
 @Composable
+private fun deleteCharacterButton(context: Context, character: CharacterRealm, viewModel: MainViewModel) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 10.dp)
+            .height(60.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Button(onClick = {
+            val delete = viewModel.deleteCharacterRealm(character.idString)
+            if(delete){
+                if (context is Activity) {
+                    context.finish()
+                }
+                Toast.makeText(context, "Character ${character.name} deleted", Toast.LENGTH_LONG).show()
+            }
+        }) {
+            Text("Delete character", color = MaterialTheme.colorScheme.error)
+        }
+    }
+}
 
+private fun startNewActivity(context: Context) {
+    val intent = Intent(context, CharacterRecyclerActivity::class.java)
+    context.startActivity(intent)
+}
+
+@Composable
 fun TitleTextCharacter(title: String) {
     Box(
         modifier = Modifier

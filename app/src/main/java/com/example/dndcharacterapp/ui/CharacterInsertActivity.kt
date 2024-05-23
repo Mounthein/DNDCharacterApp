@@ -1000,7 +1000,7 @@ fun MostrarComponentes(
     }
 }
 
-fun startNewActivity(context: Context) {
+private fun startNewActivity(context: Context) {
     val intent = Intent(context, CharacterRecyclerActivity::class.java)
     context.startActivity(intent)
 }

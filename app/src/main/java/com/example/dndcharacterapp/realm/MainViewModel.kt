@@ -1,5 +1,7 @@
 package com.example.dndcharacterapp.realm
 
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dndcharacterapp.models.character.Alignment
@@ -58,6 +60,20 @@ class MainViewModel : ViewModel() {
     }.stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(), emptyList()
     )
+
+    fun deleteCharacterRealm(idstring: String): Boolean {
+        val characterDelete = realm.query<CharacterRealm>("idString == $0", idstring).find().firstOrNull()
+
+        return realm.writeBlocking {
+            if (characterDelete != null) {
+                findLatest(characterDelete)?.also { delete(it) }
+                true
+            } else {
+                false
+            }
+        }
+    }
+
 
 //    init {
 //        createSampleEntriesCharacter()
