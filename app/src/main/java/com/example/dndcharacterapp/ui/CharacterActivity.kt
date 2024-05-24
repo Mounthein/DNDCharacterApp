@@ -78,7 +78,9 @@ class CharacterActivity : ComponentActivity() {
                                 items(filtrats) {
                                     HeaderCharacter(name = it.name!!)
                                     BodyCharacter(character = it)
-                                    deleteCharacterButton(context = LocalContext.current, it, viewModel)
+                                    deleteCharacterButton(
+                                        context = LocalContext.current, it, viewModel
+                                    )
                                 }
                             }
                         }
@@ -381,7 +383,9 @@ fun TextBoxCharacter(title: String, content: List<String>) {
 }
 
 @Composable
-private fun deleteCharacterButton(context: Context, character: CharacterRealm, viewModel: MainViewModel) {
+private fun deleteCharacterButton(
+    context: Context, character: CharacterRealm, viewModel: MainViewModel
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -391,11 +395,12 @@ private fun deleteCharacterButton(context: Context, character: CharacterRealm, v
     ) {
         Button(onClick = {
             val delete = viewModel.deleteCharacterRealm(character.idString)
-            if(delete){
+            if (delete) {
                 if (context is Activity) {
                     context.finish()
                 }
-                Toast.makeText(context, "Character ${character.name} deleted", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Character ${character.name} deleted", Toast.LENGTH_LONG)
+                    .show()
             }
         }) {
             Text("Delete character", color = MaterialTheme.colorScheme.error)
